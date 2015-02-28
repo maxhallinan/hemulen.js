@@ -325,22 +325,6 @@
     }
 
     function subData(e, conf, subData, route){
-        // var request = new XMLHttpRequest();
-
-        // //handle response
-        // request.onreadystatechange = function(){
-        //     if (request.readyState === 4) {
-        //         if (request.status === 200) {
-        //             // console.log(request);
-        //                 subSuccess(e, conf, request);
-        //         } else if (request.status === 500) {
-        //                 subFail(e, conf, request);
-        //         }
-        //     }
-        // }
-
-        // request.open('POST', route);
-        // request.send(data);
         if (!formSubmitted) {
             $.ajax({
                 success: function(res){
@@ -587,7 +571,6 @@
 
     function subSuccess(e, conf, res){
         //redirect to url provided in the response body    
-        // window.location = res.redirectUrl;
         console.log(res);
     };
 
@@ -660,8 +643,6 @@
         thisIndex   = $thisList.find(conf.deleteButton).index(e.target);
         instanceId  = $thisInstance.attr(conf.instanceIdAttr);
         itemId      = $this.closest(conf.listItem).attr(conf.itemIdAttr);
-
-        console.log('onDelete(), value of itemId: ', itemId);
         
         if(Object.keys(dataStored).length) {
             dataStored[instanceId] = deleteData(dataStored[instanceId], itemId);
@@ -688,7 +669,7 @@
         function bindEvents() {
             thisSel.dropForm.on('submit.dD', function(e){onSub.call(this, e, thisConf);});
 
-            thisSel.fileInput.on('change.dD', function(e){ console.log('upload'); onUpload.call(this, e, thisConf);});
+            thisSel.fileInput.on('change.dD', function(e){onUpload.call(this, e, thisConf);});
 
             thisSel.dropInput.on('dragenter.dD', function(e){onDragEnter.call(this, e, thisConf);});
             thisSel.dropInput.on('dragenter.dD', function(e){onDragLeave.call(this, e, thisConf);});
@@ -696,8 +677,8 @@
             thisSel.dropInput.on('drop.dD', function(e){onDragDrop.call(this, e, thisConf);});
             thisSel.dropInput.on('dragdrop.dD', function(e){onDragDrop.call(this, e, thisConf);});
             
-            thisSel.dropList.on('click.dDDelete', thisConf.deleteButton, function(e){console.log('delete firing'); onDelete.call(this, e, thisConf);});
-            thisSel.dropList.on('keyup.dDTitle', thisConf.titleInput, function(e){console.log('titleKeyup'); onTitleChange.call(this, e, thisConf);});
+            thisSel.dropList.on('click.dDDelete', thisConf.deleteButton, function(e){onDelete.call(this, e, thisConf);});
+            thisSel.dropList.on('keyup.dDTitle', thisConf.titleInput, function(e){onTitleChange.call(this, e, thisConf);});
             thisSel.dropList.on('keyup.dDCaption', thisConf.captionInput, function(e){onCaptionChange.call(this, e, thisConf);});
         };
 
