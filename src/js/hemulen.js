@@ -171,13 +171,11 @@
         //create a place in app global data storage
         //to store data uploaded through instance    
         dataStored[instanceId]  = {};
-        console.log('assignInstanceId(), value of dataStored: ', dataStored);
+
         return instanceId;
     }
 
     function setDataLimit(e, conf, instanceId, dataStored, dataNew){
-        console.log('setDataLimit executed');
-
         var dataStoredLength    = Object.keys(dataStored[instanceId]).length,
             dataNewLength       = dataNew.length,
             limit               = conf.validation.fileLimit - dataStoredLength,
@@ -197,11 +195,6 @@
                 range.end   = conf.validation.fileLimit < (range.start + dataNewLength) ? conf.validation.fileLimit : (range.start + dataNewLength); 
             }
 
-            console.log('setDataLimit(), value of dataStoredLength: ', dataStoredLength);
-            console.log('setDataLimit(), value of dataNewLength: ', dataNewLength);
-            console.log('setDataLimit(), value of limit: ', limit);
-            console.log('setDataLimit(), value of range: ', range);
-
             return range;
     }
 
@@ -209,30 +202,21 @@
         var isAcceptedType  = conf.validation.acceptTypes.indexOf( data.type ) > -1,
             isAcceptedSize  = data.size < conf.validation.fileSize;
 
-            console.log('validData(), value of isAcceptedType:', isAcceptedType);
-            console.log('validData(), value of isAcceptedSize:', isAcceptedSize);
-
             clearErrors(conf, $(e.target).closest(conf.instance).find(conf.errorElement));
 
             if (isAcceptedType && isAcceptedSize) {
-                console.log('validData(), isAcceptedType and isAcceptedSize');
                 //data is valid
                 return true;
             } else if (!isAcceptedType && !isAcceptedSize) {
-                console.log('validData(), !isAcceptedType && !isAcceptedSize');
                 //Show error messages
                 tooBig(conf, $(e.target).closest(conf.instance).find(conf.errorElement), data);
                 wrongType(conf, $(e.target).closest(conf.instance).find(conf.errorElement), data);
                 return false;
             } else if (!isAcceptedType && isAcceptedSize) {
-                console.log('validData(), !isAcceptedType && isAcceptedSize');
                 //Show error message
                 wrongType(conf, $(e.target).closest(conf.instance).find(conf.errorElement), data);
                 return false;
             } else if (isAcceptedType && !isAcceptedSize) {
-                console.log('validData(), fileSize: ', data.size);
-                console.log('validData(), conf.validation.fileSize: ', conf.validation.fileSize);                
-                console.log('validData(), isAcceptedType && !isAcceptedSize');
                 //Show error messages
                 tooBig(conf, $(e.target).closest(conf.instance).find(conf.errorElement), data);
                 return false;
@@ -243,26 +227,18 @@
         var dataItemHash, dataLimit, dataNewItem, itemList, range, updatedStorage;
 
         range           = setDataLimit(e, conf, instanceId, dataStored, dataNew);
-        console.log('storeData(), value of range: ', range);
-
         updatedStorage  = dataStored;
         itemList        = document.createDocumentFragment();
 
         for (var i = range.start; i < range.end; i++) {
             dataNewItem = dataNew[i - range.start];
-            console.log('storeData(), value of dataNewItem: ', dataNewItem);
 
             if ( validData(e, conf, dataNewItem) ) {
                 dataItemHash = createUniqueHash(generateHash, 7, usedHashes);
-                console.log('storeData(), value of dataItemHash: ', dataItemHash);
                 usedHashes.push(dataItemHash);
 
-                console.log('storeData(), value of updatedStorage[instanceId]', updatedStorage[instanceId]);
                 updatedStorage[instanceId][dataItemHash] = new DataStorage(conf, dataNewItem); 
-                console.log('storeData(), value of updatedStorage', updatedStorage);
-
                 itemList.appendChild( listStoredItem(conf, dataNewItem, dataItemHash, i) );
-                console.log('storeData(), value of itemList', itemList);
             }
         }
 
@@ -288,29 +264,17 @@
     }
 
     function deleteData(dataSet, itemId){
-        console.log('deleteData(), value of dataSet before delete: ', dataSet);
-        console.log('deleteData(), value of itemId: ', itemId);
-        console.log('deleteData(), value of dataSet[itemId]: ', dataSet[itemId]);
         delete dataSet[itemId];
-        console.log('deleteData(), value of dataSet after delete: ', dataSet);
         return dataSet;
     }
 
     function setPositionValues(instance, prop){
         var instanceId, $theseItems, conf;
-        console.log('setPositionValues(), value of instance: ', instance);
-        console.log('setPositionValues(), value of prop: ', prop);
-        console.log(instance[0]);
-        console.log(instance[1]);
+
         conf            = instance[1];
         instanceId      = $(instance[0]).attr(conf.instanceIdAttr);        
         $theseItems     = $(instance[0]).find(conf.listItem);
-        console.log('setPositionValues, value of instanceId: ', instanceId);
-        console.log('setPositionValues, value of conf: ', conf);
-        console.log('setPositionValues, value of $theseItems: ', $theseItems);
 
-        console.log('setPositionValues(), $theseItems.length: ', $theseItems.length);        
-        console.log('setPositionValues(), conf.validation.fileLimit: ', conf.validation.fileLimit);
         if ($theseItems.length && conf.validation.fileLimit > 1) {
             $theseItems.each(function(){
                 var $this       = $(this),
@@ -325,10 +289,8 @@
     function translateDataStored(conf, dataStored, submitData){
         var returnData = submitData,
             counter = -1;
-            console.log('TRANSLATING');
-            console.log(dataStored);
+
             function iterate(iterateOver){
-                console.log('iterate(), valeu of iterateOver: ', iterateOver);
                 for (var key in iterateOver) {
                     if (iterateOver[key].constructor === Object || iterateOver[key].constructor === DataStorage) {
                         if (iterateOver[key].constructor === DataStorage) {
@@ -342,8 +304,6 @@
                         } 
                         iterate(iterateOver[key]);
                     } else {
-                        // console.log('iterate(), key + counter: ', key + counter);
-                        console.log('iterate(),' + key + counter + ':', iterateOver[key]);
                         returnData.append(key + counter, iterateOver[key]);
                     }
                 }                
@@ -357,13 +317,9 @@
         // var toSubmit    = new FormData(e.target);
         var toSubmit = new FormData(e.target);
 
-        console.log('prepareSubData(), value of toSubmit: ', toSubmit);
-
         for (var i = 0; i < ddInstances.length; i++) {
             setPositionValues(ddInstances[i], 'position');            
         }
-
-        console.log('prepareSub()Data, value of dataStored: ', dataStored);
 
         return translateDataStored(conf, dataStored, toSubmit);
     }
@@ -391,8 +347,6 @@
                     subSuccess(e, conf, res);
                 },
                 error: function(res){
-                    console.log('error, e: ', e);
-                    console.log('error, conf: ', conf);
                     subFail(e, conf, res);
                 },
                 url: route,
@@ -617,28 +571,16 @@
     //ERROR HANDLING
     
     function tooMany(conf, $errorElement) {
-        console.log('tooMany()');
-        console.log('tooMany(), value of $errorElement', $errorElement);
-        console.log('tooMany() value of conf.errMessages.num', conf.errMessages.num);
         // clearErrors(conf, $errorElement);
         $errorElement.append( $(document.createElement('p')).text(conf.errMessages.num) );
     }
 
     function tooBig(conf, $errorElement, data) {
-        console.log('tooBig()');
-        console.log('tooBig(), value of $errorElement', $errorElement);
-        console.log('tooBig(), value of conf.errMessages.size', conf.errMessages.size);
-        console.log('tooBig(), value of data: ', data);
         // clearErrors(conf, $errorElement);
         $errorElement.append( $(document.createElement('p')).text(conf.errMessages.size + data.name) );           
     }
 
     function wrongType(conf, $errorElement, data){
-        console.log('wrongType()');
-        console.log('wrongType(), value of $errorElement', $errorElement);
-        console.log('wrongType(), value of conf.errMessages.type', conf.errMessages.type);
-        console.log('wrongType(), value of data: ', data);
-        console.log('wrongType(), value of data.type', data.type);
         // clearErrors(conf, $errorElement);
         $errorElement.append( $(document.createElement('p')).text(conf.errMessages.type + data.type) );   
     }
@@ -652,10 +594,6 @@
     function subFail(e, conf, res){
         var errMessage = document.createElement('p');
         errMessage.textContent = conf.errMessages.sub;
-
-        console.log('subFail(), value of errMessage: ', conf.errMessages.sub);
-        console.log('subFail(), value res: ', res);
-        console.log($('e.target').find(conf.subErrElement));
         $(e.target).find(conf.subErrElement).append(errMessage);
     };
 
@@ -685,10 +623,7 @@
     function onDragDrop(e, conf){
         e.preventDefault();
         var $thisInstance   = $(e.target).closest(conf.instance),
-            instanceId      = $thisInstance.attr(conf.instanceIdAttr)
-        console.log('onDragDrop(), value of e', e);
-        console.log('onDragDrop(), value of e', e.target);
-        console.log('onDragDrop(), value of e.originalEvent.dataTransfer.files: ', e.originalEvent.dataTransfer.files);    
+            instanceId      = $thisInstance.attr(conf.instanceIdAttr)  
         uploadData(e, conf, instanceId, e.originalEvent.dataTransfer.files);
 
         return false;
@@ -708,11 +643,6 @@
         var $thisInstance   = $(e.target).closest(conf.instance),
             instanceId      = $thisInstance.attr(conf.instanceIdAttr)
         
-        console.log('onUpload(), value of e', e);
-        console.log('onUpload(), value of e', e.target);
-        console.log('onUpload(), value of e.target.files', e.target.files)
-        console.log('onUpload(), value of instanceId', instanceId);
-
         uploadData(e, conf, instanceId, e.target.files);
 
         return false;
@@ -735,7 +665,6 @@
         
         if(Object.keys(dataStored).length) {
             dataStored[instanceId] = deleteData(dataStored[instanceId], itemId);
-            console.log('onDelete(), after delete, value of dataStored: ', dataStored);
         }
 
         $thisList.find(conf.listItem).eq(thisIndex).remove();
@@ -776,7 +705,6 @@
             //instantiate configuration and initial selections objects
             thisConf    = this.config   = ( options && isObj(options) ) ? new Config(options) : new Config();
             thisSel     = this.sel      = new InitSelections(this.config);
-            console.log('thisSel: ', thisSel);
             //assign a unique id to each DOM instance of this module instance
             //store that unique id on the element node
             //create an entry in the app global storage for each DOM instance
@@ -792,7 +720,6 @@
                 thisInstance.push(thisConf);
 
                 ddInstances.push(thisInstance);
-                console.log('init(), value of ddInstances', ddInstances);
             });             
 
             //bind events
