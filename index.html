@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Drag and Drop Prototype</title>
+        <link rel="stylesheet" type="text/css" href="/src/css/styles.css"></link>
+    </head>
+    <body>
+
+        <form action="http://requestb.in/1jb7n5e1" method="post" class="js-dd__form">
+            <h1>Drag and Drop: Multiple Instances With Instance-Level Configuration</h1>
+
+            <div class="dd-row">
+                <div class="dd-area">
+                    <h2>Instance One: Thumbnail, Title Field, and Caption Field</h2>
+                    <fieldset class="js-dd--full">
+                        <div class="dd-field js-dd__field">
+                            <p>Limit: 5 images</p>
+                            <p class="js-dd__err"></p>
+                        </div>
+                        <input type="file" class="dd__file-inpt js-dd__file-inpt" multiple/>
+                        
+                        <ul class="js-dd__list"></ul>
+                    </fieldset><!--/.js-dd- -full-->                
+                </div>
+
+
+                <div class="dd-area">
+                    <h2>Instance Two: Thumbnail Only</h2>
+                    <fieldset class="js-dd--thumb">
+                        <div class="dd-field js-dd__field">
+                            <p>Limit 10 images</p>
+                            <p class="js-dd__err"></p>
+                        </div>
+                        <input type="file" class="dd__file-inpt js-dd__file-inpt" multiple/>
+                        
+                        <ul class="js-dd__list"></ul>
+                    </fieldset><!--/js-dd- -thumb-->                
+                </div>
+
+
+                <div class="dd-area">
+                    <h2>Instance Three: File Name Only</h2>
+                    <fieldset class="js-dd--single">
+                        <div class="dd-field js-dd__field">
+                            <p>Limit 1 PDF</p>
+                            <p class="js-dd__err"></p>
+                        </div>
+                        <input type="file" class="dd__file-inpt js-dd__file-inpt" multiple/>
+                        
+                        <ul class="js-dd__list"></ul>                
+                    </fieldset><!--/js-dd- -single-->                
+                </div>    
+            </div>
+
+            <input type="submit" value="Submit" />
+        </form><!--/js-dd__form-->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+        <script src="/src/js/hemulen.js" type="text/javascript"></script>
+    </body>
+</html>
