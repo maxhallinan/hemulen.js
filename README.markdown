@@ -14,9 +14,9 @@ Markup
         <input type="submit" />
     </form>
 
-Initialize without jQuery:
+Initialize:
 
-    var hemulen = new Hemulen('#hemulen', {
+    var theConstable = new Hemulen('#hemulen', {
         namespace: 'hemulen',
         fileLimit: 10
     });
@@ -26,15 +26,15 @@ Initialize without jQuery:
 
 `options.namespace`
 
-Type: selector string
+Type: Selector string
 
 `options.dropInput`
 
-Type: selector string
+Type: Selector string
 
 `options.fileInput`
 
-Type: selector string
+Type: Selector string
 
 `options.acceptTypes`
 
@@ -46,7 +46,7 @@ Type: Number
 
 `options.fileMaxSize`
 
-Type: Number, bits
+Type: Number
 
 `options.beforeSub`
 
