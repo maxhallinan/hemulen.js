@@ -47,6 +47,8 @@
         this.onSubFail      = undefined;
         this.onSubSuccess   = undefined;
 
+        this._instanceEl = document.querySelectorAll(element);
+
         function extend(options){
             for (var key in options) {
                 if(options[key].constructor === Object) {
@@ -75,3 +77,44 @@
     }
 
 })();
+
+//INSTANCES
+
+var ddFull = new Hemulen('.js-dd--full', {
+    namespace: 'ddfull',
+    dropInput: '.js-dd-field',
+    fileInput: '.js-dd__file-inpt',
+    acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
+    fileMaxSize: 5000000,
+    fileLimit: 10,
+    beforeSub: function(){console.log('before sub');},
+    onSubFail: function(){console.log('on sub fail');},
+    onSubSuccess: function(){console.log('after sub');}
+});
+console.log(ddFull);
+
+var ddThumb = new Hemulen('.js-dd--thumb', {
+    namespace: 'ddthumb',
+    dropInput: '.js-dd-field',
+    fileInput: '.js-dd__file-inpt',
+    acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
+    fileMaxSize: 5000000,
+    fileLimit: 5,
+    beforeSub: function(){console.log('before sub');},
+    onSubFail: function(){console.log('on sub fail');},
+    onSubSuccess: function(){console.log('after sub');}
+});
+console.log(ddThumb);
+
+var ddSingle = new Hemulen('.js-dd--single', {
+    namespace: 'ddsingle',
+    dropInput: '.js-dd-field',
+    fileInput: '.js-dd__file-inpt',
+    acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
+    fileMaxSize: 5000000,
+    fileLimit: 1,
+    beforeSub: function(){console.log('before sub');},
+    onSubFail: function(){console.log('on sub fail');},
+    onSubSuccess: function(){console.log('after sub');}
+});
+console.log(ddSingle);
