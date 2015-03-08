@@ -69,7 +69,21 @@
         }
     }
 
+    function _closest(ele, selector) {
+        var possibles = document.querySelectorAll(selector);
 
+        return (function traverseUp(el){
+            for (var i = 0, j = possibles.length; i < j; i++) {
+                console.log(possibles[i] === el);
+                if (possibles[i] === el) {
+                    return el;
+                } else {
+                    return traverseUp(el.parentNode);
+                }
+            }
+        }(ele));
+   
+    }
 
 
 
@@ -96,7 +110,7 @@
     function onDrop(e){
         e.preventDefault();
         
-        var thisHemulen = e.target.closest(this.hemulen),
+        var thisHemulen = _closest(e.target, this.hemulen),
             instanceId  = this.getInstanceId(thisHemulen),
             files       = e.dataTransfer.files,
             range       = this._setUploadLimit(instanceId, files); 
@@ -107,6 +121,7 @@
                 }
             }
 
+        console.log(filesStored);
         return false;
     }
     
@@ -163,10 +178,6 @@
         _onDragOver      = _onDragOver.bind(this);
         _onDrop          = _onDrop.bind(this);
 
-        // _storeFile       = _storeFile.bind(this);
-        // _setUploadLimit  = _setUploadLimit.bind(this);
-        // _validFile       = _validFile.bind(this);   
-
         this._bindEventListeners();
     };
 
@@ -199,17 +210,7 @@
         }
     };
 
-    Hemulen.prototype.getInstanceId = function(element){
-        for (var key in this._instances) {
-            if (this._instances[key] === element) {
-                return key;
-            } else {
-                return undefined;
-            }
-        }
-    };
-
-    function _setUploadLimit(instanceId, files){
+    Hemulen.prototype._setUploadLimit = function(instanceId, files){
         var instance            = this._instances[instanceId];
             filesStoredLength   = Object.keys(dataStored[instanceId]).length,
             filesLength         = files.length,
@@ -239,9 +240,9 @@
             }
 
             return range;
-    }
+    };
 
-    function _validFile(instanceId, file){
+    Hemulen.prototype._validFile = function(instanceId, file){
         var isValidType = this.acceptTypes.indexOf(file.type) > -1,
             isValidSize = file.size < this.fileMaxSize,
             instance    = this._instances[instanceId], 
@@ -270,7 +271,7 @@
                 instance.dispatchEvent(ev);
                 return false;
             }
-    }
+    };
 
     Hemulen.prototypes._storeFile = function(instanceId, file){
         var fileId = _generateUniqueHash(_generateHash, 7, usedHashes);
@@ -292,6 +293,15 @@
         }
     };
 
+    Hemulen.prototype.getInstanceId = function(element){
+        for (var key in this._instances) {
+            if (this._instances[key] === element) {
+                return key;
+            } else {
+                return undefined;
+            }
+        }
+    };
 
     //EXPORT HEMULEN
     if (typeof module !== "undefined" && module !== null) {

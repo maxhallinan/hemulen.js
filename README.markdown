@@ -6,7 +6,7 @@
 
 Markup
 
-    <form action="" method="POST" enctype="mutltipart/form-data">
+    <form action="" method="post" enctype="mutltipart/form-data">
         <div id="hemulen">
             <div class="hemulen__drop-field"></div>
             <input class="hemulen__file-input" type="file" name="hemulen" />
@@ -17,7 +17,7 @@ Markup
 Initialize:
 
     var theConstable = new Hemulen('#hemulen', {
-        namespace: 'hemulen',
+        namespace: 'constable',
         fileLimit: 10
     });
 
@@ -70,6 +70,16 @@ Type: Function
 - `hemulen-filestored.instanceId`
 - `hemulen-filestored.file`
 - `hemulen-filestored.fileId`
+
+###File Deleted
+
+`hemulen-filedeleted`
+
+- `hemulen-filestored.instance`
+- `hemulen-filestored.instanceId`
+- `hemulen-filestored.file`
+- `hemulen-filestored.fileId`
+
 
 ###Too Many
 
