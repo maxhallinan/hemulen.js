@@ -54,7 +54,7 @@
     function _generateUniqueHash(hashGenerator, hashLength, usedHashes){
         var newHash = hashGenerator(hashLength);
  
-        return usedHashes.indexOf(newHash) > -1 ? createUniqueHash(hashGenerator, hashLength, usedHashes) : newHash; 
+        return usedHashes.indexOf(newHash) > -1 ? _generateUniqueHash(hashGenerator, hashLength, usedHashes) : newHash; 
     }
 
     function _extend(options){
@@ -73,12 +73,13 @@
 
 
     //FILE WORKERS
+    function _setUploadLimit(files){
 
-    function _storeFile(files){}
+    }
 
-    function _setUploadLimit(files){}
+    function _validFile(files){
 
-    function _validFile(files){}
+    }
 
 
 
@@ -206,6 +207,24 @@
         }
     };
 
+    Hemulen.prototype._storeFile = function(instanceId, file){
+        var fileId = _generateUniqueHash(_generateHash, 7, usedHashes);
+
+        filesStored[this.namespace][instanceId][fileId] = file; 
+        
+        if (filesStored[this.namespace][instanceId][fileId] === file) {
+            var eventDetail = {
+                instance: this._instances[instanceId],
+                instanceId: instanceId,
+                file: file,
+                fileId: fileId
+            },
+            ev = _createEvent('hemulen-filestored', true, true, eventDetail);
+            this._instances[instanceId].dispatchEvent(ev);
+        } else {
+            return null;
+        }
+    };
 
 
     //EXPORT HEMULEN

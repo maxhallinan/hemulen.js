@@ -104,7 +104,9 @@ Properties
 
 ##Actions
 
-`Hemulen.update(instanceId, fileId, key, value)`
+`Hemulen.storeFile(instanceId, file)`
+
+If file is stored successfully, `hemulen-filestored` event is fired. If file is not stored successfully, returns null.
 
 `Hemulen.delete(instanceId, fileId)`
 
