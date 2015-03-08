@@ -72,18 +72,6 @@
 
 
 
-    //FILE WORKERS
-    function _setUploadLimit(files){
-
-    }
-
-    function _validFile(files){
-
-    }
-
-
-
-
 
     //EVENT HANDLERS
     function onFileChange(e){}
@@ -106,6 +94,19 @@
     
     function onDrop(e){
         e.preventDefault();
+        
+        var thisHemulen = e.target.closest(this.hemulen),
+            instanceId  = this.getInstanceId(thisHemulen),
+            files       = e.dataTransfer.files,
+            range       = this._setUploadLimit(instanceId, files); 
+
+            for (var i = range.start; i < range.end; i++) {
+                if ( this._validFile(files[i - range.start]) ) {
+                    this._storeFile(instanceId, file);
+                }
+            }
+
+        return false;
     }
     
     function onSub(e){
@@ -161,9 +162,9 @@
         _onDragOver      = _onDragOver.bind(this);
         _onDrop          = _onDrop.bind(this);
 
-        _storeFile       = _storeFile.bind(this);
-        _setUploadLimit  = _setUploadLimit.bind(this);
-        _validFile       = _validFile.bind(this);   
+        // _storeFile       = _storeFile.bind(this);
+        // _setUploadLimit  = _setUploadLimit.bind(this);
+        // _validFile       = _validFile.bind(this);   
 
         this._bindEventListeners();
     };
@@ -207,7 +208,43 @@
         }
     };
 
-    Hemulen.prototype._storeFile = function(instanceId, file){
+    function _setUploadLimit(instanceId, files){
+        var instance            = this._instances[instanceId];
+            filesStoredLength   = Object.keys(dataStored[instanceId]).length,
+            filesLength         = files.length,
+            filesLimit          = this.fileLimit - filesStoredLength,
+            range               = {},
+            ev, eventDetail, s;
+
+            if (filesLength > filesLimit) {
+                eventDetail = {
+                    instance: instance,
+                    instanceId: instanceId,
+                    files: files,
+                    hemulen: this
+                },
+                ev = _createEvent('hemulen-toomany', true, true, eventDetail);;  
+
+                range.start = 0;
+                range.end   = 0;
+                return range;
+            } else if (filesStoredLength === 0) {
+                range.start = 0;
+                range.end   = filesLength > this.fileLimit ? this.fileLimit : filesLength;  
+            } else if {
+                s = range.start + filesLength;
+                range.start = filesStoredLength;
+                range.end   = this.fileLimit < s ? this.fileLimit : s; 
+            }
+
+            return range;
+    }
+
+    function _validFile(files){
+
+    }
+
+    Hemulen.prototypes._storeFile = function(instanceId, file){
         var fileId = _generateUniqueHash(_generateHash, 7, usedHashes);
 
         filesStored[this.namespace][instanceId][fileId] = file; 
@@ -217,7 +254,8 @@
                 instance: this._instances[instanceId],
                 instanceId: instanceId,
                 file: file,
-                fileId: fileId
+                fileId: fileId,
+                hemulen: this
             },
             ev = _createEvent('hemulen-filestored', true, true, eventDetail);
             this._instances[instanceId].dispatchEvent(ev);
