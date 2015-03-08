@@ -74,7 +74,6 @@
 
         return (function traverseUp(el){
             for (var i = 0, j = possibles.length; i < j; i++) {
-                console.log(possibles[i] === el);
                 if (possibles[i] === el) {
                     return el;
                 } else {
@@ -89,26 +88,26 @@
 
     //EVENT HANDLERS
 
-    function onFileChange(e){}
+    function _onFileChange(e){}
 
-    function onDragEnter(e){
-        e.preventDefault();
+    function _onDragEnter(e){
+        e.preventDefault && e.preventDefault();
         return false;
     }
     
-    function onDragLeave(e){
-        e.preventDefault();
+    function _onDragLeave(e){
+        e.preventDefault && e.preventDefault();
         return false;
     }
     
-    function onDragOver(e){
-        e.preventDefault();
+    function _onDragOver(e){
+        e.preventDefault && e.preventDefault();
         e.dataTransfer.dropEffect = 'all';
         return false;
     }
     
-    function onDrop(e){
-        e.preventDefault();
+    function _onDrop(e){
+        e.preventDefault && e.preventDefault();
         
         var thisHemulen = _closest(e.target, this.hemulen),
             instanceId  = this.getInstanceId(thisHemulen),
@@ -116,8 +115,8 @@
             range       = this._setUploadLimit(instanceId, files); 
 
             for (var i = range.start; i < range.end; i++) {
-                if ( this._validFile(files[i - range.start]) ) {
-                    this._storeFile(instanceId, file);
+                if ( this._validFile(instanceId, files[i - range.start]) ) {
+                    this._storeFile(instanceId, files[i - range.start]);
                 }
             }
 
@@ -125,8 +124,10 @@
         return false;
     }
     
-    function onSub(e){
-        e.preventDefault();
+    function _onSub(e){
+        e.preventDefault && e.preventDefault();
+        if (!formSubmitted) {console.log('submit');}
+        formSubmitted = true;
     }
 
 
@@ -135,7 +136,7 @@
 
     //HEMULEN CLASS
 
-    function Hemulen(element, options){
+    function Hemulen(options){
         this.hemulen        = undefined;
         this.namespace      = undefined;
         this.dropInput      = undefined;
@@ -148,7 +149,6 @@
         this.onSubSuccess   = undefined;
 
         if (options) {_extend.call(this, options);}
-
         this._init();
     }
 
@@ -169,50 +169,41 @@
             filesStored[this.namespace][instanceId] = {};
         }
 
-        //when event handlers are called,
-        //they will be called with the context of the Hemulen instance and not the event object
-        _onSub           = _onSub.bind(this);
-        _onFileChange    = _onFileChange.bind(this);
-        _onDragEnter     = _onDragEnter.bind(this);
-        _onDragLeave     = _onDragLeave.bind(this);
-        _onDragOver      = _onDragOver.bind(this);
-        _onDrop          = _onDrop.bind(this);
-
         this._bindEventListeners();
     };
 
     Hemulen.prototype._bindEventListeners = function(){
-        var i, j, k, l, key, el, dropInput, fileInput;
+        var i, j, k, l, key, el, dropForm, dropInput, fileInput;
 
         for (key in this._instances) {
-            el          = this._instances[key], 
+            el          = this._instances[key],
+            dropForm    = _closest(el, 'form'),
             dropInput   = el.querySelectorAll(this.dropInput),
             fileInput   = el.querySelectorAll(this.fileInput);
 
-
             //bind submit event
-            //place event binding here
-
+            dropForm.addEventListener('submit', _onSub.bind(this), false);
+            
             //bind change event
             for (k = 0, l = fileInput.length; k < l; k++) {
-                fileInput[k].addEventListener('change', onFileChange, false);
+                fileInput[k].addEventListener('change', _onFileChange.bind(this), false);
             }
 
             //bind drag/drop events
             for (k = 0, l = dropInput.length; k < l; k++) {
-                dropInput[k].addEventListener('dragenter', _onDragEnter, false);
-                dropInput[k].addEventListener('dragleave', _onDragLeave, false);
-                dropInput[k].addEventListener('dragover', _onDragOver, false);
-                dropInput[k].addEventListener('drop', _onDrop, false);
-                dropInput[k].addEventListener('dragdrop', _onDrop, false);
+                dropInput[k].addEventListener('dragenter', _onDragEnter.bind(this), false);
+                dropInput[k].addEventListener('dragleave', _onDragLeave.bind(this), false);
+                dropInput[k].addEventListener('dragover', _onDragOver.bind(this), false);
+                dropInput[k].addEventListener('drop', _onDrop.bind(this), false);
+                dropInput[k].addEventListener('dragdrop', _onDrop.bind(this), false);
             }
           
         }
     };
 
     Hemulen.prototype._setUploadLimit = function(instanceId, files){
-        var instance            = this._instances[instanceId];
-            filesStoredLength   = Object.keys(dataStored[instanceId]).length,
+        var instance            = this._instances[instanceId],
+            filesStoredLength   = Object.keys(filesStored[this.namespace][instanceId]).length,
             filesLength         = files.length,
             filesLimit          = this.fileLimit - filesStoredLength,
             range               = {},
@@ -226,6 +217,7 @@
                     hemulen: this
                 },
                 ev = _createEvent('hemulen-toomany', true, true, eventDetail);;  
+                instance.dispatchEvent(ev);
 
                 range.start = 0;
                 range.end   = 0;
@@ -233,7 +225,7 @@
             } else if (filesStoredLength === 0) {
                 range.start = 0;
                 range.end   = filesLength > this.fileLimit ? this.fileLimit : filesLength;  
-            } else if {
+            } else if (filesStoredLength < this.fileLimit && filesStoredLength > 0) {
                 s = range.start + filesLength;
                 range.start = filesStoredLength;
                 range.end   = this.fileLimit < s ? this.fileLimit : s; 
@@ -273,7 +265,7 @@
             }
     };
 
-    Hemulen.prototypes._storeFile = function(instanceId, file){
+    Hemulen.prototype._storeFile = function(instanceId, file){
         var fileId = _generateUniqueHash(_generateHash, 7, usedHashes);
 
         filesStored[this.namespace][instanceId][fileId] = file; 
@@ -311,48 +303,3 @@
     }
 
 })();
-
-
-//INSTANCES
-
-var ddFull = new Hemulen({
-    hemulen: '.js-dd--full',
-    namespace: 'ddfull',
-    dropInput: '.js-dd__field',
-    fileInput: '.js-dd__file-inpt',
-    acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
-    fileMaxSize: 5000000,
-    fileLimit: 10,
-    beforeSub: function(){console.log('before sub');},
-    onSubFail: function(){console.log('on sub fail');},
-    onSubSuccess: function(){console.log('after sub');}
-});
-console.log(ddFull);
-
-var ddThumb = new Hemulen({
-    hemulen: '.js-dd--thumb',
-    namespace: 'ddthumb',
-    dropInput: '.js-dd__field',
-    fileInput: '.js-dd__file-inpt',
-    acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
-    fileMaxSize: 5000000,
-    fileLimit: 5,
-    beforeSub: function(){console.log('before sub');},
-    onSubFail: function(){console.log('on sub fail');},
-    onSubSuccess: function(){console.log('after sub');}
-});
-console.log(ddThumb);
-
-var ddSingle = new Hemulen({
-    hemulen: '.js-dd--single',
-    namespace: 'ddsingle',
-    dropInput: '.js-dd__field',
-    fileInput: '.js-dd__file-inpt',
-    acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
-    fileMaxSize: 5000000,
-    fileLimit: 1,
-    beforeSub: function(){console.log('before sub');},
-    onSubFail: function(){console.log('on sub fail');},
-    onSubSuccess: function(){console.log('after sub');}
-});
-console.log(ddSingle);

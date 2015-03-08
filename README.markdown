@@ -1,5 +1,7 @@
 #Hemulen
 
+*All around (the Hemulen) there were people living slipshod and aimless lives, wherever he looked there was something to be put to rights and he worked his fingers to the bone trying to get them to see how they ought to live.* &mdash; Tove Janson, *Moominvalley in November*
+
 ##Support
 
 ##Use
@@ -66,19 +68,19 @@ Type: Function
 
 `hemulen-filestored`
 
-- `hemulen-filestored.instance`
-- `hemulen-filestored.instanceId`
-- `hemulen-filestored.file`
-- `hemulen-filestored.fileId`
+- `hemulen-filestored.detail.instance`
+- `hemulen-filestored.detail.instanceId`
+- `hemulen-filestored.detail.file`
+- `hemulen-filestored.detail.fileId`
 
 ###File Deleted
 
 `hemulen-filedeleted`
 
-- `hemulen-filestored.instance`
-- `hemulen-filestored.instanceId`
-- `hemulen-filestored.file`
-- `hemulen-filestored.fileId`
+- `hemulen-filestored.detail.instance`
+- `hemulen-filestored.detail.instanceId`
+- `hemulen-filestored.detail.file`
+- `hemulen-filestored.detail.fileId`
 
 
 ###Too Many
@@ -87,10 +89,10 @@ Type: Function
 
 Properties:
 
-- `hemulen-toomany.instance`
-- `hemulen-toomany.instanceId`
-- `hemulen-toomany.files`
-- `hemulen-toomany.quantity`
+- `hemulen-toomany.detail.instance`
+- `hemulen-toomany.detail.instanceId`
+- `hemulen-toomany.detail.files`
+- `hemulen-toomany.detail.quantity`
 
 ###Too Big
 
@@ -98,9 +100,9 @@ Properties:
 
 Properties
 
-- `hemulen-toobig.instance`
-- `hemulen-toobig.instanceId`
-- `hemulen-toobig.file`
+- `hemulen-toobig.detail.instance`
+- `hemulen-toobig.detail.instanceId`
+- `hemulen-toobig.detail.file`
 
 ###Wrong Type
 
@@ -108,9 +110,9 @@ Properties
 
 Properties
 
-- `hemulen-wrongtype.instance`
-- `hemulen-wrongtype.instanceId`
-- `hemulen-wrongtype.file`
+- `hemulen-wrongtype.detail.instance`
+- `hemulen-wrongtype.detail.instanceId`
+- `hemulen-wrongtype.detail.file`
 
 ##Actions
 
