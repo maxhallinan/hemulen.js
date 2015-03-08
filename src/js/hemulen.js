@@ -31,6 +31,30 @@
         }
     })();
 
+    //Generate a random hash of length equal to the value of the first argument
+    function _generateHash(length){
+        var hashSource = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9'],
+            hash = '';
+
+        for (var i = 0; i < length; i++) {
+            hash += hashSource[Math.floor(Math.random() * hashSource.length)];
+        }
+
+        return hash;
+    }
+
+    //Generate a random hash of length equal to the second argument 
+    //by calling generator function passed as the first argument.
+    //If new hash is equal to a value stored in array passed as the third argument,
+    //recurse to generate new hash and check again.
+    //Otherwise, return new hash.     
+    function _generateUniqueHash(hashGenerator, hashLength, usedHashes){
+        var newHash = hashGenerator(hashLength);
+ 
+        return usedHashes.indexOf(newHash) > -1 ? createUniqueHash(hashGenerator, hashLength, usedHashes) : newHash; 
+    }
+
+
 
     //EVENT HANDLERS
     function onFileChange(e){}
