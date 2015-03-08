@@ -16,12 +16,18 @@ ddFull = new Hemulen({
 });
 console.log(ddFull);
 
-ddFullEl = document.getElementById('ddfull0');
-ddFullEl.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false); 
-ddFullEl.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
-ddFullEl.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
-ddFullEl.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
+ddFullEl0 = document.getElementById('ddfull0');
+ddFullEl1 = document.getElementById('ddfull1');
 
+ddFullEl0.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false); 
+ddFullEl0.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
+ddFullEl0.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
+ddFullEl0.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
+
+ddFullEl1.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false); 
+ddFullEl1.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
+ddFullEl1.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
+ddFullEl1.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
 
 //INSTANCE TWO
 ddThumb = new Hemulen({
@@ -38,12 +44,18 @@ ddThumb = new Hemulen({
 });
 console.log(ddThumb);
 
-ddThumbEl = document.getElementById('ddthumb0');
-ddThumbEl.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false);
-ddThumbEl.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
-ddThumbEl.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
-ddThumbEl.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
+ddThumbEl0 = document.getElementById('ddthumb0');
+ddThumbEl1 = document.getElementById('ddthumb1');
 
+ddThumbEl0.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false);
+ddThumbEl0.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
+ddThumbEl0.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
+ddThumbEl0.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
+
+ddThumbEl1.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false);
+ddThumbEl1.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
+ddThumbEl1.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
+ddThumbEl1.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
 
 //INSTANCE THREE
 ddSingle = new Hemulen({
@@ -60,8 +72,15 @@ ddSingle = new Hemulen({
 });
 console.log(ddSingle);
 
-ddSingleEl = document.getElementById('ddsingle0');
-ddSingleEl.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false);
-ddSingleEl.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
-ddSingleEl.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
-ddSingleEl.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
+ddSingleEl0 = document.getElementById('ddsingle0');
+ddSingleEl1 = document.getElementById('ddsingle1');
+
+ddSingleEl0.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false);
+ddSingleEl0.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
+ddSingleEl0.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
+ddSingleEl0.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
+
+ddSingleEl1.addEventListener('hemulen-filestored', function(e){console.log('hemulen-filestored', e);}, false);
+ddSingleEl1.addEventListener('hemulen-toomany', function(e){console.log('hemulen-toomany', e);}, false);
+ddSingleEl1.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
+ddSingleEl1.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
