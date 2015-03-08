@@ -74,6 +74,7 @@
 
 
     //EVENT HANDLERS
+
     function onFileChange(e){}
 
     function onDragEnter(e){
@@ -240,8 +241,35 @@
             return range;
     }
 
-    function _validFile(files){
+    function _validFile(instanceId, file){
+        var isValidType = this.acceptTypes.indexOf(file.type) > -1,
+            isValidSize = file.size < this.fileMaxSize,
+            instance    = this._instances[instanceId], 
+            eventDetail = {
+                instance: instance,
+                instanceId: instanceId,
+                file: file,
+                hemulen: this
+            },
+            ev;
 
+            if (isValidType && isValidSize) {
+                return true;
+            } else if (!isValidType && !isValidSize) {
+                ev = _createEvent('hemulen-wrongtype', true, true, eventDetail);
+                instance.dispatchEvent(ev);
+                ev = _createEvent('hemulen-toobig', true, true, eventDetail);
+                instance.dispatchEvent(ev);
+                return false;
+            } else if (!isValidType && isValidSize) {
+                ev = _createEvent('hemulen-wrongtype', true, true, eventDetail);
+                instance.dispatchEvent(ev);
+                return false;
+            } else if (isValidType && !isValidSize) {
+                ev = _createEvent('hemulen-toobig', true, true, eventDetail);
+                instance.dispatchEvent(ev);
+                return false;
+            }
     }
 
     Hemulen.prototypes._storeFile = function(instanceId, file){
