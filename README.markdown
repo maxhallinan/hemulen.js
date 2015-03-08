@@ -62,13 +62,45 @@ Type: Function
 
 ##Events
 
-`hemulen-upload`
+###File Stored
 
-File has been dropped on target or given to file input.
+`hemulen-filestored`
 
-- `callback(event, error)`
-- if successful, do whatever with data
-- if error, do whatever with error
+- `hemulen-filestored.instance`
+- `hemulen-filestored.instanceId`
+- `hemulen-filestored.file`
+- `hemulen-filestored.fileId`
+
+###Too Many
+
+`hemulen-toomany`
+
+Properties:
+
+- `hemulen-toomany.instance`
+- `hemulen-toomany.instanceId`
+- `hemulen-toomany.files`
+- `hemulen-toomany.quantity`
+
+###Too Big
+
+`hemulen-toobig`
+
+Properties
+
+- `hemulen-toobig.instance`
+- `hemulen-toobig.instanceId`
+- `hemulen-toobig.file`
+
+###Wrong Type
+
+`hemulen-wrongtype`
+
+Properties
+
+- `hemulen-wrongtype.instance`
+- `hemulen-wrongtype.instanceId`
+- `hemulen-wrongtype.file`
 
 ##Actions
 
