@@ -160,6 +160,10 @@
         _onDragOver      = _onDragOver.bind(this);
         _onDrop          = _onDrop.bind(this);
 
+        _storeFile       = _storeFile.bind(this);
+        _setUploadLimit  = _setUploadLimit.bind(this);
+        _validFile       = _validFile.bind(this);   
+
         this._bindEventListeners();
     };
 
