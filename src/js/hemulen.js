@@ -6,6 +6,9 @@
         formSubmitted   = false; 
 
 
+
+
+
     //UTILITY
 
     //Create and dispatch a custom event using one of two techniques, based on browser capability
@@ -67,6 +70,20 @@
     }
 
 
+
+
+    //FILE WORKERS
+
+    function _storeFile(files){}
+
+    function _setUploadLimit(files){}
+
+    function _validFile(files){}
+
+
+
+
+
     //EVENT HANDLERS
     function onFileChange(e){}
 
@@ -93,6 +110,9 @@
     function onSub(e){
         e.preventDefault();
     }
+
+
+
 
 
     //HEMULEN CLASS
@@ -171,6 +191,17 @@
           
         }
     };
+
+    Hemulen.prototype.getInstanceId = function(element){
+        for (var key in this._instances) {
+            if (this._instances[key] === element) {
+                return key;
+            } else {
+                return undefined;
+            }
+        }
+    };
+
 
 
     //EXPORT HEMULEN
