@@ -54,6 +54,17 @@
         return usedHashes.indexOf(newHash) > -1 ? createUniqueHash(hashGenerator, hashLength, usedHashes) : newHash; 
     }
 
+    function _extend(options){
+        for (var key in options) {
+            if(options[key].constructor === Object) {
+                _extend.call(this[key], options[key])
+            } else {
+                if(this.hasOwnProperty(key)) {
+                    this[key] = options[key];
+                }
+            }
+        }
+    }
 
 
     //EVENT HANDLERS
@@ -87,6 +98,7 @@
     //HEMULEN CLASS
 
     function Hemulen(element, options){
+        this.hemulen        = undefined;
         this.namespace      = undefined;
         this.dropInput      = undefined;
         this.fileInput      = undefined;
@@ -97,48 +109,51 @@
         this.onSubFail      = undefined;
         this.onSubSuccess   = undefined;
 
-        this._instanceEl = document.querySelectorAll(element);
-
-        function _extend(options){
-            for (var key in options) {
-                if(options[key].constructor === Object) {
-                    _extend.call(this[key], options[key])
-                } else {
-                    if(this.hasOwnProperty(key)) {
-                        this[key] = options[key];
-                    }
-                }
-            }
-        }
-
         if (options) {_extend.call(this, options);}
 
         this._init();
     }
 
+
+
+
+
     //HEMULEN METHODS
 
+    Hemulen.prototype._init = function(){
+        var els = document.querySelectorAll(this.hemulen);
+        this._instances = {};
+        filesStored[this.namespace] = {};
+
+        for (var i = 0, l = els.length, instanceId; i < l; i++) {
+            instanceId = _generateUniqueHash(_generateHash, 7, usedHashes);
+            this._instances[instanceId] = els[i];
+            filesStored[this.namespace][instanceId] = {};
+        }
+
+        //when event handlers are called,
+        //they will be called with the context of the Hemulen instance and not the event object
+        _onSub           = _onSub.bind(this);
+        _onFileChange    = _onFileChange.bind(this);
+        _onDragEnter     = _onDragEnter.bind(this);
+        _onDragLeave     = _onDragLeave.bind(this);
+        _onDragOver      = _onDragOver.bind(this);
+        _onDrop          = _onDrop.bind(this);
+
+        this._bindEventListeners();
+    };
+
     Hemulen.prototype._bindEventListeners = function(){
-        var i,j,k,l;
+        var i, j, k, l, key, el, dropInput, fileInput;
 
-        for (i = 0, j = this._instanceEl.length; i < j; i++) {
-            var el          = this._instanceEl[i], 
-                dropInput   = el.querySelectorAll(this.dropInput),
-                fileInput   = el.querySelectorAll(this.fileInput);
+        for (key in this._instances) {
+            el          = this._instances[key], 
+            dropInput   = el.querySelectorAll(this.dropInput),
+            fileInput   = el.querySelectorAll(this.fileInput);
 
-            //when event handlers are called,
-            //they will be called with the context of the Hemulen instance and not the event object
-            onSub           = onSub.bind(this);
-            onFileChange    = onFileChange.bind(this);
-            onDragEnter     = onDragEnter.bind(this);
-            onDragLeave     = onDragLeave.bind(this);
-            onDragOver      = onDragOver.bind(this);
-            onDrop          = onDrop.bind(this);
 
             //bind submit event
-            for (k = 0, l = fileInput.length; k < l; k++) {
-                // dropForm[k].addEventListener('submit', onSub, false);
-            }
+            //place event binding here
 
             //bind change event
             for (k = 0, l = fileInput.length; k < l; k++) {
@@ -147,18 +162,16 @@
 
             //bind drag/drop events
             for (k = 0, l = dropInput.length; k < l; k++) {
-                dropInput[k].addEventListener('dragenter', onDragEnter, false);
-                dropInput[k].addEventListener('dragleave', onDragLeave, false);
-                dropInput[k].addEventListener('dragover', onDragOver, false);
-                dropInput[k].addEventListener('drop', onDrop, false);
-                dropInput[k].addEventListener('dragdrop', onDrop, false);
+                dropInput[k].addEventListener('dragenter', _onDragEnter, false);
+                dropInput[k].addEventListener('dragleave', _onDragLeave, false);
+                dropInput[k].addEventListener('dragover', _onDragOver, false);
+                dropInput[k].addEventListener('drop', _onDrop, false);
+                dropInput[k].addEventListener('dragdrop', _onDrop, false);
             }
+          
         }
     };
 
-    Hemulen.prototype._init = function(){
-        this._bindEventListeners();
-    };
 
     //EXPORT HEMULEN
     if (typeof module !== "undefined" && module !== null) {
@@ -172,7 +185,8 @@
 
 //INSTANCES
 
-var ddFull = new Hemulen('.js-dd--full', {
+var ddFull = new Hemulen({
+    hemulen: '.js-dd--full',
     namespace: 'ddfull',
     dropInput: '.js-dd__field',
     fileInput: '.js-dd__file-inpt',
@@ -185,7 +199,8 @@ var ddFull = new Hemulen('.js-dd--full', {
 });
 console.log(ddFull);
 
-var ddThumb = new Hemulen('.js-dd--thumb', {
+var ddThumb = new Hemulen({
+    hemulen: '.js-dd--thumb',
     namespace: 'ddthumb',
     dropInput: '.js-dd__field',
     fileInput: '.js-dd__file-inpt',
@@ -198,7 +213,8 @@ var ddThumb = new Hemulen('.js-dd--thumb', {
 });
 console.log(ddThumb);
 
-var ddSingle = new Hemulen('.js-dd--single', {
+var ddSingle = new Hemulen({
+    hemulen: '.js-dd--single',
     namespace: 'ddsingle',
     dropInput: '.js-dd__field',
     fileInput: '.js-dd__file-inpt',
