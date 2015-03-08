@@ -13,23 +13,23 @@
 
     //Create and dispatch a custom event using one of two techniques, based on browser capability
     //Parameters: eventtarget (element node), eventname (string), eventbubbles (boolean), eventcancelable (boolean), eventdetail (object)
-    var _customEvent = (function(){
+    var _createEvent = (function(){
         if (typeof CustomEvent === 'function') {
-            return function(eventtarget, eventname, eventbubbles, eventcancelable, eventdetail){
+            return function(eventname, eventbubbles, eventcancelable, eventdetail){
                 var ev = new CustomEvent(eventname, {
                     detail: eventdetail,
                     bubbles: eventbubbles,
                     cancelable: eventcancelable
                 });
-                eventtarget.dispatchEvent(ev);
+                return ev;
             };
         } else {
             //IE9+
-            return function(eventtarget, eventname, eventbubbles, eventcancelable, eventdetail){
+            return function(eventname, eventbubbles, eventcancelable, eventdetail){
                 var ev = document.createEvent('Event');
                 ev.initEvent(eventname, eventbubbles, eventcancelable);
                 if (eventdetail) {ev.detail = eventdetail;}
-                eventtarget.dispatchEvent(ev);
+                return ev;
             }
         }
     })();
