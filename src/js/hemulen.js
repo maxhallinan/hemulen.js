@@ -152,7 +152,7 @@
 
 
 
-    //HEMULEN METHODS
+    //HEMULEN "PRIVATE" METHODS
 
     Hemulen.prototype._init = function(){
         var els = document.querySelectorAll(this.hemulen);
@@ -212,7 +212,7 @@
                     files: files,
                     hemulen: this
                 },
-                ev = _createEvent('hemulen-toomany', true, true, eventDetail);;  
+                ev = _createEvent('hemulen-toomany', true, true, eventDetail);  
                 instance.dispatchEvent(ev);
 
                 range.start = 0;
@@ -281,6 +281,9 @@
         }
     };
 
+
+    //HEMULEN "PUBLIC" METHODS
+
     Hemulen.prototype.getInstanceId = function(element){
         for (var key in this._instances) {
             if (this._instances[key] === element) {
@@ -289,6 +292,15 @@
         }
         return undefined;
     };
+
+    Hemulen.prototype.getFileId = function(instanceId, file){};
+
+    Hemulen.prototype.deleteFile = function(instanceId, fileId){};
+
+    Hemulen.prototype.storeFile = function(instanceId, file){};
+
+    Hemulen.prototype.addData = function(instanceId, fileId, updates){};
+
 
     //EXPORT HEMULEN
     if (typeof module !== "undefined" && module !== null) {

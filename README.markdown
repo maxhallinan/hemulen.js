@@ -2,27 +2,34 @@
 
 *All around (the Hemulen) there were people living slipshod and aimless lives, wherever he looked there was something to be put to rights and he worked his fingers to the bone trying to get them to see how they ought to live.* &mdash; Tove Jansson, *Moominvalley in November*
 
+Too many plugins make too many assumptions and offer too many features. I am really tired of these plugins. I'm tired of their over-designed branding which indicates that someone or someones have built a tool and staked their ego to it; I'm tired of their 
+
 ##Support
 
 ##Glossary
 
+- Hemulen class instance
+    + An instance of the Hemulen class created by calling the Hemulen constructor and passing an object of configuration values.
+- Hemulen DOM instance
+    + A Hemulen class instance can refer to more than one DOM element. 
 - File List
 - File Object
 
 ##Use
 
     <form action="" method="post" enctype="multipart/form-data">
-        <div id="hemulen">
+        <div id="constable">
             <div class="hemulen__drop-field"></div>
             <input class="hemulen__file-input" type="file" name="hemulen" />
         </div>
         <input type="submit" />
     </form>
     
-
+    
+    <script type="text/javascript" src="hemulen.js"></script>
     <script>
         var theConstable = new Hemulen({
-            hemulen: '#hemulen',
+            hemulen: '#constable',
             namespace: 'constable',
             fileLimit: 10
         });
@@ -62,20 +69,22 @@ Type: Function
 
 ##Events
 
+Hemulen events are DOM events. In addition to the properties and methods common to DOM events, a Hemulen event object contains Hemulen-specific values stored on the `event.detail` property.
+
 ###File Stored
 
 Event Name: `hemulen-filestored`
 
-An event emitted by the Hemulen element when a file is dropped on the drop field or uploaded through the file input and successfully stored in the data model.
+The event emitted by the Hemulen element when a file is dropped on the drop field or uploaded through the file input and successfully stored on the data model.
 
 Event properties:
 
 - `hemulen-filestored.detail.file`
     + Type: File Object
-    + The file object that has been successfully stored in the data model.
+    + The file object that has been successfully stored on the data model.
 - `hemulen-filestored.detail.fileId`
     + Type: String
-    + The key under which the file has been stored in the data model. The fileId is needed to remove the file from the data model.
+    + The key under which the file has been stored on the data model. **`fileId` should be stored for later use.** Without the value of `fileId`, the file cannot be removed from the data model or updated with additional properties. Unlike the `instanceId`, there is no method to query the data model for a `fileId`. A file whose `fileId` is unknown to the application is stranded on the data model.
 - `hemulen-filestored.detail.hemulen`
     + Type: Object
     + Hemulen instance configuration
@@ -87,7 +96,7 @@ Event properties:
 
 Event Name: `hemulen-toobig`
 
-The event emitted when the size of a file dropped on the drop field or entered into the file upload input is greater than the value of `options.maxFileSize`.
+The event emitted by the Hemulen element when the size of a file dropped on the drop field or uploaded through the file input is greater than the value of `options.maxFileSize`. When `hemulen-toobig` is emitted, `hemulen-toobig.detail.file` has not been stored on the data model.  
 
 Properties
 
@@ -102,7 +111,7 @@ Properties
 
 Event Name: `hemulen-toomany`
 
-The event emitted when the number of files dropped on the drop field or entered into the file upload field exceeds the value of `options.fileLimit`. When `hemulen-toomany` is emitted, no files have been entered to the data model.
+The event emitted by the Hemulen element when the number of files dropped on the drop field or uploaded through the file input is greater than the value of `options.fileLimit`. When `hemulen-toomany` is emitted, no files have been stored on the data model.
 
 Properties:
 
@@ -117,7 +126,7 @@ Properties:
 
 Event Name: `hemulen-wrongtype`
 
-The event emitted when the mime-type of a file does not match any of the array of mime-types given as the value of `options.acceptTypes`
+The event emitted by the Hemulen element when the mime type of a file dropped on the drop field or uploaded through the file input does not match any of the mime type strings stored in `options.acceptTypes`. When `hemulen-wrongtype` is emitted, `hemulen-toobig.detail.file` has not been stored on the data model.
 
 Properties
 
@@ -130,12 +139,18 @@ Properties
 
 ##API
 
+`Hemulen.getInstanceId(element)`
+
+Where `element` is an Element Node and a Hemulen DOM instance, returns the id of that DOM instance within the Hemulen class instance.
+
+`Hemulen.getFileId(instanceId, file)`
+
 `Hemulen.storeFile(instanceId, file)`
 
 If file is stored successfully, `hemulen-filestored` event is fired. If file is not stored successfully, returns null.
 
 `Hemulen.deleteFile(instanceId, fileId)`
 
-`Hemulen.destroy(instanceId)`
+`Hemulen.addData(instanceId, fileId, data)`
 
-`Hemulen.submit()`
+`Hemulen.getInstanceId(element)`
