@@ -76,10 +76,9 @@
             for (var i = 0, j = possibles.length; i < j; i++) {
                 if (possibles[i] === el) {
                     return el;
-                } else {
-                    return traverseUp(el.parentNode);
                 }
             }
+            return traverseUp(el.parentNode);
         }(ele));
    
     }
@@ -109,10 +108,10 @@
     function _onDrop(e){
         e.preventDefault && e.preventDefault();
         
-        var thisHemulen = _closest(e.target, this.hemulen),
-            instanceId  = this.getInstanceId(thisHemulen),
-            files       = e.dataTransfer.files,
-            range       = this._setUploadLimit(instanceId, files); 
+        var thisHemulen = _closest(e.target, this.hemulen);
+        var instanceId  = this.getInstanceId(thisHemulen);
+        var files       = e.dataTransfer.files;
+        var range       = this._setUploadLimit(instanceId, files); 
 
             for (var i = range.start; i < range.end; i++) {
                 if ( this._validFile(instanceId, files[i - range.start]) ) {
@@ -145,8 +144,6 @@
         this.fileMaxSize    = undefined;
         this.fileLimit      = undefined;
         this.beforeSub      = undefined;
-        this.onSubFail      = undefined;
-        this.onSubSuccess   = undefined;
 
         if (options) {_extend.call(this, options);}
         this._init();
@@ -202,12 +199,12 @@
     };
 
     Hemulen.prototype._setUploadLimit = function(instanceId, files){
-        var instance            = this._instances[instanceId],
-            filesStoredLength   = Object.keys(filesStored[this.namespace][instanceId]).length,
-            filesLength         = files.length,
-            filesLimit          = this.fileLimit - filesStoredLength,
-            range               = {},
-            ev, eventDetail, s;
+        var instance            = this._instances[instanceId];
+        var filesStoredLength   = Object.keys(filesStored[this.namespace][instanceId]).length;
+        var filesLength         = files.length;
+        var filesLimit          = this.fileLimit - filesStoredLength;
+        var range               = {};
+        var ev, eventDetail, s;
 
             if (filesLength > filesLimit) {
                 eventDetail = {
@@ -226,8 +223,8 @@
                 range.start = 0;
                 range.end   = filesLength > this.fileLimit ? this.fileLimit : filesLength;  
             } else if (filesStoredLength < this.fileLimit && filesStoredLength > 0) {
-                s = range.start + filesLength;
                 range.start = filesStoredLength;
+                s = range.start + filesLength;
                 range.end   = this.fileLimit < s ? this.fileLimit : s; 
             }
 
@@ -289,10 +286,9 @@
         for (var key in this._instances) {
             if (this._instances[key] === element) {
                 return key;
-            } else {
-                return undefined;
             }
         }
+        return undefined;
     };
 
     //EXPORT HEMULEN

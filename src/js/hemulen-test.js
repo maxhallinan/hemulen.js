@@ -14,7 +14,6 @@ ddFull = new Hemulen({
     onSubFail: function(){console.log('on sub fail');},
     onSubSuccess: function(){console.log('after sub');}
 });
-console.log(ddFull);
 
 ddFullEl0 = document.getElementById('ddfull0');
 ddFullEl1 = document.getElementById('ddfull1');
@@ -29,6 +28,7 @@ ddFullEl1.addEventListener('hemulen-toomany', function(e){console.log('hemulen-t
 ddFullEl1.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
 ddFullEl1.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
 
+
 //INSTANCE TWO
 ddThumb = new Hemulen({
     hemulen: '.js-dd--thumb',
@@ -42,7 +42,6 @@ ddThumb = new Hemulen({
     onSubFail: function(){console.log('on sub fail');},
     onSubSuccess: function(){console.log('after sub');}
 });
-console.log(ddThumb);
 
 ddThumbEl0 = document.getElementById('ddthumb0');
 ddThumbEl1 = document.getElementById('ddthumb1');
@@ -57,6 +56,7 @@ ddThumbEl1.addEventListener('hemulen-toomany', function(e){console.log('hemulen-
 ddThumbEl1.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
 ddThumbEl1.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
 
+
 //INSTANCE THREE
 ddSingle = new Hemulen({
     hemulen: '.js-dd--single',
@@ -70,7 +70,6 @@ ddSingle = new Hemulen({
     onSubFail: function(){console.log('on sub fail');},
     onSubSuccess: function(){console.log('after sub');}
 });
-console.log(ddSingle);
 
 ddSingleEl0 = document.getElementById('ddsingle0');
 ddSingleEl1 = document.getElementById('ddsingle1');

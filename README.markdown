@@ -11,22 +11,23 @@
 
 ##Use
 
-Markup
-
-    <form action="" method="post" enctype="mutltipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data">
         <div id="hemulen">
             <div class="hemulen__drop-field"></div>
             <input class="hemulen__file-input" type="file" name="hemulen" />
         </div>
         <input type="submit" />
     </form>
+    
 
-Initialize:
+    <script>
+        var theConstable = new Hemulen({
+            hemulen: '#hemulen',
+            namespace: 'constable',
+            fileLimit: 10
+        });
+    </script>
 
-    var theConstable = new Hemulen('#hemulen', {
-        namespace: 'constable',
-        fileLimit: 10
-    });
 
 
 ##Config
@@ -45,7 +46,7 @@ Type: Selector string
 
 `options.acceptTypes`
 
-Type: Array of mime-types strings, 
+Type: Array of strings 
 
 `options.fileLimit`
 
@@ -56,14 +57,6 @@ Type: Number
 Type: Number
 
 `options.beforeSub`
-
-Type: Function
-
-`options.onSubFail`
-
-Type: Function
-
-`options.onSubSuccess`
 
 Type: Function
 
@@ -90,15 +83,20 @@ Event properties:
 - `hemulen-filestored.detail.instanceId`
     + Type: String
 
-###File Deleted
+###Too Big
 
-Event Name: `hemulen-filedeleted`
+Event Name: `hemulen-toobig`
 
-- `hemulen-filestored.detail.instance`
-- `hemulen-filestored.detail.instanceId`
-- `hemulen-filestored.detail.file`
-- `hemulen-filestored.detail.fileId`
+The event emitted when the size of a file dropped on the drop field or entered into the file upload input is greater than the value of `options.maxFileSize`.
 
+Properties
+
+- `hemulen-toobig.detail.instance`
+    + Type: Element Node
+- `hemulen-toobig.detail.instanceId`
+    + Type: String
+- `hemulen-toobig.detail.file`
+    + Type: File Object
 
 ###Too Many
 
@@ -115,21 +113,6 @@ Properties:
 - `hemulen-toomany.detail.hemulen`
     + Type: Object
 
-###Too Big
-
-Event Name: `hemulen-toobig`
-
-The event emitted when the size of a file dropped on the drop field or entered into the file upload input is greater than the value of `options.maxFileSize`.
-
-Properties
-
-- `hemulen-toobig.detail.instance`
-    + Type: Element Node
-- `hemulen-toobig.detail.instanceId`
-    + Type: String
-- `hemulen-toobig.detail.file`
-    + Type: File Object
-
 ###Wrong Type
 
 Event Name: `hemulen-wrongtype`
@@ -145,12 +128,14 @@ Properties
 - `hemulen-wrongtype.detail.file`
     + Type: File Object
 
-##Actions
+##API
 
 `Hemulen.storeFile(instanceId, file)`
 
 If file is stored successfully, `hemulen-filestored` event is fired. If file is not stored successfully, returns null.
 
-`Hemulen.delete(instanceId, fileId)`
+`Hemulen.deleteFile(instanceId, fileId)`
 
 `Hemulen.destroy(instanceId)`
+
+`Hemulen.submit()`
