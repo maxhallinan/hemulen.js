@@ -75,7 +75,7 @@ Hemulen events are DOM events. In addition to the properties and methods common 
 
 Event Name: `hemulen-filestored`
 
-The event emitted by the Hemulen element when a file is dropped on the drop field or uploaded through the file input and successfully stored on the data model.
+The event emitted by the Hemulen element when a file is dropped on the drop input or uploaded through the file input and successfully stored on the data model.
 
 Event properties:
 
@@ -96,7 +96,7 @@ Event properties:
 
 Event Name: `hemulen-toobig`
 
-The event emitted by the Hemulen element when the size of a file dropped on the drop field or uploaded through the file input is greater than the value of `options.maxFileSize`. When `hemulen-toobig` is emitted, `hemulen-toobig.detail.file` has not been stored on the data model.  
+The event emitted by the Hemulen element when the size of a file dropped on the drop input or uploaded through the file input is greater than the value of `options.maxFileSize`. When `hemulen-toobig` is emitted, `hemulen-toobig.detail.file` has not been stored on the data model.  
 
 Properties
 
@@ -111,7 +111,7 @@ Properties
 
 Event Name: `hemulen-toomany`
 
-The event emitted by the Hemulen element when the number of files dropped on the drop field or uploaded through the file input is greater than the value of `options.fileLimit`. When `hemulen-toomany` is emitted, no files have been stored on the data model.
+The event emitted by the Hemulen element when the number of files dropped on the drop input or uploaded through the file input is greater than the value of `options.fileLimit`. When `hemulen-toomany` is emitted, no files have been stored on the data model.
 
 Properties:
 
@@ -126,7 +126,7 @@ Properties:
 
 Event Name: `hemulen-wrongtype`
 
-The event emitted by the Hemulen element when the mime type of a file dropped on the drop field or uploaded through the file input does not match any of the mime type strings stored in `options.acceptTypes`. When `hemulen-wrongtype` is emitted, `hemulen-toobig.detail.file` has not been stored on the data model.
+The event emitted by the Hemulen element when the mime type of a file dropped on the drop input or uploaded through the file input does not match any of the mime type strings stored in `options.acceptTypes`. When `hemulen-wrongtype` is emitted, `hemulen-toobig.detail.file` has not been stored on the data model.
 
 Properties
 
@@ -145,9 +145,9 @@ Where `element` is an Element Node and a Hemulen DOM instance, returns the id of
 
 `Hemulen.getFileId(instanceId, file)`
 
-`Hemulen.storeFile(instanceId, file)`
+`Hemulen.storeFiles(instanceId, files)`
 
-If file is stored successfully, `hemulen-filestored` event is fired. If file is not stored successfully, returns null.
+Where `files` is a `FileList` containing one or more `File` objects, `Hemulen.storeFiles()` will store these `File` objects on the data model. This method is called internally to store files that have been dropped on the drop input or uploaded through the file input. When `Hemulen.storeFiles()` is called, the Hemulen instance will emit events as if the files had been dropped on the drop input or uploaded through the file input.
 
 `Hemulen.deleteFile(instanceId, fileId)`
 
