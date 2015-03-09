@@ -92,6 +92,23 @@ Event properties:
 - `hemulen-filestored.detail.instanceId`
     + Type: String
 
+###File Deleted
+
+Event Name: `hemulen-filedeleted`
+
+The event emitted by the Hemulen element when a file is removed from the data model. 
+
+Event properties:
+
+- `hemulen-toobig.detail.instance`
+    + Type: Element Node
+- `hemulen-toobig.detail.instanceId`
+    + Type: String
+- `hemulen-filestored.detail.hemulen`
+    + Type: Object
+    + Hemulen instance configuration
+    + The Hemulen context
+
 ###Too Big
 
 Event Name: `hemulen-toobig`
@@ -147,9 +164,11 @@ Where `element` is an Element Node and a Hemulen DOM instance, returns the id of
 
 `Hemulen.storeFile(instanceId, file)`
 
-If file is stored successfully, `hemulen-filestored` event is fired. If file is not stored successfully, returns null.
+Add a file to the data model. If file is stored successfully, `hemulen-filestored` event is fired. If file is not stored successfully, returns null.
 
 `Hemulen.deleteFile(instanceId, fileId)`
+
+Remove a file from the data model. If the file is removed successfully, the `hemulen-filedeleted` event is emitted.
 
 `Hemulen.addData(instanceId, fileId, data)`
 

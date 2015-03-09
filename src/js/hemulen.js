@@ -287,7 +287,23 @@
 
     Hemulen.prototype.getFileId = function(instanceId, file){};
 
-    Hemulen.prototype.deleteFile = function(instanceId, fileId){};
+    Hemulen.prototype.deleteFile = function(instanceId, fileId){
+        var ev, eventDetail;
+        
+        delete filesStored[instanceId][fileId];
+
+        if (!filesStored[instanceId][fileId]) {
+            eventDetail = {
+                instance: this._instances[instanceId],
+                instanceId: instanceId,
+                hemulen: this
+            };
+            ev = _createEvent('hemulen-filedeleted', true, true, eventDetail);
+            this._instances[instanceId].dispatchEvent(ev);            
+        }
+
+        return false;
+    };
 
     Hemulen.prototype.storeFiles = function(instanceId, files){
         var range       = this._setUploadLimit(instanceId, files); 
@@ -299,7 +315,9 @@
         }
     };
 
-    Hemulen.prototype.addData = function(instanceId, fileId, updates){};
+    Hemulen.prototype.addData = function(instanceId, fileId, updates){
+        
+    };
 
 
     //EXPORT HEMULEN
