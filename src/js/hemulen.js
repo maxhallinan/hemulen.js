@@ -285,7 +285,14 @@
         return undefined;
     };
 
-    Hemulen.prototype.getFileId = function(instanceId, file){};
+    Hemulen.prototype.getFileId = function(instanceId, file){
+        for (var key in filesStored[instanceId]) {
+            if (filesStored[instanceId][key] === file) {
+                return key;
+            } 
+        }
+        return undefined;
+    };
 
     Hemulen.prototype.deleteFile = function(instanceId, fileId){
         var ev, eventDetail;
