@@ -88,7 +88,9 @@
 
     //EVENT HANDLERS
 
-    function _onFileChange(e){}
+    function _onFileChange(e){
+        this.storeFiles(this.getInstanceId(_closest(e.target, this.hemulen)), e.target.files);
+    }
 
     function _onDragEnter(e){
         e.preventDefault && e.preventDefault();
@@ -108,17 +110,7 @@
     
     function _onDrop(e){
         e.preventDefault && e.preventDefault();
-        
-        var thisHemulen = _closest(e.target, this.hemulen);
-        var instanceId  = this.getInstanceId(thisHemulen);
-        var files       = e.dataTransfer.files;
-        var range       = this._setUploadLimit(instanceId, files); 
-
-            for (var i = range.start; i < range.end; i++) {
-                if ( this._validFile(instanceId, files[i - range.start]) ) {
-                    this._storeFile(instanceId, files[i - range.start]);
-                }
-            }
+        this.storeFiles(this.getInstanceId(_closest(e.target, this.hemulen)), e.dataTransfer.files);
         return false;
     }
     
@@ -297,7 +289,15 @@
 
     Hemulen.prototype.deleteFile = function(instanceId, fileId){};
 
-    Hemulen.prototype.storeFile = function(instanceId, file){};
+    Hemulen.prototype.storeFiles = function(instanceId, files){
+        var range       = this._setUploadLimit(instanceId, files); 
+
+        for (var i = range.start; i < range.end; i++) {
+            if ( this._validFile(instanceId, files[i - range.start]) ) {
+                this._storeFile(instanceId, files[i - range.start]);
+            }
+        }
+    };
 
     Hemulen.prototype.addData = function(instanceId, fileId, updates){};
 
