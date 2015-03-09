@@ -1,6 +1,7 @@
 ;(function(){
     'use strict';
 
+    //MODULE GLOBALS
     var filesStored     = {},
         usedHashes      = [],
         formSubmitted   = false; 
@@ -118,8 +119,6 @@
                     this._storeFile(instanceId, files[i - range.start]);
                 }
             }
-
-        console.log(filesStored);
         return false;
     }
     
@@ -199,12 +198,12 @@
     };
 
     Hemulen.prototype._setUploadLimit = function(instanceId, files){
-        var instance            = this._instances[instanceId];
-        var filesStoredLength   = Object.keys(filesStored[this.namespace][instanceId]).length;
-        var filesLength         = files.length;
-        var filesLimit          = this.fileLimit - filesStoredLength;
-        var range               = {};
-        var ev, eventDetail, s;
+        var instance            = this._instances[instanceId],
+            filesStoredLength   = Object.keys(filesStored[this.namespace][instanceId]).length,
+            filesLength         = files.length,
+            filesLimit          = this.fileLimit - filesStoredLength,
+            range               = {},
+            ev, eventDetail, s;
 
             if (filesLength > filesLimit) {
                 eventDetail = {
