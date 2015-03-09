@@ -63,7 +63,7 @@ ddSingle = new Hemulen({
     namespace: 'ddsingle',
     dropInput: '.js-dd__field',
     fileInput: '.js-dd__file-inpt',
-    acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
+    acceptTypes: ['application/pdf'],
     fileMaxSize: 5000000,
     fileLimit: 1,
     beforeSub: function(){console.log('before sub');},
