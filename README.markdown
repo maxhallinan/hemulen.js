@@ -171,5 +171,3 @@ Where `files` is a `FileList` containing one or more `File` objects, `Hemulen.st
 Remove a file and all associate data from the data model. If the file is removed successfully, the `hemulen-filedeleted` event is emitted.
 
 `Hemulen.addData(instanceId, fileId, data)`
-
-`Hemulen.getInstanceId(element)`

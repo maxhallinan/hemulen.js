@@ -323,7 +323,7 @@
     };
 
     Hemulen.prototype.addData = function(instanceId, fileId, updates){
-        
+        _extend.call(filesStored[instanceId][fileId], updates);        
     };
 
 
