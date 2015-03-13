@@ -168,6 +168,24 @@ Properties
 - `hemulen-wrongtype.detail.file`
     + Type: File Object
 
+###Submission Success
+
+Event Name: `hemulen-subsuccess`
+
+Properties
+
+- `hemulen-subsuccess.detail.request`
+    + 
+
+###Submission Failure
+
+Event Name: `hemulen-subfail`
+
+Properties
+
+- `hemulen-subsuccess.detail.request`
+
+
 ##API
 
 `Hemulen.getInstanceId(element)`
