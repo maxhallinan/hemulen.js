@@ -185,3 +185,5 @@ Where `files` is a `FileList` containing one or more `File` objects, `Hemulen.st
 Remove a file and all associate data from the data model. If the file is removed successfully, the `hemulen-filedeleted` event is emitted.
 
 `Hemulen.addData(instanceId, fileId, data)`
+
+Where `data` is an object containing values to be associated with that file on the data model. The values must be primitives These key/value pairs will be equivalent to form field/form field values when the data is sent to the server..
