@@ -147,7 +147,7 @@
     
     function _onSub(e){
         e.preventDefault && e.preventDefault();
-        if (!formSubmitted) {}
+        if (!formSubmitted) {this._subData(e.target);}
         formSubmitted = true;
     }
 
@@ -303,6 +303,29 @@
         } else {
             return null;
         }
+    };
+
+    Hemulen.prototype._subData = function(form){
+        var req     = new XMLHttpRequest(),
+            route   = this.url || form.getAttribute('action');
+            
+
+        req.onreadystatechange = function(){
+            if (req.readyState === 4) {
+                var ev,
+                    eventDetail = {request: req};
+                
+                ev = req.status === 200 ?   _createEvent('hemulen-subsuccess', true, true, eventDetail) : 
+                                            _createEvent('hemulen-subfail', true, true, eventDetail);
+
+                form.dispatchEvent(ev);
+                
+                formSubmitted = false;            
+            }
+        };
+
+        req.open('POST', route, true);
+        req.send( _createSubData(filesStored, new FormData(form)) );
     };
 
 
