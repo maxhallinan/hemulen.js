@@ -84,6 +84,37 @@
    
     }
 
+    function _createSubData(storedData, formData){
+        var propname    = '',
+            counter     = 0;
+
+            for (var foo in storedData) {
+                if (storedData.hasOwnProperty(foo)){
+                    propname    = foo;
+                    
+                    if (storedData[foo].constructor === Object) {
+                        for (var bar in storedData[foo]) {
+                            if (storedData[foo].hasOwnProperty(bar)) {
+                                
+                                if (storedData[foo][bar].constructor === Object) {    
+                                    for (var baz in storedData[foo][bar]) {
+                                        if (storedData[foo][bar].hasOwnProperty(baz)) {
+                                            formData[propname + counter + baz] = storedData[foo][bar][baz];                                          
+                                        }
+                                    }
+                                }
+                                
+                                counter++;                            
+                            }
+                        }
+                    }
+
+                    counter = 0;
+                }
+            }
+
+            return formData;
+    }
 
 
     //EVENT HANDLERS
@@ -116,7 +147,7 @@
     
     function _onSub(e){
         e.preventDefault && e.preventDefault();
-        if (!formSubmitted) {console.log('submit');}
+        if (!formSubmitted) {}
         formSubmitted = true;
     }
 
@@ -137,6 +168,7 @@
         this.beforeSub      = undefined;
 
         if (options) {_extend.call(this, options);}
+        
         this._init();
     }
 

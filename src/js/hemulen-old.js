@@ -316,7 +316,7 @@
             iterate(dataStored);
 
             return returnData;
-    };
+    }
 
     function prepareSubData(e, conf) {
         var toSubmit = new FormData(e.target);

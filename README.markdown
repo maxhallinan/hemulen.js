@@ -1,19 +1,33 @@
 #Hemulen
 
-*All around (the Hemulen) there were people living slipshod and aimless lives, wherever he looked there was something to be put to rights and he worked his fingers to the bone trying to get them to see how they ought to live.* &mdash; Tove Jansson, *Moominvalley in November*
+*All around (the hemulen) there were people living slipshod and aimless lives, wherever he looked there was something to be put to rights...*  
 
-Too many plugins make too many assumptions and offer too many features. I am really tired of these plugins. I'm tired of their over-designed branding which indicates that someone or someones have built a tool and staked their ego to it; I'm tired of their 
+&mdash;Tove Jansson, *Moominvalley in November*
+
+*...however hard he tried he remained a hemulen doing his best without anything really coming off. In the end he got up and pulled on his trousers.*
+
+&mdash;Tove Jansson, *Moominvalley in November*
+
+Hemulen.js was written with a grumpiness about JavaScript client-side plugins that make too many assumptions and offer too many features. These plugins violate the [Unix philosophy](https://books.google.com/books?id=5wBQEp6ruIAC&pg=PA76) of "small, sharp tools, each intended to do one thing well." Plugins that fail to meet this standard have proliferated in the universe of client-side code. These plugins, like all plugins, intend to make client-side coding easier. Sometimes they succeed. But the ease afforded by these plugins comes at a cost. That cost is the subjugation of the codebase to a quiet tyranny wherein the plugin dictates (sometimes explicitly, sometimes in effect) aspects of document structure, page styles, and application architecture. Sometimes these dictates are small and easily managed; sometimes they are significant and have significant side-effects. If we start with the belief that every codebase has an ideal form and that the life of the codebase is a movement towards the manifestation of this ideal, then we understand that a plugin's side-effects impede this evolution, warp its form, and degrade that life. In the worst cases, the life of the codebase completely loses the path towards its ideal form, wandering in whatever direction it is pointed by its tools and hoping that it is not told to go in two different directions at once. In those cases, the life of the codebase has become "slipshod and aimless".
+
+The hemulens are great reformers, single-minded about enforcing rules, and as unhappy with themselves as they are with everyone else. So too with Hemulen.js. It is not without side-effects. But it has been written, at least, with regret for those side-effects and with a hope that when the time comes to pull on the trousers and be about the work of building web pages, those side-effects will be small enough to be forgiven. 
+
+ because their
+
+as unhappy with themselves as much as anyone else 
+
+ who fail to meet their impossible standards. 
 
 ##Support
 
 ##Glossary
 
 - Hemulen class instance
-    + An instance of the Hemulen class created by calling the Hemulen constructor and passing an object of configuration values.
+    + An instance of the Hemulen class created by calling the Hemulen constructor.
 - Hemulen DOM instance
     + A Hemulen class instance can refer to more than one DOM element. 
-- File List
-- File Object
+- [File List](http://www.w3.org/TR/FileAPI/#filelist-section)
+- [File Object](http://www.w3.org/TR/FileAPI/#dfn-file)
 
 ##Use
 
