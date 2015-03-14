@@ -1,4 +1,4 @@
-#Hemulen
+#Hemulen.js
 
 *All around (the hemulen) there were people living slipshod and aimless lives, wherever he looked there was something to be put to rights...*  
 
@@ -76,10 +76,6 @@ Type: Number
 `options.fileMaxSize`
 
 Type: Number
-
-`options.beforeSub`
-
-Type: Function
 
 ##Events
 
@@ -175,7 +171,6 @@ Event Name: `hemulen-subsuccess`
 Properties
 
 - `hemulen-subsuccess.detail.request`
-    + 
 
 ###Submission Failure
 
@@ -183,7 +178,7 @@ Event Name: `hemulen-subfail`
 
 Properties
 
-- `hemulen-subsuccess.detail.request`
+- `hemulen-subfailure.detail.request`
 
 
 ##API

@@ -86,7 +86,8 @@
 
     function _createSubData(storedData, formData){
         var propname    = '',
-            counter     = 0;
+            counterA    = 0,
+            counterB    = 0;
 
             for (var foo in storedData) {
                 if (storedData.hasOwnProperty(foo)){
@@ -99,17 +100,30 @@
                                 if (storedData[foo][bar].constructor === Object) {    
                                     for (var baz in storedData[foo][bar]) {
                                         if (storedData[foo][bar].hasOwnProperty(baz)) {
-                                            formData[propname + counter + baz] = storedData[foo][bar][baz];                                          
+                                            
+                                            if (storedData[foo][bar][baz].constructor === Object) {
+                                                for (var qux in storedData[foo][bar][baz]) {
+                                                    if(storedData[foo][bar][baz].hasOwnProperty(qux)) {
+                                                        formData.append((propname + counterA + qux + counterB), storedData[foo][bar][baz][qux]);
+                                                    }
+                                                }
+                                
+                                                counterB++;
+                                            }
+
+                                          
                                         }
                                     }
-                                }
                                 
-                                counter++;                            
+                                    counterA++;  
+                                    counterB = 0;
+                                }
+                                                      
                             }
                         }
                     }
 
-                    counter = 0;
+                    counterA = 0;
                 }
             }
 
@@ -165,7 +179,6 @@
         this.acceptTypes    = undefined;
         this.fileMaxSize    = undefined;
         this.fileLimit      = undefined;
-        this.beforeSub      = undefined;
 
         if (options) {_extend.call(this, options);}
         
@@ -288,9 +301,10 @@
     Hemulen.prototype._storeFile = function(instanceId, file){
         var fileId = _generateUniqueHash(_generateHash, 7, usedHashes);
 
-        filesStored[this.namespace][instanceId][fileId] = file; 
+        filesStored[this.namespace][instanceId][fileId] = {};
+        filesStored[this.namespace][instanceId][fileId]['file'] = file; 
         
-        if (filesStored[this.namespace][instanceId][fileId] === file) {
+        if (filesStored[this.namespace][instanceId][fileId]['file'] === file) {
             var eventDetail = {
                 instance: this._instances[instanceId],
                 instanceId: instanceId,
@@ -307,16 +321,15 @@
 
     Hemulen.prototype._subData = function(form){
         var req     = new XMLHttpRequest(),
-            route   = this.url || form.getAttribute('action');
+            route   = form.getAttribute('action');
             
-
         req.onreadystatechange = function(){
             if (req.readyState === 4) {
                 var ev,
                     eventDetail = {request: req};
                 
                 ev = req.status === 200 ?   _createEvent('hemulen-subsuccess', true, true, eventDetail) : 
-                                            _createEvent('hemulen-subfail', true, true, eventDetail);
+                                            _createEvent('hemulen-subfailure', true, true, eventDetail);
 
                 form.dispatchEvent(ev);
                 
@@ -342,7 +355,7 @@
 
     Hemulen.prototype.getFileId = function(instanceId, file){
         for (var key in filesStored[instanceId]) {
-            if (filesStored[instanceId][key] === file) {
+            if (filesStored[instanceId][key][file] === file) {
                 return key;
             } 
         }

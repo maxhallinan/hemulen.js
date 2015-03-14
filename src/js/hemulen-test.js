@@ -1,5 +1,11 @@
-//INSTANCES
 var ddFull, ddFullEl, ddThumb, ddThumbEl, ddSingle, ddSingleEl;
+
+//DD FORM
+ddForm = document.getElementById('ddform');
+ddForm.addEventListener('hemulen-subsuccess', function(e){console.log('hemulen-subsuccess', e);}, false);
+ddForm.addEventListener('hemulen-subfailure', function(e){console.log('hemulen-subfailure', e);}, false);
+
+//INSTANCES
 
 //INSTANCE ONE
 ddFull = new Hemulen({
@@ -9,11 +15,9 @@ ddFull = new Hemulen({
     fileInput: '.js-dd__file-inpt',
     acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
     fileMaxSize: 5000000,
-    fileLimit: 10,
-    beforeSub: function(){console.log('before sub');},
-    onSubFail: function(){console.log('on sub fail');},
-    onSubSuccess: function(){console.log('after sub');}
+    fileLimit: 10
 });
+
 
 ddFullEl0 = document.getElementById('ddfull0');
 ddFullEl1 = document.getElementById('ddfull1');
@@ -28,7 +32,6 @@ ddFullEl1.addEventListener('hemulen-toomany', function(e){console.log('hemulen-t
 ddFullEl1.addEventListener('hemulen-toobig', function(e){console.log('hemulen-toobig', e);}, false);  
 ddFullEl1.addEventListener('hemulen-wrongtype', function(e){console.log('hemulen-wrongtype', e);}, false);
 
-
 //INSTANCE TWO
 ddThumb = new Hemulen({
     hemulen: '.js-dd--thumb',
@@ -37,10 +40,7 @@ ddThumb = new Hemulen({
     fileInput: '.js-dd__file-inpt',
     acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
     fileMaxSize: 5000000,
-    fileLimit: 5,
-    beforeSub: function(){console.log('before sub');},
-    onSubFail: function(){console.log('on sub fail');},
-    onSubSuccess: function(){console.log('after sub');}
+    fileLimit: 5
 });
 
 ddThumbEl0 = document.getElementById('ddthumb0');
@@ -65,10 +65,7 @@ ddSingle = new Hemulen({
     fileInput: '.js-dd__file-inpt',
     acceptTypes: ['application/pdf'],
     fileMaxSize: 5000000,
-    fileLimit: 1,
-    beforeSub: function(){console.log('before sub');},
-    onSubFail: function(){console.log('on sub fail');},
-    onSubSuccess: function(){console.log('after sub');}
+    fileLimit: 1
 });
 
 ddSingleEl0 = document.getElementById('ddsingle0');
