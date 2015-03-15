@@ -1,13 +1,38 @@
 ;(function($){
     'use strict';
 
-    var ddFull, ddThumb, ddSingle;
+    var full, thumb, single;
+
 
     //APP CONFIGURATION
+
+    //conf.ddInstance
+    //conf.instanceSel.full
+    //conf.instanceSel.thumb
+    //conf.instanceSel.single
+    //conf.ddListItem
+    //conf.attrInstanceId
+    //conf.attrFileId
+
+
     var conf = {
-        ddList: '.js-dd__list',
-        ddError: '.js-dd__err',
-        ddSubError: '.js-dd__err--sub',
+        attrInstanceId: 'data-dd-instanceid',
+        attrFileId: 'data-dd-fileid',
+        instance: '.js-dd-instance',
+        instanceSel: {
+            full: 'js-dd--full',
+            thumb: 'js-dd--thumb',
+            single: 'js-dd--single',
+        },
+        list: '.js-dd__list',
+        listItem: '.js-dd__list-item',
+        del: '.js-dd__btn--del',
+        reorder: '.js-dd__btn--reorder',
+        listInpt: '.js-dd__list-inpt',
+        inptTitle: 'js-dd__inpt--title',
+        inptCapt: 'js-dd__inpt--capt',
+        error: '.js-dd__err',
+        subError: '.js-dd__err--sub',
         err: {
             tooMany: 'The number of files you are attempting to upload exceeds the file limit.',
             tooBig: 'This file exceeds the file size limit: ',
@@ -18,16 +43,20 @@
         }
     };
 
+
     //DOM SELECTIONS
-    var ddForm          = document.getElementById('ddform'),
-        ddFullEl0       = document.getElementById('ddfull0'),
-        ddFullEl1       = document.getElementById('ddfull1'),
-        ddThumbEl0      = document.getElementById('ddthumb0'),
-        ddThumbEl1      = document.getElementById('ddthumb1'),
-        ddSingleEl0     = document.getElementById('ddsingle0'),
-        ddSingleEl1     = document.getElementById('ddsingle1');
+
+    var form          = document.getElementById('ddform'),
+        fullEl0       = document.getElementById('ddfull0'),
+        fullEl1       = document.getElementById('ddfull1'),
+        thumbEl0      = document.getElementById('ddthumb0'),
+        thumbEl1      = document.getElementById('ddthumb1'),
+        singleEl0     = document.getElementById('ddsingle0'),
+        singleEl1     = document.getElementById('ddsingle1');
+
 
     //HANDLEBARS.JS TEMPLATES
+
     var fullTemplate    = Handlebars.compile( document.getElementById('ddlistfulltemp').innerHTML ),
         thumbTemplate   = Handlebars.compile( document.getElementById('ddlistthumbtemp').innerHTML ),
         singleTemplate  = Handlebars.compile( document.getElementById('ddlistsingletemp').innerHTML );
@@ -38,9 +67,8 @@
 
     //HEMULEN.JS INSTANTIATIONS
 
-
     //Instance 1
-    ddFull = new Hemulen({
+    full = new Hemulen({
         hemulen: '.js-dd--full',
         namespace: 'ddfull',
         dropInput: '.js-dd__field',
@@ -50,8 +78,14 @@
         fileLimit: 5
     });
 
+    $('.js-dd--full').each(function(){
+        var instanceId = full.getInstanceId(this);
+        $(this).attr('data-dd-instanceid', instanceId);
+    });
+
+
     //Instance 2
-    ddThumb = new Hemulen({
+    thumb = new Hemulen({
         hemulen: '.js-dd--thumb',
         namespace: 'ddthumb',
         dropInput: '.js-dd__field',
@@ -61,8 +95,14 @@
         fileLimit: 10
     });
 
+    $('.js-dd--thumb').each(function(){
+        var instanceId = thumb.getInstanceId(this);
+        $(this).attr('data-dd-instanceid', instanceId);
+    });
+
+
     //Instance 3
-    ddSingle = new Hemulen({
+    single = new Hemulen({
         hemulen: '.js-dd--single',
         namespace: 'ddsingle',
         dropInput: '.js-dd__field',
@@ -72,8 +112,10 @@
         fileLimit: 1
     });
 
-
-
+    $('.js-dd--single').each(function(){
+        var instanceId = single.getInstanceId(this);
+        $(this).attr('data-dd-instanceid', instanceId);
+    });
 
 
     //EVENT HANDLERS
@@ -84,7 +126,7 @@
         var reader          = new FileReader();
 
         reader.onload = function(readerE){
-            $(e.detail.instance).find(conf.ddList).append(thumbTemplate({
+            $(e.detail.instance).find(conf.list).append(thumbTemplate({
                 name: e.detail.file.name,
                 fileId: e.detail.fileId,
                 thumbSrc: readerE.target.result
@@ -100,7 +142,7 @@
         var reader = new FileReader();
 
         reader.onload = function(readerE){
-            $(e.detail.instance).find(conf.ddList).append(thumbTemplate({
+            $(e.detail.instance).find(conf.list).append(thumbTemplate({
                 name: e.detail.file.name,
                 fileId: e.detail.fileId,
                 thumbSrc: readerE.target.result
@@ -113,7 +155,7 @@
     }
 
     function _onFileStoredSingle(e){    
-        $(e.detail.instance).find(conf.ddList).html(singleTemplate({
+        $(e.detail.instance).find(conf.list).html(singleTemplate({
             name: e.detail.file.name,
             fileId: e.detail.fileId
         }));
@@ -121,6 +163,31 @@
         console.log('hemulen-filestored', e);
     }
 
+    function _onDelete(e){
+        e.preventDefault();
+
+        var $this           = $(this), 
+            $thisItem       = $this.closest(conf.listItem),
+            $thisInstance   = $this.closest(conf.instance),
+            instanceId      = $thisInstance.attr(conf.attrInstanceId),
+            fileId          = $(this).closest(conf.listItem).attr(conf.attrFileId);
+
+        if ( $thisInstance.hasClass(conf.instanceSel.full) ) {
+            full.deleteFile(instanceId, fileId);
+        } else if ( $thisInstance.hasClass(conf.instanceSel.thumb) ) {
+            thumb.deleteFile(instanceId, fileId);
+        } else if ( $thisInstance.hasClass(conf.instanceSel.single) ) {
+            single.deleteFile(instanceId, fileId);
+        }
+
+        $thisItem.remove();
+
+        console.log('list delete', e);
+    }
+
+    function _onListInpt(e){
+        console.log('list keyup ', e);
+    }
 
     //Error events
 
@@ -172,41 +239,52 @@
 
     //EVENT LISTENERS
 
-    ddForm.addEventListener('hemulen-subsuccess', _onSubSuccess, false);
-    ddForm.addEventListener('hemulen-subfailure', _onSubFailure, false);
+    form.addEventListener('hemulen-subsuccess', _onSubSuccess, false);
+    form.addEventListener('hemulen-subfailure', _onSubFailure, false);
 
 
-    ddFullEl0.addEventListener('hemulen-filestored', _onFileStoredFull, false); 
-    ddFullEl0.addEventListener('hemulen-toomany', _onTooMany, false);
-    ddFullEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
-    ddFullEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
-
-    ddFullEl1.addEventListener('hemulen-filestored', _onFileStoredFull, false); 
-    ddFullEl1.addEventListener('hemulen-toomany', _onTooMany, false);
-    ddFullEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
-    ddFullEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    fullEl0.addEventListener('hemulen-filestored', _onFileStoredFull, false); 
+    fullEl0.addEventListener('hemulen-toomany', _onTooMany, false);
+    fullEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
+    fullEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    fullEl0.addEventListener('hemulen-filedeleted', function(e){console.log('hemulen-filedeleted', e);}, false);
 
 
-    ddThumbEl0.addEventListener('hemulen-filestored', _onFileStoredThumb, false);
-    ddThumbEl0.addEventListener('hemulen-toomany', _onTooMany, false);
-    ddThumbEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
-    ddThumbEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
-
-    ddThumbEl1.addEventListener('hemulen-filestored', _onFileStoredThumb, false);
-    ddThumbEl1.addEventListener('hemulen-toomany', _onTooMany, false);
-    ddThumbEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
-    ddThumbEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    fullEl1.addEventListener('hemulen-filestored', _onFileStoredFull, false); 
+    fullEl1.addEventListener('hemulen-toomany', _onTooMany, false);
+    fullEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
+    fullEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    fullEl1.addEventListener('hemulen-filedeleted', function(e){console.log('hemulen-filedeleted', e);}, false);
 
 
-    ddSingleEl0.addEventListener('hemulen-filestored', _onFileStoredSingle, false);
-    ddSingleEl0.addEventListener('hemulen-toomany', _onTooMany, false);
-    ddSingleEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
-    ddSingleEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    thumbEl0.addEventListener('hemulen-filestored', _onFileStoredThumb, false);
+    thumbEl0.addEventListener('hemulen-toomany', _onTooMany, false);
+    thumbEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
+    thumbEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    thumbEl0.addEventListener('hemulen-filedeleted', function(e){console.log('hemulen-filedeleted', e);}, false);
 
-    ddSingleEl1.addEventListener('hemulen-filestored', _onFileStoredSingle, false);
-    ddSingleEl1.addEventListener('hemulen-toomany', _onTooMany, false);
-    ddSingleEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
-    ddSingleEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    thumbEl1.addEventListener('hemulen-filestored', _onFileStoredThumb, false);
+    thumbEl1.addEventListener('hemulen-toomany', _onTooMany, false);
+    thumbEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
+    thumbEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    thumbEl1.addEventListener('hemulen-filedeleted', function(e){console.log('hemulen-filedeleted', e);}, false);
+
+
+    singleEl0.addEventListener('hemulen-filestored', _onFileStoredSingle, false);
+    singleEl0.addEventListener('hemulen-toomany', _onTooMany, false);
+    singleEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
+    singleEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    singleEl0.addEventListener('hemulen-filedeleted', function(e){console.log('hemulen-filedeleted', e);}, false);
+
+    singleEl1.addEventListener('hemulen-filestored', _onFileStoredSingle, false);
+    singleEl1.addEventListener('hemulen-toomany', _onTooMany, false);
+    singleEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
+    singleEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    singleEl1.addEventListener('hemulen-filedeleted', function(e){console.log('hemulen-filedeleted', e);}, false);
+
+    $(conf.list).on('click.delete', conf.del, _onDelete);
+    $(conf.list).on('keyup.fileinfo', conf.listInpt, _onListInpt);
+
 }(jQuery));
 
 
