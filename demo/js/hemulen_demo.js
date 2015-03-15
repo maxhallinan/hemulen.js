@@ -67,7 +67,24 @@
         acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
         fileMaxSize: 5000000,
         fileLimit: 5,
-        beforeSub: function(e){console.log('beforeSub full');}
+        beforeSub: function(e, instance){
+            var instanceId, fileId;
+
+            $('.js-dd--full').each(function(){
+                var $this = $(this),
+                    instanceId = $this.attr(conf.attrInstanceId),
+                    $theseItems = $this.findconf.listItem;
+
+                $theseItems.each(function(){
+                    var $that           = $(this),
+                        itemId          = $that.attr(conf.attrFileId),
+                        positionVal     = $theseItems.index($that);
+
+                    instance.addData(instanceId, fileId, {position: positionVal});
+                });
+            });
+            console.log('beforeSub full');
+        }
     });
 
     $('.js-dd--full').each(function(){
@@ -85,7 +102,24 @@
         acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
         fileMaxSize: 5000000,
         fileLimit: 10,
-        beforeSub: function(e){console.log('beforeSub thumb');}
+        beforeSub: function(e, instance){
+            var instanceId, fileId;
+
+            $('.js-dd--thumb').each(function(){
+                var $this = $(this),
+                    instanceId = $this.attr(conf.attrInstanceId),
+                    $theseItems = $this.findconf.listItem;
+
+                $theseItems.each(function(){
+                    var $that           = $(this),
+                        itemId          = $that.attr(conf.attrFileId),
+                        positionVal     = $theseItems.index($that);
+
+                    instance.addData(instanceId, fileId, {position: positionVal});
+                });
+            });
+            console.log('beforeSub thumb');
+        }
     });
 
     $('.js-dd--thumb').each(function(){
@@ -103,7 +137,7 @@
         acceptTypes: ['application/pdf'],
         fileMaxSize: 5000000,
         fileLimit: 1,
-        beforeSub: function(e){console.log('beforeSub single');}
+        beforeSub: function(e, instance){console.log('beforeSub single');}
     });
 
     $('.js-dd--single').each(function(){
