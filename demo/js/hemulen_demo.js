@@ -66,7 +66,8 @@
         fileInput: '.js-dd__file-inpt',
         acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
         fileMaxSize: 5000000,
-        fileLimit: 5
+        fileLimit: 5,
+        beforeSub: function(e){console.log('beforeSub full');}
     });
 
     $('.js-dd--full').each(function(){
@@ -83,7 +84,8 @@
         fileInput: '.js-dd__file-inpt',
         acceptTypes: ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/bmp'],
         fileMaxSize: 5000000,
-        fileLimit: 10
+        fileLimit: 10,
+        beforeSub: function(e){console.log('beforeSub thumb');}
     });
 
     $('.js-dd--thumb').each(function(){
@@ -100,7 +102,8 @@
         fileInput: '.js-dd__file-inpt',
         acceptTypes: ['application/pdf'],
         fileMaxSize: 5000000,
-        fileLimit: 1
+        fileLimit: 1,
+        beforeSub: function(e){console.log('beforeSub single');}
     });
 
     $('.js-dd--single').each(function(){
