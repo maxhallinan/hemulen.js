@@ -1,5 +1,6 @@
 /*
  * DRAG AND DROP PROTOTYPE
+ * http://www.modularscale.com/?16&px&1.2&web&text
  */
 
 * {box-sizing: border-box;}
@@ -41,8 +42,11 @@ img {
 
 .dd-field {
     border: 1px dashed #ccc;
-    height: 400px;
-    width: 100%;
+/*    height: 400px;
+    width: 100%;*/
+    height: 300px;
+    margin: 0 auto 2rem;
+    width: 300px;
 }
 
 .dd-field:hover {
@@ -51,4 +55,31 @@ img {
 
 .dd-field p {
     text-align: center;
+}
+
+.dd__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dd__fig {
+    border: 1px solid #eee;
+    max-width: 100px;
+    padding: 5px;
+}
+
+    .dd__fig img {
+        display: block;
+        max-width: 100%;
+        width: 100%;
+    }
+
+.dd__column {
+    float: left;
+}
+
+.dd__fieldset label,
+.dd__fieldset input {
+    display: block;
 }
