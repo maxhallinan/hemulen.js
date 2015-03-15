@@ -63,7 +63,7 @@
             if(options[key].constructor === Object) {
                 _extend.call(this[key], options[key])
             } else {
-                if(this.hasOwnProperty(key)) {
+                if(options.hasOwnProperty(key)) {
                     this[key] = options[key];
                 }
             }
@@ -394,7 +394,7 @@
     };
 
     Hemulen.prototype.addData = function(instanceId, fileId, updates){
-        _extend.call(filesStored[instanceId][fileId], updates);        
+        _extend.call(filesStored[this.namespace][instanceId][fileId], updates);        
     };
 
 

@@ -126,7 +126,7 @@
         var reader          = new FileReader();
 
         reader.onload = function(readerE){
-            $(e.detail.instance).find(conf.list).append(thumbTemplate({
+            $(e.detail.instance).find(conf.list).append(fullTemplate({
                 name: e.detail.file.name,
                 fileId: e.detail.fileId,
                 thumbSrc: readerE.target.result
@@ -186,6 +186,28 @@
     }
 
     function _onListInpt(e){
+        var $this           = $(this), 
+            $thisItem       = $this.closest(conf.listItem),
+            $thisInstance   = $this.closest(conf.instance),
+            instanceId      = $thisInstance.attr(conf.attrInstanceId),
+            fileId          = $this.closest(conf.listItem).attr(conf.attrFileId),
+            thisValue       = $this.val(),
+            thisData = {};
+
+        if ($this.hasClass(conf.inptTitle) ) {
+            thisData.title = thisValue;
+        } else if ($this.hasClass(conf.inptCapt)){
+            thisData.caption = thisValue;
+        }
+
+        if ( $thisInstance.hasClass(conf.instanceSel.full) ) {
+            full.addData(instanceId, fileId, thisData);
+        } else if ( $thisInstance.hasClass(conf.instanceSel.thumb) ) {
+            thumb.addData(instanceId, fileId, thisData);
+        } else if ( $thisInstance.hasClass(conf.instanceSel.single) ) {
+            single.addData(instanceId, fileId, thisData);
+        }
+
         console.log('list keyup ', e);
     }
 
