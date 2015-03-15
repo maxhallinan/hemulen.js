@@ -368,9 +368,9 @@
     Hemulen.prototype.deleteFile = function(instanceId, fileId){
         var ev, eventDetail;
         
-        delete filesStored[instanceId][fileId];
+        delete filesStored[this.namespace][instanceId][fileId];
 
-        if (!filesStored[instanceId][fileId]) {
+        if (!filesStored[this.namespace][instanceId][fileId]) {
             eventDetail = {
                 instance: this._instances[instanceId],
                 instanceId: instanceId,
