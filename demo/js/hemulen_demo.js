@@ -73,17 +73,17 @@
             $('.js-dd--full').each(function(){
                 var $this = $(this),
                     instanceId = $this.attr(conf.attrInstanceId),
-                    $theseItems = $this.findconf.listItem;
+                    $theseItems = $this.find(conf.listItem);
 
                 $theseItems.each(function(){
                     var $that           = $(this),
-                        itemId          = $that.attr(conf.attrFileId),
+                        fileId          = $that.attr(conf.attrFileId),
                         positionVal     = $theseItems.index($that);
 
                     instance.addData(instanceId, fileId, {position: positionVal});
                 });
             });
-            console.log('beforeSub full');
+            console.log('beforeSub full', e, instance);
         }
     });
 
@@ -108,7 +108,7 @@
             $('.js-dd--thumb').each(function(){
                 var $this = $(this),
                     instanceId = $this.attr(conf.attrInstanceId),
-                    $theseItems = $this.findconf.listItem;
+                    $theseItems = $this.find(conf.listItem);
 
                 $theseItems.each(function(){
                     var $that           = $(this),
@@ -118,7 +118,7 @@
                     instance.addData(instanceId, fileId, {position: positionVal});
                 });
             });
-            console.log('beforeSub thumb');
+            console.log('beforeSub thumb', e, instance);
         }
     });
 
@@ -137,7 +137,7 @@
         acceptTypes: ['application/pdf'],
         fileMaxSize: 5000000,
         fileLimit: 1,
-        beforeSub: function(e, instance){console.log('beforeSub single');}
+        beforeSub: function(e, instance){console.log('beforeSub single', e, instance);}
     });
 
     $('.js-dd--single').each(function(){
