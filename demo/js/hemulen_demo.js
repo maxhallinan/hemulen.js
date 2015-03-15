@@ -1,19 +1,8 @@
 ;(function($){
     'use strict';
 
+    //APP GLOBALS
     var full, thumb, single;
-
-
-    //APP CONFIGURATION
-
-    //conf.ddInstance
-    //conf.instanceSel.full
-    //conf.instanceSel.thumb
-    //conf.instanceSel.single
-    //conf.ddListItem
-    //conf.attrInstanceId
-    //conf.attrFileId
-
 
     var conf = {
         attrInstanceId: 'data-dd-instanceid',
@@ -31,6 +20,8 @@
         listInpt: '.js-dd__list-inpt',
         inptTitle: 'js-dd__inpt--title',
         inptCapt: 'js-dd__inpt--capt',
+        sortable: '.js-sortable',
+        sortableHandle: '.js-sortable__handle',
         error: '.js-dd__err',
         subError: '.js-dd__err--sub',
         err: {
@@ -126,11 +117,21 @@
         var reader          = new FileReader();
 
         reader.onload = function(readerE){
+            var $sortableList = $(conf.sortable);
+
             $(e.detail.instance).find(conf.list).append(fullTemplate({
                 name: e.detail.file.name,
                 fileId: e.detail.fileId,
                 thumbSrc: readerE.target.result
             }));
+
+            //DESTROY AND RE-INITIALIZE REORDER PLUGIN
+            $sortableList.sortable('destroy');
+
+            $sortableList.sortable({
+                forcePlaceholderSize: true,
+                handle: conf.sortableHandle
+            });
         };
 
         reader.readAsDataURL(e.detail.file);
@@ -142,11 +143,22 @@
         var reader = new FileReader();
 
         reader.onload = function(readerE){
+            var $sortableList = $(conf.sortable);
+
             $(e.detail.instance).find(conf.list).append(thumbTemplate({
                 name: e.detail.file.name,
                 fileId: e.detail.fileId,
                 thumbSrc: readerE.target.result
             }));
+
+            //DESTROY AND RE-INITIALIZE REORDER PLUGIN
+            $sortableList.sortable('destroy');
+
+            $sortableList.sortable({
+                forcePlaceholderSize: true,
+                handle: conf.sortableHandle
+            });
+
         };
 
         reader.readAsDataURL(e.detail.file);

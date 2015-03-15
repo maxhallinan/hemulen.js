@@ -19,7 +19,7 @@
                         </div>
                         <input type="file" class="dd__file-inpt js-dd__file-inpt" multiple/>
                         
-                        <ul class="js-dd__list"></ul>
+                        <ul class="js-dd__list js-sortable"></ul>
                     </fieldset><!--/.js-dd- -full-->                
                 </div>
 
@@ -33,7 +33,7 @@
                         </div>
                         <input type="file" class="dd__file-inpt js-dd__file-inpt" multiple/>
                         
-                        <ul class="js-dd__list"></ul>
+                        <ul class="js-dd__list js-sortable"></ul>
                     </fieldset><!--/js-dd- -thumb-->                
                 </div>
 
@@ -62,7 +62,7 @@
                         </div>
                         <input type="file" class="dd__file-inpt js-dd__file-inpt" multiple/>
                         
-                        <ul class="js-dd__list"></ul>
+                        <ul class="js-dd__list js-sortable"></ul>
                     </fieldset><!--/.js-dd- -full-->                
                 </div>
 
@@ -76,7 +76,7 @@
                         </div>
                         <input type="file" class="dd__file-inpt js-dd__file-inpt" multiple/>
                         
-                        <ul class="js-dd__list"></ul>
+                        <ul class="js-dd__list js-sortable"></ul>
                     </fieldset><!--/js-dd- -thumb-->                
                 </div>
 
@@ -102,7 +102,7 @@
         <script id="ddlistfulltemp" type="text/x-handlebars-template">
             <li class="js-dd__list-item" data-dd-fileid="{{fileId}}">
                 <div>
-                    <a class="js-dd__btn--reorder" href="#">Reorder</a>
+                    <a class="js-sortable__handle" href="#">Reorder</a>
                 </div>
                 <div>
 
@@ -122,7 +122,7 @@
         <script id="ddlistthumbtemp" type="text/x-handlebars-template">
             <li class="js-dd__list-item" data-dd-fileid="{{fileId}}">
                 <div>
-                    <a class="js-dd__btn--reorder" href="#">Reorder</a>
+                    <a class="js-sortable__handle" href="#">Reorder</a>
                 </div>
                 <div>
                     <img src="{{thumbSrc}}" alt="{{name}}" >
