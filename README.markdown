@@ -59,6 +59,10 @@ Type: Number
 
 Type: Number
 
+`options.beforeSub`
+
+Type: Function
+
 ##Events
 
 Hemulen events are DOM events. In addition to the properties and methods common to DOM events, a Hemulen event object contains Hemulen-specific values stored on the `event.detail` property.

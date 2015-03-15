@@ -168,7 +168,7 @@
         e.preventDefault && e.preventDefault();
         
         if (!formSubmitted) {
-            for (i = 0, j = beforeSub.length; i < j; i++) {beforeSub[i](e);}
+            for (i = 0, j = beforeSub.length; i < j; i++) {beforeSub[i](e, this);}
             this._subData(e.target);
         }
         formSubmitted = true;
