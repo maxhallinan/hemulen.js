@@ -4,6 +4,7 @@
     //MODULE GLOBALS
     var filesStored     = {},
         usedHashes      = [],
+        beforeSub       = [],
         formSubmitted   = false; 
 
 
@@ -163,8 +164,13 @@
     }
     
     function _onSub(e){
+        var i, j;
         e.preventDefault && e.preventDefault();
-        if (!formSubmitted) {this._subData(e.target);}
+        
+        if (!formSubmitted) {
+            for (i = 0, j = beforeSub.length; i < j; i++) {beforeSub[i](e);}
+            this._subData(e.target);
+        }
         formSubmitted = true;
     }
 
@@ -182,6 +188,7 @@
         this.acceptTypes    = undefined;
         this.fileMaxSize    = undefined;
         this.fileLimit      = undefined;
+        this.beforeSub      = undefined;
 
         if (options) {_extend.call(this, options);}
         
@@ -204,6 +211,8 @@
             this._instances[instanceId] = els[i];
             filesStored[this.namespace][instanceId] = {};
         }
+
+        if (this.beforeSub && this.beforeSub.constructor === Function){beforeSub.push(this.beforeSub);}
 
         this._bindEventListeners();
     };
