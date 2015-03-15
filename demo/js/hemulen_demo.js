@@ -5,8 +5,9 @@
 
     //APP CONFIGURATION
     var conf = {
-        ddError: '.js-dd__err',
         ddList: '.js-dd__list',
+        ddError: '.js-dd__err',
+        ddSubError: '.js-dd__err--sub',
         err: {
             tooMany: 'The number of files you are attempting to upload exceeds the file limit.',
             tooBig: 'This file exceeds the file size limit: ',
@@ -154,12 +155,14 @@
     //Form submission events
 
     function _onSubSuccess(e){
-        console.log('hemulen-subsuccess', e);
-
         window.location = (JSON.parse(e.detail.request.response)).redirectUrl;
+
+        console.log('hemulen-subsuccess', e);
     }
     
     function _onSubFailure(e){
+        $(e.target).find(conf.ddSubError).text(conf.sub.fail);
+
         console.log('hemulen-subfailure', e);
     }
 
