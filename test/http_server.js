@@ -4,7 +4,7 @@ var http            = require('http'),
 
 var collectData = '',
     responseData = {
-        "redirectUrl" : 'http://localhost:4567/form-event-success.html'
+        "redirectUrl" : 'http://www.google.com'
     };
 
 

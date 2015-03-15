@@ -1,6 +1,9 @@
 ;(function($){
     'use strict';
 
+    var ddFull, ddThumb, ddSingle;
+
+    //APP CONFIGURATION
     var conf = {
         ddError: '.js-dd__err',
         ddList: '.js-dd__list',
@@ -8,11 +11,11 @@
             tooMany: 'The number of files you are attempting to upload exceeds the file limit.',
             tooBig: 'This file exceeds the file size limit: ',
             wrongType: 'This file is the wrong file type: '
+        },
+        sub: {
+            fail: 'There was a problem with the submission. Please try again.'
         }
     };
-
-    var ddFull, ddThumb, ddSingle;
-
 
     //DOM SELECTIONS
     var ddForm          = document.getElementById('ddform'),
@@ -23,53 +26,19 @@
         ddSingleEl0     = document.getElementById('ddsingle0'),
         ddSingleEl1     = document.getElementById('ddsingle1');
 
-
-    //FILE LIST TEMPLATES
+    //HANDLEBARS.JS TEMPLATES
     var fullTemplate    = Handlebars.compile( document.getElementById('ddlistfulltemp').innerHTML ),
         thumbTemplate   = Handlebars.compile( document.getElementById('ddlistthumbtemp').innerHTML ),
         singleTemplate  = Handlebars.compile( document.getElementById('ddlistsingletemp').innerHTML );
 
 
-    //UTILITY
 
-    //Returns an img element node with src attribute set
-    //to image data passed as the first argument.
-    function _makeThumbnail(file){
-        var thumb = document.createElement('img'),
-            reader = new FileReader();
 
-        reader.onload =
-            (function(img) {
-                return function(e) {
-                    img.src = e.target.result;
-                };
-            })(thumb);
 
-        reader.readAsDataURL(file);
+    //HEMULEN.JS INSTANTIATIONS
 
-        return thumb;
-    }
 
-    // function _setThumbnailSrc(file){
-    //     var reader = new FileReader(),
-    //         src;
-
-    //     reader.onload = (function(something){
-    //         return function(e){
-    //             src = e.target.result;                
-    //             console.log(something);
-    //         }
-    //     })(src);
-
-    //     reader.readAsDataURL(file);
-        
-    //     console.log(src);
-    //     return src;
-    // }
-
-    //HEMULEN PLUGIN INITIALIZATION
-
-    //INSTANCE ONE
+    //Instance 1
     ddFull = new Hemulen({
         hemulen: '.js-dd--full',
         namespace: 'ddfull',
@@ -80,7 +49,7 @@
         fileLimit: 5
     });
 
-    //INSTANCE TWO
+    //Instance 2
     ddThumb = new Hemulen({
         hemulen: '.js-dd--thumb',
         namespace: 'ddthumb',
@@ -91,7 +60,7 @@
         fileLimit: 10
     });
 
-    //INSTANCE THREE
+    //Instance 3
     ddSingle = new Hemulen({
         hemulen: '.js-dd--single',
         namespace: 'ddsingle',
@@ -103,13 +72,15 @@
     });
 
 
+
+
+
     //EVENT HANDLERS
 
-    //GENERAL EVENTS
+    //General events
 
     function _onFileStoredFull(e){
-        var reader          = new FileReader(),
-            templateData    = {};
+        var reader          = new FileReader();
 
         reader.onload = function(readerE){
             $(e.detail.instance).find(conf.ddList).append(thumbTemplate({
@@ -150,7 +121,7 @@
     }
 
 
-    //ERROR EVENTS
+    //Error events
 
     function _onTooBig(e){
         var errMessage = document.createElement('p');
@@ -180,15 +151,21 @@
     }
     
 
-    //FORM SUBMISSION EVENTS
+    //Form submission events
 
     function _onSubSuccess(e){
         console.log('hemulen-subsuccess', e);
+
+        window.location = (JSON.parse(e.detail.request.response)).redirectUrl;
     }
     
     function _onSubFailure(e){
         console.log('hemulen-subfailure', e);
     }
+
+
+
+
 
     //EVENT LISTENERS
 
