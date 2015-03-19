@@ -1,3 +1,11 @@
+// |- Hemulen File Storage object
+// |   |- namespace
+// |   |   |- instanceId
+// |   |   |   |- fileId
+// |   |   |   |   |- file
+// |   |   |   |   |- foo
+// |   |   |   |   |- bar
+
 ;(function(){
     'use strict';
 

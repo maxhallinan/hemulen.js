@@ -4,35 +4,50 @@
 
 ###Overview
 
-Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. A drag&#45;and&#45;drop field is created by instantiating the `Hemulen` class. A `Hemulen` instance is bound to one or more DOM elements containing a drag&#45;and&#45;drop field and an optional file input. The `Hemulen` class can be instantiated multiple times per form, enabling differences of behavior among fields. When the form is submitted, files uploaded to each of the drag&#45;and&#45;drop fields and the values of all other fields will be submitted as a single asynchronous request. The request is made to the value of the form's action attribute.
+Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. A drag&#45;and&#45;drop field is created by instantiating the `Hemulen` class. A `Hemulen` instance is bound to one or more DOM elements containing a drag&#45;and&#45;drop field and an optional file input. The `Hemulen` class can be instantiated multiple times per form, enabling differences of behavior among fields. When the form is submitted, files dropped on the drag&#45;and&#45;drop fields will be posted with the form as a single asynchronous request. The request is made to the value of the form's action attribute.
 
-Hemulen.js has three primary functions: managing data, sending data to the server, and dispatching events that describe the application's state. When a file is dropped on a drag&#45;and&#45;drop field, Hemulen validates the file against the validation criteria specified for that Hemulen instance. If the validation fails, the element to which the instance is bound emits a Hemulen error event. If the validation succeeds, the element emits the `hemulen-filestored` event and the file is placed in storage.
+###What Hemulen.js does
 
-Hemulen file storage:
+Hemulen.js has three primary functions: manage data, send data to the server, and dispatch events that describe actions taken with this data.
 
-    |- Hemulen File Storage object
-    |   |- namespace
-    |   |   |- instanceId
-    |   |   |   |- fileId
-    |   |   |   |   |- file
-    |   |   |   |   |- foo
-    |   |   |   |   |- bar
+####Manage data
 
-Hemulen file storage can be accessed and manipulated using the Hemulen API. Capabilities include referencing a stored file, removing a file from storage, or associating additional values with a stored file (such as `foo` and `bar` in the above diagram). After the form registers the submit event but before the POST request is made, this tree structure is flattened into a series of key/value pairs. The key names follow this naming pattern: `namespace[instance number]property[file number]`. Thus, if a form contained one Hemulen instance with a namespace of `galleryimages` and that instance was bound to two elements, and two images had been dropped on each of those elements, the request body would include four files stored under these key names: 
+When a file is dropped on a drag&#45;and&#45;drop field, Hemulen validates the file against the validation criteria specified for that Hemulen instance. If the file is valid, Hemulen places the file in a data structure where it is held until the form is submitted. Files stored in this data structure are easily accessed and manipulated via the Hemulen API. Capabilities include referencing a stored file, removing a file from storage, and associating additional values with a stored file.
+
+The contents of this data structure are stored in memory. The data does not persist across sessions and *its use is limited in every way that memory use in a browser is limited*. A large number of files or one file of sufficiently large size will exceed a browser's memory limit. Hemulen.js is not a suitable tool for these cases. 
+
+####Send data to the server
+
+Data held in Hemulen's temporary storage and values represented by non-Hemulen form fields are together sent to the server with `multipart/form-data` encoding. As is the case with an average form, data is posted as a set of key/value pairs and the key for a non-Hemulen field is the value of that field's `name` attribute. Form fields that interact with the Hemulen API (e.g., a file input or a field used to collect a value that is then associated with a file via the Hemulen API) should not be given a name attribute. Hemulen generates the keys for all data held in Hemulen storage. Those keys will follow this pattern:
+
+    [instance name][element number][property name][file number]
+
+- `[instance name]`: the value of `options.namespace`
+- `[element number]`: a single Hemulen instance can be bound to more than one element. Stored files are grouped first by Hemulen instance and then by the element on which they are dropped. `[element number]` is the zero-based index of that element in the set of elements to which the Hemulen instance is bound. That set is ordered by appearance in the DOM.
+- `[property name]`: if the value is a file, `[property name]` is "file". If the value is not a file, it is a value that has been associated with the file using the Hemulen API method `Hemulen.addData`. `.addData` expects an object containing one or more key/value pairs to be associated with the file. When the form is submitted, the key for each of these values will be used as `[property name]`.
+- `[file number]`: the zero-based index of a file in the group of files that have been dropped on a drag&#45;and&#45;drop field. Values associated with a file will share that file's `[file number]`. 
+
+#####Example
+
+The `Hemulen` class has been instantiated once and given a namespace of `"galleryimages"`. The instance is bound to two elements, each containing a drag&#45;and&#45;drop field. Two image files have been dropped on the first drag&#45;and&#45;drop field and three image files have been dropped on the second drag&#45;and&#45;drop field. When the form is submitted, the request body includes five key/value pairs. Following the Hemulen naming pattern, the five keys are:
 
 - `galleryimages0file0`;
 - `galleryimages0file1`;
 - `galleryimages1file0`; 
-- `galleryimages1file1`.
+- `galleryimages1file1`;
+- `galleryimages1file2`.
 
-If a `title` value had been associated with each of these files, the request body would include an additional four values stored under these key names:
+The same form has been modified. When a user drops a file onto one of the two drag&#45;and&#45;drop fields, a text input is added to the form. This text input enables the user to provide a title for each image. The application uses the Hemulen API to associate the value of this field with the respective file. Again, the form is submitted. Now the request body includes an additional five key/value pairs. The additional keys are:
 
 - `galleryimages0title0`;
 - `galleryimages0title1`;
 - `galleryimages1title0`; 
-- `galleryimages1title1`.
+- `galleryimages1title1`;
+- `galleryimages1title2`.
 
-Hemulen.js does not:
+####Dispatch events
+
+###What Hemulen.js does not
 
 - manipulate the DOM in any way, including:
     + generate UI components,
@@ -42,14 +57,14 @@ Hemulen.js does not:
 - test browser compatability;
 - provide a browser compatability fallback.
 
-All of these things are better handled by the application. By subscribing to Hemulen events and using the Hemulen API, these tasks and features can be easily accomplished and accomplished in a manner that best suits the application.
+All of these things are better handled by the application. By subscribing to Hemulen events and using the Hemulen API, these tasks and features are easily accomplished and accomplished in a manner that best suits the application.
 
-##Reference
+##Dependencies
 
-- Drag events
-- FIle API
-- [File List](http://www.w3.org/TR/FileAPI/#filelist-section)
-- [File Object](http://www.w3.org/TR/FileAPI/#dfn-file)
+- [Drag and drop DOM events](http://www.w3.org/TR/2011/WD-html5-20110113/dnd.html#dnd)
+- [File API](http://www.w3.org/TR/FileAPI/)
+    - [File List](http://www.w3.org/TR/FileAPI/#filelist-section)
+    - [File Object](http://www.w3.org/TR/FileAPI/#dfn-file)
 
 ##Use
 
