@@ -37,7 +37,7 @@ The `Hemulen` class has been instantiated once and given a namespace of `"galler
 - `galleryimages1file1`;
 - `galleryimages1file2`.
 
-The same form has been modified. When a user drops a file onto one of the two drag&#45;and&#45;drop fields, a text input is added to the form. This text input enables the user to provide a title for each image. The application uses the Hemulen API to associate the value of this field with the respective file. Again, the form is submitted. Now the request body includes an additional five key/value pairs. The additional keys are:
+Then the application is modified. When a user drops a file onto one of the two drag&#45;and&#45;drop fields, a text input is added to the form. This text input enables the user to provide a title for each image. The application uses the Hemulen API to associate the value of this field with the respective file. Again, the form is submitted. Now the request body includes an additional five key/value pairs. The additional keys are:
 
 - `galleryimages0title0`;
 - `galleryimages0title1`;
@@ -80,9 +80,16 @@ All of these things are better handled by the application. By subscribing to Hem
     <script type="text/javascript" src="hemulen.js"></script>
     <script>
         var foo = new Hemulen({
+            acceptTypes: ['image/jpeg', 'image/pjpeg'],
+            beforeSub: function(event, instance){
+                console.log('The form is being submitted.');
+            }, 
+            dropInput: '.foo__drop-field',
             hemulen: '.foo',
-            namespace: 'foo',
-            fileLimit: 10
+            fileInput: '.foo__file-input',
+            fileLimit: 10,
+            fileMaxSize: 5000000,
+            namespace: 'foo'
         });
     </script>
 
@@ -90,33 +97,81 @@ All of these things are better handled by the application. By subscribing to Hem
 
 ##Configuration
 
-`options.namespace`
+`new Hemulen(config);`
+
+The `Hemulen` constructor expects a single argument: a configuration object. There are three required configuration properties and several optional configuration properties.
+
+###Required
+
+####dropInput
+
+`config.dropInput`
+
+Type: CSS selector string
+
+A CSS selector identifying the drag&#45;and&#45;drop field. `config.dropInput` must be a descendant of `config.hemulen`.
+
+####hemulen
+
+`config.hemulen`
+
+Type: CSS selector string
+
+A CSS selector identifying the element containing `config.dropInput` and (optionally) `config.fileInput`.
+
+####namespace
+
+`config.namespace`
 
 Type: String
+ 
+A string used to identify a Hemulen instance when posting data to the server. Multiple `Hemulen` instances for a single form must each be given a unique namespace. See the "Send data to the server" section of the Hemulen.js overview for more information about the significance and utility of `config.namespace`.
 
-`options.dropInput`
+###Optional
 
-Type: Selector string
+####acceptTypes
 
-`options.fileInput`
+`config.acceptTypes`
 
-Type: Selector string
+Type: Array of mime-type strings
 
-`options.acceptTypes`
+Validate by file type. When validation fails, the Hemulen element will emit the `hemulen-wrongtype` event. If the `Hemulen` class is instantiated without `config.acceptTypes`, the instance will accept any file type.
 
-Type: Array of strings 
+####beforeSub
 
-`options.fileLimit`
-
-Type: Number
-
-`options.fileMaxSize`
-
-Type: Number
-
-`options.beforeSub`
+`config.beforeSub(event, instance)`
 
 Type: Function
+
+A callback executed after the submit event is registered but before the data is sent to the server. If a form contains multiple Hemulen instances, the `beforeSub` of each instance will be called in the order of instantiation. `beforeSub` is called with two arguments:
+
+- `event`: the submit event
+- `instance`: the `Hemulen` instance on which `beforeSub` is defined. To call a Hemulen API method within `beforeSub`, reference `instance`, e.g. `instance.addData()`.
+
+####fileInput
+
+`config.fileInput`
+
+Type: CSS selector string
+
+A file input to work jointly with the drag&#45;and&#45;drop field. `config.fileInput` must be a child of `config.hemulen`. Files selected through the file input are treated like files dropped on the drag&#45;and&#45;drop field. When the data is posted to the server, there will be no differentiation between files that were dropped on the drag&#45;and&#45;drop field and files that were uploaded through the file input. The file input should not be given a `name` attribute; files selected through this input will be named by Hemulen.js. See the "Send data to the server" section of the Hemulen.js overview for more information.
+
+####fileLimit
+
+`config.fileLimit`
+
+Type: Number
+
+Limit the number of files a drag&#45;and&#45;drop field or a file input will accept. A user can drop files multiple times until this limit is reached. If a user attempts to drop a group of files whose number exceeds the limit (or the remaining limit if files have been dropped already), no files will be accepted and the Hemulen element will emit the `hemulen-toomany` event.
+
+####fileMaxSize
+
+`config.fileMaxSize`
+
+Type: Number
+
+Validate by file size. When validation fails, the Hemulen element will emit the `hemulen-toobig` event. If the `Hemulen` class is instantiated without `options.fileMaxSize`, the instance will not validate by file size. 
+
 
 ##Events
 
@@ -134,7 +189,7 @@ Event properties:
 
 - `hemulen-toobig.detail.instance`
     + Type: Element Node
-- `hemulen-toobig.detail.instanceId`
+- `hemulen-toobig.detail.hemulenId`
     + Type: String
 - `hemulen-filestored.detail.hemulen`
     + Type: Object
@@ -154,12 +209,12 @@ Event properties:
     + The file object that has been successfully stored on the data model.
 - `hemulen-filestored.detail.fileId`
     + Type: String
-    + The key under which the file has been stored on the data model. **`fileId` should be stored for later use.** Without the value of `fileId`, the file cannot be removed from the data model or updated with additional properties. Unlike the `instanceId`, there is no method to query the data model for a `fileId`. A file whose `fileId` is unknown to the application is stranded on the data model.
+    + The key under which the file has been stored on the data model. **`fileId` should be stored for later use.** Without the value of `fileId`, the file cannot be removed from the data model or updated with additional properties. Unlike the `hemulenId`, there is no method to query the data model for a `fileId`. A file whose `fileId` is unknown to the application is stranded on the data model.
 - `hemulen-filestored.detail.hemulen`
     + Type: Object
     + Hemulen instance configuration
     + The Hemulen context
-- `hemulen-filestored.detail.instanceId`
+- `hemulen-filestored.detail.hemulenId`
     + Type: String
 
 ###Error Events
@@ -174,7 +229,7 @@ Properties
 
 - `hemulen-toobig.detail.instance`
     + Type: Element Node
-- `hemulen-toobig.detail.instanceId`
+- `hemulen-toobig.detail.hemulenId`
     + Type: String
 - `hemulen-toobig.detail.file`
     + Type: File Object
@@ -187,7 +242,7 @@ The event emitted by the Hemulen element when the number of files dropped on the
 
 Properties:
 
-- `hemulen-toomany.detail.instanceId`
+- `hemulen-toomany.detail.hemulenId`
     + Type: String
 - `hemulen-toomany.detail.files`
     + Type: File List
@@ -204,7 +259,7 @@ Properties
 
 - `hemulen-wrongtype.detail.instance`
     + Type: Element Node
-- `hemulen-wrongtype.detail.instanceId`
+- `hemulen-wrongtype.detail.hemulenId`
     + Type: String
 - `hemulen-wrongtype.detail.file`
     + Type: File Object
@@ -232,37 +287,37 @@ Properties
 
 ###addData
 
-`Hemulen.addData(instanceId, fileId, data)`
+`Hemulen.addData(hemulenId, fileId, data)`
 
-`instanceId`:
+`hemulenId`: a string identifying 
 
 `fileId`:
 
-`data`: an object containing values to be associated with the specified file on the data model. These key/value pairs will be sent to the server as form field name/value pairs. The values must be primitives.
+`data`: an object containing values to be associated with the specified file on the data model. The values must be primitives.
 
 ###deleteFile
 
-`Hemulen.deleteFile(instanceId, fileId)`
+`Hemulen.deleteFile(hemulenId, fileId)`
 
-`instanceId`:
+`hemulenId`:
 
 `fileId`:
 
 Remove a file and all associated data from the data model. If the file is removed successfully, the `hemulen-filedeleted` event is emitted.
 
-###getInstanceId
+###getHemulenId
 
-`Hemulen.getInstanceId(element)`
+`Hemulen.getHemulenId(element)`
 
-`element`: an Element Node to which the Hemulen instance is bound.
+`element`: the Element Node to which the Hemulen instance is bound.
 
-Returns the id of that field on the data model.
+Returns the id of that on the data model.
 
 ###storeFiles
 
-`Hemulen.storeFiles(instanceId, files)`
+`Hemulen.storeFiles(hemulenId, files)`
 
-`instanceId`:
+`hemulenId`:
 
 `files`: a `FileList` containing one or more `File` objects.
 
