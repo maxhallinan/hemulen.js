@@ -6,6 +6,9 @@
 // |   |   |   |   |- foo
 // |   |   |   |   |- bar
 
+//instance === hemulenEl
+//hemulen === Hemulen class instance
+
 ;(function(){
     'use strict';
 

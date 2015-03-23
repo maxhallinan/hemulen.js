@@ -47,22 +47,20 @@ Then the application is modified. When a user drops a file onto one of the two d
 
 ####Dispatch events
 
-Hemulen.js is devoted to a single utility: handling data for forms with drag&ndash;and&ndash;drop fields. Hemulen.js is designed to fulfill this utility without making assumptions about or asserting application architecture, and with minimal side effects on application state. 
+A drag&ndash;and&ndash;drop application typically requires features that are dependent upon but beyond the scope of Hemulen.js. For instance, the average drag&ndash;and&ndash;drop interface displays a list of dropped files. Listing a dropped file depends on Hemulen.js for access to file data and confirmation that the file has been placed in Hemulen storage. These dependencies can be satisfied by binding to Hemulen events.
 
-An application typically requires features that are dependent upon but beyond the scope of this utility. For instance, the average drag&ndash;and&ndash;drop interface displays a list of dropped files. Listing a dropped file depends on Hemulen.js for access to file data and confirmation that the file has been placed in Hemulen storage. Hemulen.js excludes these features from its core utility because their ideal implementation is determined by the application's functional requirements and architecture. Instead, Hemulen.js dispatches custom events that describe the internal result of any interaction with a Hemulen instance. Hemulen events expose the Hemulen data upon which these application-specific features depend without making assumptions or assertions about how that data will be used.
-
-Most Hemulen events are emitted by the element to which the Hemulen instance is bound. Form submission events are emitted by the form element. See the Events section for more information.
+A Hemulen event describes the internal result of an interaction with a Hemulen instance. The event object exposes the Hemulen data upon which these application-specific features depend. Most Hemulen events are emitted by the element to which the Hemulen instance is bound. Form submission events are emitted by the form element. See the Events section for more information.
 
 ###What Hemulen.js does not
 
-- manipulate the DOM in any major way, including:
+Hemulen.js is devoted to a single utility: handling data for forms with drag&ndash;and&ndash;drop fields. Hemulen.js is designed to fulfill this utility without making assumptions about or asserting application architecture, and with minimal side effects on application state. For this reason, Hemulen.js does not:
+
+- manipulate the DOM (with the exception of adding the `hemulen-incompatible` class), including:
     + generate UI components,
     + generate file thumbnails,
     + list dropped files,
     + display validation or error messages;
 - provide a browser compatability fallback.
-
-Implementing these features is the application's responsibility.
 
 ##Dependencies
 
@@ -196,14 +194,12 @@ The event emitted by the Hemulen element when a file is removed from the data mo
 
 Event properties:
 
-- `hemulen-toobig.detail.instance`
-    + Type: Element Node
-- `hemulen-toobig.detail.hemulenId`
-    + Type: String
-- `hemulen-filestored.detail.hemulen`
-    + Type: Object
-    + Hemulen instance configuration
-    + The Hemulen context
+- `hemulen-filedeleted.detail.hemulen`:
+    + Type: Object,
+    + The `Hemulen` class instance bound to the Hemulen element emitting the event;
+- `hemulen-filedeleted.detail.hemulenElId`:
+    + Type: String,
+    + The Hemulen storage key identifying the Hemulen element emitting the event.
 
 ####File Stored
 
@@ -213,18 +209,18 @@ The event emitted by the Hemulen element when a file is dropped on the drop inpu
 
 Event properties:
 
+- `hemulen-filestored.detail.hemulen`
+    + Type: Object
+    + The `Hemulen` class instance bound to the Hemulen element emitting the event.
+- `hemulen-filestored.detail.hemulenElId`
+    + Type: String
+    + The Hemulen storage key identifying the Hemulen element emitting the event.
 - `hemulen-filestored.detail.file`
     + Type: File Object
     + The file object that has been successfully stored on the data model.
 - `hemulen-filestored.detail.fileId`
     + Type: String
-    + The key under which the file has been stored on the data model. **`fileId` should be stored for later use.** Without the value of `fileId`, the file cannot be removed from the data model or updated with additional properties. Unlike the `hemulenId`, there is no method to query the data model for a `fileId`. A file whose `fileId` is unknown to the application is stranded on the data model.
-- `hemulen-filestored.detail.hemulen`
-    + Type: Object
-    + Hemulen instance configuration
-    + The Hemulen context
-- `hemulen-filestored.detail.hemulenId`
-    + Type: String
+    + The key under which the file has been stored on the data model. **`fileId` should be stored for later use.** Without the value of `fileId`, the file cannot be removed from the data model or updated with additional properties. Unlike the `hemulenElId`, there is no method to query the data model for a `fileId`. A file whose `fileId` is unknown to the application is stranded on the data model.
 
 ###Error Events
 
@@ -236,12 +232,15 @@ The event emitted by the Hemulen element when the size of a file dropped on the 
 
 Properties
 
-- `hemulen-toobig.detail.instance`
-    + Type: Element Node
-- `hemulen-toobig.detail.hemulenId`
+- `hemulen-toobig.detail.hemulen`
+    + Type: Object
+    + The `Hemulen` class instance bound to the Hemulen element emitting the event.
+- `hemulen-toobig.detail.hemulenElId`
     + Type: String
+    + The Hemulen storage key identifying the Hemulen element emitting the event.
 - `hemulen-toobig.detail.file`
     + Type: File Object
+    + The invalid file.
 
 ####Too Many
 
@@ -251,12 +250,15 @@ The event emitted by the Hemulen element when the number of files dropped on the
 
 Properties:
 
-- `hemulen-toomany.detail.hemulenId`
-    + Type: String
-- `hemulen-toomany.detail.files`
-    + Type: File List
 - `hemulen-toomany.detail.hemulen`
     + Type: Object
+    + The `Hemulen` class instance bound to the Hemulen element emitting the event.
+- `hemulen-toomany.detail.hemulenElId`
+    + Type: String
+    + The Hemulen storage key identifying the Hemulen element emitting the event.
+- `hemulen-toomany.detail.files`
+    + Type: File List
+    + The group of files that were dropped on the drag&ndash;and&ndash;drop field but not placed in Hemulen storage.
 
 ####Wrong Type
 
@@ -266,12 +268,15 @@ The event emitted by the Hemulen element when the mime type of a file dropped on
 
 Properties
 
-- `hemulen-wrongtype.detail.instance`
-    + Type: Element Node
-- `hemulen-wrongtype.detail.hemulenId`
-    + Type: String
-- `hemulen-wrongtype.detail.file`
-    + Type: File Object
+- `hemulen-wrongtype.detail.hemulen`:
+    + Type: Object,
+    + The `Hemulen` class instance bound to the Hemulen element emitting the event;
+- `hemulen-wrongtype.detail.hemulenElId`:
+    + Type: String,
+    + The Hemulen storage key identifying the Hemulen element emitting the event;
+- `hemulen-wrongtype.detail.file`:
+    + Type: File Object,
+    + The invalid file.
 
 ###Form Submission Events
 
@@ -282,6 +287,8 @@ Event Name: `hemulen-subsuccess`
 Properties
 
 - `hemulen-subsuccess.detail.request`
+    + Type: XMLHttpRequest object
+    + The POST request made when the form is submitted.
 
 ####Submission Failure
 
@@ -290,47 +297,70 @@ Event Name: `hemulen-subfail`
 Properties
 
 - `hemulen-subfailure.detail.request`
-
+    + Type: XMLHttpRequest object
+    + The POST request made when the form is submitted.
 
 ##API
 
 ###addData
 
-`Hemulen.addData(hemulenId, fileId, data)`
+`Hemulen.addData(hemulenElId, fileId, data)`
 
-`hemulenId`: a string identifying 
+Associate one or more values with a stored file.
 
-`fileId`:
+Parameters:
 
-`data`: an object containing values to be associated with the specified file on the data model. The values must be primitives.
+- `hemulenElId`:
+    + Type: String,
+    + a Hemulen storage key identifying an element to which the Hemulan instance is bound;
+- `fileId`: 
+    + Type: String,
+    + a Hemulen storage key identifying the file with which the `data` will be associated;
+- `data`: 
+    + Type: Object,
+    + an object containing values to be associated with the stored file. The values must be primitives.
 
 ###deleteFile
 
-`Hemulen.deleteFile(hemulenId, fileId)`
-
-`hemulenId`:
-
-`fileId`:
+`Hemulen.deleteFile(hemulenElId, fileId)`
 
 Remove a file and all associated data from the data model. If the file is removed successfully, the `hemulen-filedeleted` event is emitted.
 
-###getHemulenId
+Parameters:
 
-`Hemulen.getHemulenId(element)`
+- `hemulenElId`: 
+    + Type: String,
+    + a Hemulen storage key identifying an element to which the Hemulan instance is bound;
+- `fileId`: 
+    + Type: String,
+    + a Hemulen storage key identifying the file to be removed from storage.
 
-`element`: the Element Node to which the Hemulen instance is bound.
+###getHemulenElId
 
-Returns the id of that on the data model.
+`Hemulen.getHemulenElId(element)`
+
+Returns the key identifying `element` on the data model.
+
+Parameters:
+
+- `element`: 
+    + Type: Element Node,
+    + the element to which the Hemulen instance is bound.
 
 ###storeFiles
 
-`Hemulen.storeFiles(hemulenId, files)`
-
-`hemulenId`:
-
-`files`: a `FileList` containing one or more `File` objects.
+`Hemulen.storeFiles(hemulenElId, files)`
 
 Stores each item of `files` on the data model. When `Hemulen.storeFiles()` is called, the Hemulen instance will emit events as if the files had been dropped on the drop input or uploaded through the file input.
+
+Parameters:
+
+- `hemulenElId`: 
+    + Type: String,
+    + a Hemulen storage key identifying an element to which the Hemulan instance is bound;
+- `files`:
+    + Type: FileList Object
+    + a `FileList` containing one or more `File` objects.
 
 ##Browser Compatability
 
