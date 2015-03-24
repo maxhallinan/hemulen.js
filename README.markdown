@@ -12,19 +12,19 @@ Hemulen.js has three primary functions: manage data, send data to the server, an
 
 ####Manage data
 
-When a file is dropped on a drag&#45;and&#45;drop field, Hemulen validates the file against the validation criteria specified for that Hemulen instance. If the file is valid, Hemulen places the file in a data structure where it is held until the form is submitted. Files stored in this data structure are easily accessed and manipulated via the Hemulen API. Capabilities include referencing a stored file, removing a file from storage, and associating additional values with a stored file.
+When a valid file is dropped on a drag&#45;and&#45;drop field, Hemulen places the file in a data structure where it is held until the form is submitted. Files stored in this data structure are easily accessed and manipulated via the Hemulen API. Capabilities include referencing a stored file, removing a file from storage, and associating additional values with a stored file.
 
-The contents of this data structure are stored in memory. The data does not persist across sessions and use of this storage is *limited in every way that memory use in a browser is limited*. A large number of files or one file of sufficiently large size will exceed a browser's memory limit. Hemulen.js is not a suitable tool for forms that expect large quantities of data. 
+The contents of this data structure are stored in memory. The data does not persist across sessions and use of this storage is *limited in every way that memory use in a browser is limited*. A large number of files or one file of sufficiently large size will exceed a browser's memory limit. Hemulen.js is not a suitable tool for forms that accept exceptionally large quantities of data. 
 
 ####Send data to the server
 
-Data held in Hemulen's temporary storage and values represented by non-Hemulen form fields are together sent to the server with `multipart/form-data` encoding. As is the case with an average form, data is posted as a set of key/value pairs and the key for a non-Hemulen field is the value of that field's `name` attribute. Form fields that interact with the Hemulen API (e.g., a file input or a field used to collect a value that is then associated with a file via the Hemulen API) should not be given a name attribute. Hemulen generates the keys for all data held in Hemulen storage. Those keys follow this pattern:
+Data held in Hemulen's temporary storage and values represented by non-Hemulen form fields are together sent to the server with `multipart/form-data` encoding. As is the case with an average form, data is posted as a set of key/value pairs and the key for a non-Hemulen field is the value of that field's `name` attribute. Form fields that collect values then associated with a stored file should not be given a name attribute. Hemulen.js generates the keys for all data held in Hemulen storage. Those keys follow this pattern:
 
     [instance name][element number][property name][file number]
 
-- `[instance name]`: the value of `options.namespace`
-- `[element number]`: a single Hemulen instance can be bound to more than one element. Stored files are grouped first by Hemulen instance and then by the element on which they are dropped. `[element number]` is the zero-based index of that element in the set of elements to which the Hemulen instance is bound. The matched set is ordered by appearance in the DOM.
-- `[property name]`: if the value is a file, `[property name]` is "file". If the value is not a file, it is a value that has been associated with the file using the Hemulen API method `Hemulen.addData`. `.addData` expects an object containing one or more key/value pairs to be associated with the file. When the form is submitted, the key for each of these values will be used as `[property name]`.
+- `[instance name]`: the value of `config.namespace`;
+- `[element number]`: stored files are grouped first by Hemulen instance and then by the element on which they are dropped. `[element number]` is the zero-based index of that element in the set of elements to which the Hemulen instance is bound. The matched set is ordered by appearance in the DOM;
+- `[property name]`: refers either to a file or a value associated with a file. When referring to a file, `[property name]` is "file". When referring to a value associated with a file, `[property name]` is the key for that value;
 - `[file number]`: the zero-based index of a file in the group of files that have been dropped on a drag&#45;and&#45;drop field. Values associated with a file will share that file's `[file number]`. 
 
 #####Example
@@ -71,31 +71,24 @@ Hemulen.js depends on these browser APIs:
     - [File List](http://www.w3.org/TR/FileAPI/#filelist-section),
     - [File Object](http://www.w3.org/TR/FileAPI/#dfn-file).
 
-When a page loads Hemulen.js, Hemulen.js immediately tests support for these APIs. If they are not supported, Hemulen.js adds class `hemulen-incompatible` to the `html` element. Check for this class before creating a Hemulen instance.
+When loaded, Hemulen.js tests support for these APIs. If they are not supported, Hemulen.js adds class `hemulen-incompatible` to the `html` element. Check for this class before creating a Hemulen instance.
 
-##Use
+##Basic Use
 
     <form action="/hemulen-form" method="post" enctype="multipart/form-data">
         <div class="foo">
             <div class="foo__drop-field"></div>
-            <input class="foo__file-input" type="file" />
         </div>
         <input type="submit" />
     </form>
     
     
     <script type="text/javascript" src="hemulen.js"></script>
+    
     <script>
         var foo = new Hemulen({
-            acceptTypes: ['image/jpeg', 'image/pjpeg'],
-            beforeSub: function(event, instance){
-                console.log('A POST request will be made momentarily.');
-            }, 
             dropInput: '.foo__drop-field',
-            hemulen: '.foo',
-            fileInput: '.foo__file-input',
-            fileLimit: 10,
-            fileMaxSize: 5000000,
+            hemulenEl: '.foo',
             namespace: 'foo'
         });
     </script>
@@ -116,11 +109,11 @@ The `Hemulen` constructor expects a single argument: a configuration object. The
 
 Type: CSS selector string
 
-A CSS selector identifying the drag&#45;and&#45;drop field. `config.dropInput` must be a descendant of `config.hemulen`.
+A CSS selector identifying the drag&#45;and&#45;drop field. `config.dropInput` must be a descendant of `config.hemulenEl`.
 
-####hemulen
+####hemulenEl
 
-`config.hemulen`
+`config.hemulenEl`
 
 Type: CSS selector string
 
@@ -161,7 +154,7 @@ A callback executed after the submit event is registered but before the data is 
 
 Type: CSS selector string
 
-A file input to work jointly with the drag&#45;and&#45;drop field. `config.fileInput` must be a child of `config.hemulen`. Files selected through the file input are treated like files dropped on the drag&#45;and&#45;drop field. When the data is posted to the server, there will be no differentiation between files that were dropped on the drag&#45;and&#45;drop field and files that were uploaded through the file input. The file input should not be given a `name` attribute; files selected through this input will be named by Hemulen.js. See the "Send data to the server" section of the Hemulen.js overview for more information.
+A file input to work jointly with the drag&#45;and&#45;drop field. `config.fileInput` must be a child of `config.hemulenEl`. Files selected through the file input are treated like files dropped on the drag&#45;and&#45;drop field. When the data is posted to the server, there will be no differentiation between files that were dropped on the drag&#45;and&#45;drop field and files that were uploaded through the file input. The file input should not be given a `name` attribute; files selected through this input will be named by Hemulen.js. See the "Send data to the server" section of the Hemulen.js overview for more information.
 
 ####fileLimit
 
@@ -302,9 +295,11 @@ Properties
 
 ##API
 
+Hemulen API methods can be called by an instance of the `Hemulen` class.
+
 ###addData
 
-`Hemulen.addData(hemulenElId, fileId, data)`
+`Hemulen.prototype.addData(hemulenElId, fileId, data)`
 
 Associate one or more values with a stored file.
 
@@ -322,7 +317,7 @@ Parameters:
 
 ###deleteFile
 
-`Hemulen.deleteFile(hemulenElId, fileId)`
+`Hemulen.prototype.deleteFile(hemulenElId, fileId)`
 
 Remove a file and all associated data from the data model. If the file is removed successfully, the `hemulen-filedeleted` event is emitted.
 
@@ -337,7 +332,7 @@ Parameters:
 
 ###getHemulenElId
 
-`Hemulen.getHemulenElId(element)`
+`Hemulen.prototype.getHemulenElId(element)`
 
 Returns the key identifying `element` on the data model.
 
@@ -349,7 +344,7 @@ Parameters:
 
 ###storeFiles
 
-`Hemulen.storeFiles(hemulenElId, files)`
+`Hemulen.prototype.storeFiles(hemulenElId, files)`
 
 Stores each item of `files` on the data model. When `Hemulen.storeFiles()` is called, the Hemulen instance will emit events as if the files had been dropped on the drop input or uploaded through the file input.
 
