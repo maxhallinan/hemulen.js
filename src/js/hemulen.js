@@ -149,7 +149,7 @@
     //EVENT HANDLERS
 
     function _onFileChange(e){
-        this.storeFiles(this.getInstanceId(_closest(e.target, this.hemulen)), e.target.files);
+        this.storeFiles(this.getHemulenElId(_closest(e.target, this.hemulenEl)), e.target.files);
     }
 
     function _onDragEnter(e){
@@ -170,7 +170,7 @@
     
     function _onDrop(e){
         e.preventDefault && e.preventDefault();
-        this.storeFiles(this.getInstanceId(_closest(e.target, this.hemulen)), e.dataTransfer.files);
+        this.storeFiles(this.getHemulenElId(_closest(e.target, this.hemulenEl)), e.dataTransfer.files);
         return false;
     }
     
@@ -192,7 +192,7 @@
     //HEMULEN CLASS
 
     function Hemulen(options){
-        this.hemulen        = undefined;
+        this.hemulenEl      = undefined;
         this.namespace      = undefined;
         this.dropInput      = undefined;
         this.fileInput      = undefined;
@@ -213,7 +213,7 @@
     //HEMULEN "PRIVATE" METHODS
 
     Hemulen.prototype._init = function(){
-        var els = document.querySelectorAll(this.hemulen);
+        var els = document.querySelectorAll(this.hemulenEl);
         this._instances = {};
         filesStored[this.namespace] = {};
 
@@ -367,7 +367,7 @@
 
     //HEMULEN "PUBLIC" METHODS
 
-    Hemulen.prototype.getInstanceId = function(element){
+    Hemulen.prototype.getHemulenElId = function(element){
         for (var key in this._instances) {
             if (this._instances[key] === element) {
                 return key;
