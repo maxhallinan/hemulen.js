@@ -1,6 +1,6 @@
 // |- Hemulen File Storage object
 // |   |- namespace
-// |   |   |- instanceId
+// |   |   |- hemulenElId
 // |   |   |   |- fileId
 // |   |   |   |   |- file
 // |   |   |   |   |- foo
@@ -217,10 +217,10 @@
         this._instances = {};
         filesStored[this.namespace] = {};
 
-        for (var i = 0, l = els.length, instanceId; i < l; i++) {
-            instanceId = _generateUniqueHash(_generateHash, 7, usedHashes);
-            this._instances[instanceId] = els[i];
-            filesStored[this.namespace][instanceId] = {};
+        for (var i = 0, l = els.length, hemulenElId; i < l; i++) {
+            hemulenElId = _generateUniqueHash(_generateHash, 7, usedHashes);
+            this._instances[hemulenElId] = els[i];
+            filesStored[this.namespace][hemulenElId] = {};
         }
 
         if (this.beforeSub && this.beforeSub.constructor === Function){beforeSub.push(this.beforeSub);}
@@ -257,9 +257,9 @@
         }
     };
 
-    Hemulen.prototype._setUploadLimit = function(instanceId, files){
-        var instance            = this._instances[instanceId],
-            filesStoredLength   = Object.keys(filesStored[this.namespace][instanceId]).length,
+    Hemulen.prototype._setUploadLimit = function(hemulenElId, files){
+        var instance            = this._instances[hemulenElId],
+            filesStoredLength   = Object.keys(filesStored[this.namespace][hemulenElId]).length,
             filesLength         = files.length,
             filesLimit          = this.fileLimit - filesStoredLength,
             range               = {},
@@ -268,7 +268,7 @@
             if (filesLength > filesLimit) {
                 eventDetail = {
                     instance: instance,
-                    instanceId: instanceId,
+                    hemulenElId: hemulenElId,
                     files: files,
                     hemulen: this
                 },
@@ -290,13 +290,13 @@
             return range;
     };
 
-    Hemulen.prototype._validFile = function(instanceId, file){
+    Hemulen.prototype._validFile = function(hemulenElId, file){
         var isValidType = this.acceptTypes ? this.acceptTypes.indexOf(file.type) > -1 : true,
             isValidSize = this.fileMaxSize ? this.fileMaxSize > file.size : true,
-            instance    = this._instances[instanceId], 
+            instance    = this._instances[hemulenElId], 
             eventDetail = {
                 instance: instance,
-                instanceId: instanceId,
+                hemulenElId: hemulenElId,
                 file: file,
                 hemulen: this
             },
@@ -304,10 +304,10 @@
 
         // var isValidType = this.acceptTypes.indexOf(file.type) > -1,
         //     isValidSize = file.size < this.fileMaxSize,
-        //     instance    = this._instances[instanceId], 
+        //     instance    = this._instances[hemulenElId], 
         //     eventDetail = {
         //         instance: instance,
-        //         instanceId: instanceId,
+        //         hemulenElId: hemulenElId,
         //         file: file,
         //         hemulen: this
         //     },
@@ -332,22 +332,22 @@
             }
     };
 
-    Hemulen.prototype._storeFile = function(instanceId, file){
+    Hemulen.prototype._storeFile = function(hemulenElId, file){
         var fileId = _generateUniqueHash(_generateHash, 7, usedHashes);
 
-        filesStored[this.namespace][instanceId][fileId] = {};
-        filesStored[this.namespace][instanceId][fileId]['file'] = file; 
+        filesStored[this.namespace][hemulenElId][fileId] = {};
+        filesStored[this.namespace][hemulenElId][fileId]['file'] = file; 
         
-        if (filesStored[this.namespace][instanceId][fileId]['file'] === file) {
+        if (filesStored[this.namespace][hemulenElId][fileId]['file'] === file) {
             var eventDetail = {
-                instance: this._instances[instanceId],
-                instanceId: instanceId,
+                instance: this._instances[hemulenElId],
+                hemulenElId: hemulenElId,
                 file: file,
                 fileId: fileId,
                 hemulen: this
             },
             ev = _createEvent('hemulen-filestored', true, true, eventDetail);
-            this._instances[instanceId].dispatchEvent(ev);
+            this._instances[hemulenElId].dispatchEvent(ev);
         } else {
             return null;
         }
@@ -387,45 +387,45 @@
         return undefined;
     };
 
-    Hemulen.prototype.getFileId = function(instanceId, file){
-        for (var key in filesStored[instanceId]) {
-            if (filesStored[instanceId][key][file] === file) {
+    Hemulen.prototype.getFileId = function(hemulenElId, file){
+        for (var key in filesStored[hemulenElId]) {
+            if (filesStored[hemulenElId][key][file] === file) {
                 return key;
             } 
         }
         return undefined;
     };
 
-    Hemulen.prototype.deleteFile = function(instanceId, fileId){
+    Hemulen.prototype.deleteFile = function(hemulenElId, fileId){
         var ev, eventDetail;
         
-        delete filesStored[this.namespace][instanceId][fileId];
+        delete filesStored[this.namespace][hemulenElId][fileId];
 
-        if (!filesStored[this.namespace][instanceId][fileId]) {
+        if (!filesStored[this.namespace][hemulenElId][fileId]) {
             eventDetail = {
-                instance: this._instances[instanceId],
-                instanceId: instanceId,
+                instance: this._instances[hemulenElId],
+                hemulenElId: hemulenElId,
                 hemulen: this
             };
             ev = _createEvent('hemulen-filedeleted', true, true, eventDetail);
-            this._instances[instanceId].dispatchEvent(ev);            
+            this._instances[hemulenElId].dispatchEvent(ev);            
         }
 
         return false;
     };
 
-    Hemulen.prototype.storeFiles = function(instanceId, files){
-        var range       = this._setUploadLimit(instanceId, files); 
+    Hemulen.prototype.storeFiles = function(hemulenElId, files){
+        var range       = this.fileLimit ? this._setUploadLimit(hemulenElId, files) : {start: 0, end: files.length}; 
 
         for (var i = range.start; i < range.end; i++) {
-            if ( this._validFile(instanceId, files[i - range.start]) ) {
-                this._storeFile(instanceId, files[i - range.start]);
+            if ( this._validFile(hemulenElId, files[i - range.start]) ) {
+                this._storeFile(hemulenElId, files[i - range.start]);
             }
         }
     };
 
-    Hemulen.prototype.addData = function(instanceId, fileId, updates){
-        _extend.call(filesStored[this.namespace][instanceId][fileId], updates);        
+    Hemulen.prototype.addData = function(hemulenElId, fileId, updates){
+        _extend.call(filesStored[this.namespace][hemulenElId][fileId], updates);        
     };
 
 
