@@ -291,8 +291,8 @@
     };
 
     Hemulen.prototype._validFile = function(instanceId, file){
-        var isValidType = this.acceptTypes.indexOf(file.type) > -1,
-            isValidSize = file.size < this.fileMaxSize,
+        var isValidType = this.acceptTypes ? this.acceptTypes.indexOf(file.type) > -1 : true,
+            isValidSize = this.fileMaxSize ? this.fileMaxSize > file.size : true,
             instance    = this._instances[instanceId], 
             eventDetail = {
                 instance: instance,
@@ -300,7 +300,18 @@
                 file: file,
                 hemulen: this
             },
-            ev;
+            ev;            
+
+        // var isValidType = this.acceptTypes.indexOf(file.type) > -1,
+        //     isValidSize = file.size < this.fileMaxSize,
+        //     instance    = this._instances[instanceId], 
+        //     eventDetail = {
+        //         instance: instance,
+        //         instanceId: instanceId,
+        //         file: file,
+        //         hemulen: this
+        //     },
+        //     ev;
 
             if (isValidType && isValidSize) {
                 return true;
