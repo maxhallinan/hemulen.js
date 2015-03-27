@@ -201,8 +201,16 @@
         this.fileLimit      = undefined;
         this.beforeSub      = undefined;
 
-        if (options) {_extend.call(this, options);}
+        if (!options || options.constructor !== Object) {
+            throw new Error('Invalid Hemulen configuration.');
+        } else {
+            _extend.call(this, options);
+        }
         
+        if (!this.hemulenEl || this.hemulenEl.constructor !== String){throw new Error('hemulenEl is a required configuration option and must be a CSS selector string.');}
+        if (!this.dropInput || this.dropInput.constructor !== String){throw new Error('dropInput is a required configuration option and must be a CSS selector string.');}
+        if (!this.namespace || this.namespace.constructor !== String){throw new Error('namespace is a required configuration option and must be a CSS selector string.');}
+
         this._init();
     }
 

@@ -5,7 +5,7 @@
     var full, thumb, single;
 
     var conf = {
-        attrInstanceId: 'data-dd-instanceid',
+        attrHemulenElId: 'data-dd-hemulenelid',
         attrFileId: 'data-dd-fileid',
         instance: '.js-dd-instance',
         instanceSel: {
@@ -59,7 +59,7 @@
 
     //Instance 1
     full = new Hemulen({
-        hemulen: '.js-dd--full',
+        hemulenEl: '.js-dd--full',
         namespace: 'ddfull',
         dropInput: '.js-dd__field',
         fileInput: '.js-dd__file-inpt',
@@ -67,11 +67,11 @@
         fileMaxSize: 5000000,
         fileLimit: 5,
         beforeSub: function(e, instance){
-            var instanceId, fileId;
+            var hemulenElId, fileId;
 
             $('.js-dd--full').each(function(){
                 var $this = $(this),
-                    instanceId = $this.attr(conf.attrInstanceId),
+                    hemulenElID = $this.attr(conf.attrHemulenElId),
                     $theseItems = $this.find(conf.listItem);
 
                 $theseItems.each(function(){
@@ -79,7 +79,7 @@
                         fileId          = $that.attr(conf.attrFileId),
                         positionVal     = $theseItems.index($that);
 
-                    instance.addData(instanceId, fileId, {position: positionVal});
+                    instance.addData(hemulenElId, fileId, {position: positionVal});
                 });
             });
             console.log('beforeSub full', e, instance);
@@ -87,14 +87,14 @@
     });
 
     $('.js-dd--full').each(function(){
-        var instanceId = full.getInstanceId(this);
-        $(this).attr('data-dd-instanceid', instanceId);
+        var hemulenElId = full.getHemulenElId(this);
+        $(this).attr(conf.attrHemulenElId, hemulenElId);
     });
 
 
     //Instance 2
     thumb = new Hemulen({
-        hemulen: '.js-dd--thumb',
+        hemulenEl: '.js-dd--thumb',
         namespace: 'ddthumb',
         dropInput: '.js-dd__field',
         fileInput: '.js-dd__file-inpt',
@@ -102,11 +102,11 @@
         fileMaxSize: 5000000,
         fileLimit: 10,
         beforeSub: function(e, instance){
-            var instanceId, fileId;
+            var hemulenElId, fileId;
 
             $('.js-dd--thumb').each(function(){
                 var $this = $(this),
-                    instanceId = $this.attr(conf.attrInstanceId),
+                    hemulenElId = $this.attr(conf.attrHemulenElId),
                     $theseItems = $this.find(conf.listItem);
 
                 $theseItems.each(function(){
@@ -114,7 +114,7 @@
                         itemId          = $that.attr(conf.attrFileId),
                         positionVal     = $theseItems.index($that);
 
-                    instance.addData(instanceId, fileId, {position: positionVal});
+                    instance.addData(hemulenElId, fileId, {position: positionVal});
                 });
             });
             console.log('beforeSub thumb', e, instance);
@@ -122,14 +122,14 @@
     });
 
     $('.js-dd--thumb').each(function(){
-        var instanceId = thumb.getInstanceId(this);
-        $(this).attr('data-dd-instanceid', instanceId);
+        var hemulenElId = thumb.getHemulenElId(this);
+        $(this).attr(conf.attrHemulenElId, hemulenElId);
     });
 
 
     //Instance 3
     single = new Hemulen({
-        hemulen: '.js-dd--single',
+        hemulenEl: '.js-dd--single',
         namespace: 'ddsingle',
         dropInput: '.js-dd__field',
         fileInput: '.js-dd__file-inpt',
@@ -140,8 +140,8 @@
     });
 
     $('.js-dd--single').each(function(){
-        var instanceId = single.getInstanceId(this);
-        $(this).attr('data-dd-instanceid', instanceId);
+        var hemulenElId = single.getHemulenElId(this);
+        $(this).attr(conf.attrHemulenElId, hemulenElId);
     });
 
 
@@ -217,15 +217,15 @@
         var $this           = $(this), 
             $thisItem       = $this.closest(conf.listItem),
             $thisInstance   = $this.closest(conf.instance),
-            instanceId      = $thisInstance.attr(conf.attrInstanceId),
+            hemulenElId      = $thisInstance.attr(conf.attrHemulenElId),
             fileId          = $(this).closest(conf.listItem).attr(conf.attrFileId);
 
         if ( $thisInstance.hasClass(conf.instanceSel.full) ) {
-            full.deleteFile(instanceId, fileId);
+            full.deleteFile(hemulenElId, fileId);
         } else if ( $thisInstance.hasClass(conf.instanceSel.thumb) ) {
-            thumb.deleteFile(instanceId, fileId);
+            thumb.deleteFile(hemulenElId, fileId);
         } else if ( $thisInstance.hasClass(conf.instanceSel.single) ) {
-            single.deleteFile(instanceId, fileId);
+            single.deleteFile(hemulenElId, fileId);
         }
 
         $thisItem.remove();
@@ -237,7 +237,7 @@
         var $this           = $(this), 
             $thisItem       = $this.closest(conf.listItem),
             $thisInstance   = $this.closest(conf.instance),
-            instanceId      = $thisInstance.attr(conf.attrInstanceId),
+            hemulenElId      = $thisInstance.attr(conf.attrHemulenElId),
             fileId          = $this.closest(conf.listItem).attr(conf.attrFileId),
             thisValue       = $this.val(),
             thisData = {};
@@ -249,11 +249,11 @@
         }
 
         if ( $thisInstance.hasClass(conf.instanceSel.full) ) {
-            full.addData(instanceId, fileId, thisData);
+            full.addData(hemulenElId, fileId, thisData);
         } else if ( $thisInstance.hasClass(conf.instanceSel.thumb) ) {
-            thumb.addData(instanceId, fileId, thisData);
+            thumb.addData(hemulenElId, fileId, thisData);
         } else if ( $thisInstance.hasClass(conf.instanceSel.single) ) {
-            single.addData(instanceId, fileId, thisData);
+            single.addData(hemulenElId, fileId, thisData);
         }
 
         console.log('list keyup ', e);
