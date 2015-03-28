@@ -13,10 +13,10 @@
     'use strict';
 
     //MODULE GLOBALS
-    var filesStored     = {},
-        usedHashes      = [],
-        beforeSub       = [],
-        formSubmitted   = false; 
+    var filesStored     = {};
+    var usedHashes      = [];
+    var beforeSub       = [];
+    var formSubmitted   = false; 
 
 
 
@@ -97,9 +97,9 @@
     }
 
     function _createSubData(storedData, formData){
-        var propname    = '',
-            counterA    = 0,
-            counterB    = 0;
+        var propname    = '';
+        var counterA    = 0;
+        var counterB    = 0;
 
             for (var foo in storedData) {
                 if (storedData.hasOwnProperty(foo)){
@@ -175,7 +175,8 @@
     }
     
     function _onSub(e){
-        var i, j;
+        var i, j; 
+
         e.preventDefault && e.preventDefault();
         
         if (!formSubmitted) {
@@ -237,7 +238,15 @@
     };
 
     Hemulen.prototype._bindEventListeners = function(){
-        var i, j, k, l, key, el, dropForm, dropInput, fileInput;
+        var i; 
+        var j; 
+        var k; 
+        var l;
+        var key; 
+        var el;
+        var dropForm;
+        var dropInput;
+        var fileInput;
 
         for (key in this._instances) {
             el          = this._instances[key],
@@ -266,78 +275,69 @@
     };
 
     Hemulen.prototype._setUploadLimit = function(hemulenElId, files){
-        var instance            = this._instances[hemulenElId],
-            filesStoredLength   = Object.keys(filesStored[this.namespace][hemulenElId]).length,
-            filesLength         = files.length,
-            filesLimit          = this.fileLimit - filesStoredLength,
-            range               = {},
-            ev, eventDetail, s;
+        var instance            = this._instances[hemulenElId];
+        var filesStoredLength   = Object.keys(filesStored[this.namespace][hemulenElId]).length;
+        var filesLength         = files.length;
+        var filesLimit          = this.fileLimit - filesStoredLength;
+        var range               = {};
+        var ev;
+        var eventDetail;
+        var s;
 
-            if (filesLength > filesLimit) {
-                eventDetail = {
-                    instance: instance,
-                    hemulenElId: hemulenElId,
-                    files: files,
-                    hemulen: this
-                },
-                ev = _createEvent('hemulen-toomany', true, true, eventDetail);  
-                instance.dispatchEvent(ev);
+        if (filesLength > filesLimit) {
+            eventDetail = {
+                instance: instance,
+                hemulenElId: hemulenElId,
+                files: files,
+                hemulen: this
+            },
+            ev = _createEvent('hemulen-toomany', true, true, eventDetail);  
+            instance.dispatchEvent(ev);
 
-                range.start = 0;
-                range.end   = 0;
-                return range;
-            } else if (filesStoredLength === 0) {
-                range.start = 0;
-                range.end   = filesLength > this.fileLimit ? this.fileLimit : filesLength;  
-            } else if (filesStoredLength < this.fileLimit && filesStoredLength > 0) {
-                range.start = filesStoredLength;
-                s = range.start + filesLength;
-                range.end   = this.fileLimit < s ? this.fileLimit : s; 
-            }
-
+            range.start = 0;
+            range.end   = 0;
             return range;
+        } else if (filesStoredLength === 0) {
+            range.start = 0;
+            range.end   = filesLength > this.fileLimit ? this.fileLimit : filesLength;  
+        } else if (filesStoredLength < this.fileLimit && filesStoredLength > 0) {
+            range.start = filesStoredLength;
+            s = range.start + filesLength;
+            range.end   = this.fileLimit < s ? this.fileLimit : s; 
+        }
+
+        return range;
     };
 
     Hemulen.prototype._validFile = function(hemulenElId, file){
-        var isValidType = this.acceptTypes ? this.acceptTypes.indexOf(file.type) > -1 : true,
-            isValidSize = this.fileMaxSize ? this.fileMaxSize > file.size : true,
-            instance    = this._instances[hemulenElId], 
-            eventDetail = {
+        var isValidType = this.acceptTypes ? this.acceptTypes.indexOf(file.type) > -1 : true;
+        var isValidSize = this.fileMaxSize ? this.fileMaxSize > file.size : true;
+        var instance    = this._instances[hemulenElId];
+        var eventDetail = {
                 instance: instance,
                 hemulenElId: hemulenElId,
                 file: file,
                 hemulen: this
-            },
-            ev;            
+            };
+        var ev;            
 
-        // var isValidType = this.acceptTypes.indexOf(file.type) > -1,
-        //     isValidSize = file.size < this.fileMaxSize,
-        //     instance    = this._instances[hemulenElId], 
-        //     eventDetail = {
-        //         instance: instance,
-        //         hemulenElId: hemulenElId,
-        //         file: file,
-        //         hemulen: this
-        //     },
-        //     ev;
-
-            if (isValidType && isValidSize) {
-                return true;
-            } else if (!isValidType && !isValidSize) {
-                ev = _createEvent('hemulen-wrongtype', true, true, eventDetail);
-                instance.dispatchEvent(ev);
-                ev = _createEvent('hemulen-toobig', true, true, eventDetail);
-                instance.dispatchEvent(ev);
-                return false;
-            } else if (!isValidType && isValidSize) {
-                ev = _createEvent('hemulen-wrongtype', true, true, eventDetail);
-                instance.dispatchEvent(ev);
-                return false;
-            } else if (isValidType && !isValidSize) {
-                ev = _createEvent('hemulen-toobig', true, true, eventDetail);
-                instance.dispatchEvent(ev);
-                return false;
-            }
+        if (isValidType && isValidSize) {
+            return true;
+        } else if (!isValidType && !isValidSize) {
+            ev = _createEvent('hemulen-wrongtype', true, true, eventDetail);
+            instance.dispatchEvent(ev);
+            ev = _createEvent('hemulen-toobig', true, true, eventDetail);
+            instance.dispatchEvent(ev);
+            return false;
+        } else if (!isValidType && isValidSize) {
+            ev = _createEvent('hemulen-wrongtype', true, true, eventDetail);
+            instance.dispatchEvent(ev);
+            return false;
+        } else if (isValidType && !isValidSize) {
+            ev = _createEvent('hemulen-toobig', true, true, eventDetail);
+            instance.dispatchEvent(ev);
+            return false;
+        }
     };
 
     Hemulen.prototype._storeFile = function(hemulenElId, file){
@@ -353,8 +353,9 @@
                 file: file,
                 fileId: fileId,
                 hemulen: this
-            },
-            ev = _createEvent('hemulen-filestored', true, true, eventDetail);
+            };
+            var ev = _createEvent('hemulen-filestored', true, true, eventDetail);
+            
             this._instances[hemulenElId].dispatchEvent(ev);
         } else {
             return null;
@@ -362,13 +363,13 @@
     };
 
     Hemulen.prototype._subData = function(form){
-        var req     = new XMLHttpRequest(),
-            route   = form.getAttribute('action');
+        var req     = new XMLHttpRequest();
+        var route   = form.getAttribute('action');
             
         req.onreadystatechange = function(){
             if (req.readyState === 4) {
-                var ev,
-                    eventDetail = {request: req};
+                var ev;
+                var eventDetail = {request: req};
                 
                 ev = req.status === 200 ?   _createEvent('hemulen-subsuccess', true, true, eventDetail) : 
                                             _createEvent('hemulen-subfailure', true, true, eventDetail);
@@ -387,25 +388,38 @@
     //HEMULEN "PUBLIC" METHODS
 
     Hemulen.prototype.getHemulenElId = function(element){
+
+        if (!element || typeof element !== 'object' || !element.nodeType || element.nodeType !== 1) {
+            throw new Error('The first argument must be an element node');
+        }
+
         for (var key in this._instances) {
             if (this._instances[key] === element) {
                 return key;
             }
         }
+
         return undefined;
     };
 
     Hemulen.prototype.getFileId = function(hemulenElId, file){
+        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
+
         for (var key in filesStored[hemulenElId]) {
             if (filesStored[hemulenElId][key][file] === file) {
                 return key;
             } 
         }
+
         return undefined;
     };
 
     Hemulen.prototype.deleteFile = function(hemulenElId, fileId){
-        var ev, eventDetail;
+        var ev;
+        var eventDetail;
+
+        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
+        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
         
         delete filesStored[this.namespace][hemulenElId][fileId];
 
@@ -423,7 +437,11 @@
     };
 
     Hemulen.prototype.storeFiles = function(hemulenElId, files){
-        var range       = this.fileLimit ? this._setUploadLimit(hemulenElId, files) : {start: 0, end: files.length}; 
+        var range;
+
+        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
+
+        range = this.fileLimit ? this._setUploadLimit(hemulenElId, files) : {start: 0, end: files.length}; 
 
         for (var i = range.start; i < range.end; i++) {
             if ( this._validFile(hemulenElId, files[i - range.start]) ) {
@@ -433,6 +451,16 @@
     };
 
     Hemulen.prototype.addData = function(hemulenElId, fileId, updates){
+        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
+        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
+        if (!hemulenElId || hemulenElId.constructor !== Object) {throw new Error('This is an invalid value: ', updates);}
+        
+        for (var prop in updates) {
+            if (updates.hasOwnProperty(prop) && (updates[prop].constructor === Object || updates[prop].constructor === Array) ) {
+                throw new Error('The third argument is invalid. Values stored on the object must be primitives.');
+            }
+        }
+
         _extend.call(filesStored[this.namespace][hemulenElId][fileId], updates);        
     };
 
