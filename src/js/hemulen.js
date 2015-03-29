@@ -310,30 +310,15 @@
         var isValidType = this.acceptTypes ? this.acceptTypes.indexOf(file.type) > -1 : true;
         var isValidSize = this.fileMaxSize ? this.fileMaxSize > file.size : true;
         var instance    = this._instances[hemulenElId];
-        var eventDetail = {
-                instance: instance,
-                hemulenElId: hemulenElId,
-                file: file,
-                hemulen: this
-            };
-        var ev;            
 
         if (isValidType && isValidSize) {
             return true;
         } else if (!isValidType && !isValidSize) {
-            ev = _createEvent('hemulen-wrongtype', true, true, eventDetail);
-            instance.dispatchEvent(ev);
-            ev = _createEvent('hemulen-toobig', true, true, eventDetail);
-            instance.dispatchEvent(ev);
-            return false;
+            return ['too big', 'wrong type'];
         } else if (!isValidType && isValidSize) {
-            ev = _createEvent('hemulen-wrongtype', true, true, eventDetail);
-            instance.dispatchEvent(ev);
-            return false;
+            return ['wrong type'];
         } else if (isValidType && !isValidSize) {
-            ev = _createEvent('hemulen-toobig', true, true, eventDetail);
-            instance.dispatchEvent(ev);
-            return false;
+            return ['too big'];
         }
     };
 
@@ -428,7 +413,6 @@
                 hemulen: this
             };
             ev = _createEvent('hemulen-filedeleted', true, true, eventDetail);
-            ev.hello = "hello world";
             this._instances[hemulenElId].dispatchEvent(ev);            
         }
 
@@ -436,16 +420,38 @@
     };
 
     Hemulen.prototype.storeFiles = function(hemulenElId, files){
-        var range;
+        var range, valid;
+        var ev, eventDetail;
+        var errors = [];
 
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
 
         range = this.fileLimit ? this._setUploadLimit(hemulenElId, files) : {start: 0, end: files.length}; 
 
         for (var i = range.start; i < range.end; i++) {
-            if ( this._validFile(hemulenElId, files[i - range.start]) ) {
+            valid = this._validFile(hemulenElId, files[i - range.start]); 
+            
+            if ( valid === true ) {
                 this._storeFile(hemulenElId, files[i - range.start]);
-            }
+            } else {
+                for (var l = 0, m = valid.length; l < m; l++) {
+                    errors.push({
+                        errorType: valid[l],
+                        file: files[i]
+                    });
+                }
+            }   
+        }
+
+        if (errors.length) {
+            eventDetail = {
+                errors: errors,
+                instance: this._instances[hemulenElId],
+                hemulenElId: hemulenElId,
+                hemulen: this
+            };
+            ev = _createEvent('hemulen-invalidfiles', true, true, eventDetail);
+            this._instances[hemulenElId].dispatchEvent(ev); 
         }
     };
 

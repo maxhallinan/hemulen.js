@@ -298,7 +298,7 @@
     fullEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
     fullEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
     fullEl0.addEventListener('hemulen-filedeleted', _onFileDeleted, false);
-
+    fullEl0.addEventListener('hemulen-error', function(e){console.log('hemulen-error: ', e);}, false);
 
     fullEl1.addEventListener('hemulen-filestored', _onFileStoredFull, false); 
     fullEl1.addEventListener('hemulen-toomany', _onTooMany, false);

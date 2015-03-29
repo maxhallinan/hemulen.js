@@ -217,46 +217,41 @@ Event properties:
 
 ###Error Events
 
-####Error
+####Too Many Files
 
-Event Name: `hemulen-error`
+Event Name: `hemulen-toomany`
 
-The event emitted by the Hemulen element when one or more invalid files have been dropped on the drag&ndash;and&ndash;drop field or uploaded through the file input, or when the number of files exceeds the file limit. Invalid files have not been stored on the data model. In the case of error type `'too many'`, none of the files have been stored on the data model. 
+The event emitted by the Hemulen element when the number of files dropped on the drop input or uploaded through the file input is greater than the value of `options.fileLimit`. When `hemulen-toomany` is emitted, no files have been stored on the data model.
 
-Dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input might produce multiple errors. The event is emitted once per user action and  the `hemulen-error.detail.errors` property contains all errors produced by that action. 
+Properties:
+
+- `hemulen-toomany.detail.hemulen`
+    + Type: Object
+    + The `Hemulen` class instance bound to the Hemulen element emitting the event.
+- `hemulen-toomany.detail.hemulenElId`
+    + Type: String
+    + The Hemulen storage key identifying the Hemulen element emitting the event.
+- `hemulen-toomany.detail.files`
+    + Type: File List
+    + The group of files that were dropped on the drag&ndash;and&ndash;drop field but not placed in Hemulen storage.
+####Invalid Files
+
+Event Name: `hemulen-invalid`
+
+The event emitted by the Hemulen element when one or more invalid files have been dropped on the drag&ndash;and&ndash;drop field or uploaded through the file input, or when the number of files exceeds the file limit. Invalid files have not been stored on the data model.
+
+Dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input can produce multiple errors. The event is emitted once per user action and  the `hemulen-error.detail.errors` property contains all errors produced by that action. 
 
 Event properties:
 
 - `hemulen-error.detail.errors`:
     + Type: Array,
-    + An array of objects. Each object represents an error. The error is one of three error types.
-
-#####Error Types
-
-- Too Big:
-    + The file is greater than the value of `config.maxFileSize`;
-    + Properties:
+    + An array of objects. Each object represents an error. Each object has two properties:
         * `errorType`:
             - Type: String,
-            - Value: `'too big'`;
-        * `file`:
-            - Type: File Object,
-            - The invalid file;
-- Too Many:
-    + The number of files being dropped or uploaded is greater than the value of `config.fileLimit` or the remaining limit if files have previously been dropped or uploaded;
-    + Properties:
-        * `errorType`:
-            - Type: String,
-            - Value: `'too many'`;
-        * `files`:
-            - Type: File List,
-            - The group of files;
-- Wrong Type:
-    + The file does not match any of the mime type strings stored in `config.acceptTypes`;
-    + Properties:
-        * `errorType`:
-            - Type: String,
-            - Value: `'wrong type'`;
+            - One of two error types:
+                + `'too big'`: the file is greater than the value of `config.maxFileSize`;
+                + `'too many'`: the file does nto match any of the mime type strings stored in `config.accepTypes`.
         * `file`:
             - Type: File Object,
             - The invalid file.
