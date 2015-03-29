@@ -238,9 +238,9 @@ Properties:
 
 Event Name: `hemulen-invalid`
 
-The event emitted by the Hemulen element when one or more invalid files have been dropped on the drag&ndash;and&ndash;drop field or uploaded through the file input, or when the number of files exceeds the file limit. Invalid files have not been stored on the data model.
+The event emitted by the Hemulen element when one or more invalid files have been dropped on the drag&ndash;and&ndash;drop field or uploaded through the file input. Invalid files have not been stored on the data model.
 
-Dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input can produce multiple errors. The event is emitted once per user action and  the `hemulen-error.detail.errors` property contains all errors produced by that action. 
+Dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input can produce multiple errors. The event is emitted once per user action and  the `hemulen-invalid.detail.errors` property contains all errors produced by that action. 
 
 Event properties:
 
@@ -250,7 +250,7 @@ Event properties:
 - `hemulen-invalid.detail.hemulenElId`
     + Type: String
     + The Hemulen storage key identifying the Hemulen element emitting the event.
-- `hemulen-error.detail.errors`:
+- `hemulen-invalid.detail.errors`:
     + Type: Array,
     + An array of objects. Each object represents an error. Each object has two properties:
         * `errorType`:
