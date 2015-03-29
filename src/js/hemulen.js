@@ -1,14 +1,3 @@
-// |- Hemulen File Storage object
-// |   |- namespace
-// |   |   |- hemulenElId
-// |   |   |   |- fileId
-// |   |   |   |   |- file
-// |   |   |   |   |- foo
-// |   |   |   |   |- bar
-
-//instance === hemulenEl
-//hemulen === Hemulen class instance
-
 ;(function(){
     'use strict';
 
@@ -97,6 +86,14 @@
     }
 
     function _createSubData(storedData, formData){
+        // |- Hemulen File Storage object
+        // |   |- namespace
+        // |   |   |- hemulenElId
+        // |   |   |   |- fileId
+        // |   |   |   |   |- file
+        // |   |   |   |   |- foo
+        // |   |   |   |   |- bar
+
         var propname    = '';
         var counterA    = 0;
         var counterB    = 0;
@@ -426,10 +423,12 @@
         if (!filesStored[this.namespace][hemulenElId][fileId]) {
             eventDetail = {
                 instance: this._instances[hemulenElId],
+                fileId: fileId,
                 hemulenElId: hemulenElId,
                 hemulen: this
             };
             ev = _createEvent('hemulen-filedeleted', true, true, eventDetail);
+            ev.hello = "hello world";
             this._instances[hemulenElId].dispatchEvent(ev);            
         }
 
@@ -452,8 +451,8 @@
 
     Hemulen.prototype.addData = function(hemulenElId, fileId, updates){
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
-        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
-        if (!hemulenElId || hemulenElId.constructor !== Object) {throw new Error('This is an invalid value: ', updates);}
+        if (!fileId || fileId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
+        if (!updates || updates.constructor !== Object) {throw new Error('This is an invalid value: ', updates);}
         
         for (var prop in updates) {
             if (updates.hasOwnProperty(prop) && (updates[prop].constructor === Object || updates[prop].constructor === Array) ) {
