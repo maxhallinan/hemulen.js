@@ -244,10 +244,10 @@ Dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file
 
 Event properties:
 
-- `hemulen-toomany.detail.hemulen`
+- `hemulen-invalid.detail.hemulen`
     + Type: Object
     + The `Hemulen` class instance bound to the Hemulen element emitting the event.
-- `hemulen-toomany.detail.hemulenElId`
+- `hemulen-invalid.detail.hemulenElId`
     + Type: String
     + The Hemulen storage key identifying the Hemulen element emitting the event.
 - `hemulen-error.detail.errors`:
