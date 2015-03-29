@@ -4,7 +4,7 @@
 
 ###Overview
 
-Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. A drag&#45;and&#45;drop field is created by instantiating the `Hemulen` class. A `Hemulen` instance is bound to one or more DOM elements containing a drag&#45;and&#45;drop field and an optional file input. The `Hemulen` class can be instantiated multiple times per form, enabling differences of behavior among fields. When the form is submitted, files dropped on the drag&#45;and&#45;drop fields will be posted with the form as a single asynchronous request. The request is made to the value of the form's action attribute.
+Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. A drag&#45;and&#45;drop field is created by instantiating the `Hemulen` class. A `Hemulen` instance is bound to one or more DOM elements containing a drag&#45;and&#45;drop field and an optional file input. A single `Hemulen` instance works for one or more forms per page and the `Hemulen` class can be instantiated multiple times per form, enabling differences of behavior among fields. When the form is submitted, files dropped on the drag&#45;and&#45;drop fields will be posted with the form as a single asynchronous request. The request is made to the value of the form's action attribute.
 
 ###What Hemulen.js does
 
@@ -73,6 +73,13 @@ Hemulen.js depends on these browser APIs:
 
 When loaded, Hemulen.js tests support for these APIs. If they are not supported, Hemulen.js adds class `hemulen-incompatible` to the `html` element. Check for this class before creating a Hemulen instance.
 
+##Browser Compatability
+
+- Chrome 31+
+- FireFox 35+
+- IE 10+
+- Safari 7.1+
+
 ##Basic Use
 
     <form action="/hemulen-form" method="post" enctype="multipart/form-data">
@@ -92,7 +99,6 @@ When loaded, Hemulen.js tests support for these APIs. If they are not supported,
             namespace: 'foo'
         });
     </script>
-
 
 
 ##Configuration
@@ -221,7 +227,7 @@ Event properties:
 
 Event Name: `hemulen-toomany`
 
-The event emitted by the Hemulen element when the number of files dropped on the drop input or uploaded through the file input is greater than the value of `options.fileLimit`. When `hemulen-toomany` is emitted, no files have been stored on the data model.
+The event emitted by the Hemulen element when the number of files dropped on the drop input or uploaded through the file input is greater than the value of `options.fileLimit`. When `hemulen-toomany` is emitted, none of that group of files have been stored on the data model.
 
 Properties:
 
@@ -233,14 +239,15 @@ Properties:
     + The Hemulen storage key identifying the Hemulen element emitting the event.
 - `hemulen-toomany.detail.files`
     + Type: File List
-    + The group of files that were dropped on the drag&ndash;and&ndash;drop field but not placed in Hemulen storage.
+    + The group of files that triggered the event.
+
 ####Invalid Files
 
 Event Name: `hemulen-invalid`
 
 The event emitted by the Hemulen element when one or more invalid files have been dropped on the drag&ndash;and&ndash;drop field or uploaded through the file input. Invalid files have not been stored on the data model.
 
-Dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input can produce multiple errors. The event is emitted once per user action and  the `hemulen-invalid.detail.errors` property contains all errors produced by that action. 
+A user action (dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input) can produce multiple errors. The event is emitted once per user action and  the `hemulen-invalid.detail.errors` property contains all errors produced by that action. 
 
 Event properties:
 
@@ -257,7 +264,7 @@ Event properties:
             - Type: String,
             - One of two error types:
                 + `'too big'`: the file is greater than the value of `config.maxFileSize`;
-                + `'too many'`: the file does nto match any of the mime type strings stored in `config.accepTypes`.
+                + `'too many'`: the file does not match any of the mime type strings stored in `config.accepTypes`.
         * `file`:
             - Type: File Object,
             - The invalid file.
@@ -348,6 +355,5 @@ Parameters:
     + Type: FileList Object
     + a `FileList` containing one or more `File` objects.
 
-##Browser Compatability
 
 

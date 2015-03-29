@@ -6,12 +6,6 @@
     var formEls     = false;
     var usedHashes  = [];
 
-    // var filesStored     = {};
-    // var beforeSub       = [];
-    // var formSubmitted   = false; 
-
-
-
 
 
     //UTILITY
