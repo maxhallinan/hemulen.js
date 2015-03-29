@@ -466,6 +466,39 @@
     };
 
 
+
+
+
+    //TEST FOR BROWSER API DEPENDENCIES
+    function _testDragDrop(){
+        //modernizr test
+        var div = document.createElement('div');
+        return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+    }
+
+    function _testFileAPI(){
+        //modernizr test
+        // file tests for the File API specification
+        // Tests for objects specific to the File API W3C specification without
+        // being redundant (don't bother testing for Blob since it is assumed
+        // to be the File object's prototype.
+        
+        // Will fail in Safari 5 due to its lack of support for the standards
+        // defined FileReader object
+
+        return !!(window.File && window.FileList && window.FileReader);
+    }
+
+    (function(){
+        if (!_testFileAPI() || !_testDragDrop){
+            document.documentElement.classList.add('hemulen-incompatible');
+        }
+    }());
+
+
+
+
+
     //EXPORT HEMULEN
     if (typeof module !== "undefined" && module !== null) {
         module.exports = Hemulen;
