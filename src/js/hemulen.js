@@ -283,10 +283,9 @@
 
         if (filesLength > filesLimit) {
             eventDetail = {
-                instance: instance,
-                hemulenElId: hemulenElId,
                 files: files,
-                hemulen: this
+                hemulen: this,
+                hemulenElId: hemulenElId
             },
             ev = _createEvent('hemulen-toomany', true, true, eventDetail);  
             instance.dispatchEvent(ev);
@@ -330,11 +329,10 @@
         
         if (filesStored[this.namespace][hemulenElId][fileId]['file'] === file) {
             var eventDetail = {
-                instance: this._instances[hemulenElId],
-                hemulenElId: hemulenElId,
                 file: file,
                 fileId: fileId,
-                hemulen: this
+                hemulen: this,
+                hemulenElId: hemulenElId
             };
             var ev = _createEvent('hemulen-filestored', true, true, eventDetail);
             
@@ -407,10 +405,9 @@
 
         if (!filesStored[this.namespace][hemulenElId][fileId]) {
             eventDetail = {
-                instance: this._instances[hemulenElId],
                 fileId: fileId,
-                hemulenElId: hemulenElId,
-                hemulen: this
+                hemulen: this,
+                hemulenElId: hemulenElId
             };
             ev = _createEvent('hemulen-filedeleted', true, true, eventDetail);
             this._instances[hemulenElId].dispatchEvent(ev);            
@@ -437,7 +434,7 @@
                 for (var l = 0, m = valid.length; l < m; l++) {
                     errors.push({
                         errorType: valid[l],
-                        file: files[i]
+                        file: files[i - range.start]
                     });
                 }
             }   
@@ -446,11 +443,10 @@
         if (errors.length) {
             eventDetail = {
                 errors: errors,
-                instance: this._instances[hemulenElId],
-                hemulenElId: hemulenElId,
-                hemulen: this
+                hemulen: this,
+                hemulenElId: hemulenElId
             };
-            ev = _createEvent('hemulen-invalidfiles', true, true, eventDetail);
+            ev = _createEvent('hemulen-invalid', true, true, eventDetail);
             this._instances[hemulenElId].dispatchEvent(ev); 
         }
     };

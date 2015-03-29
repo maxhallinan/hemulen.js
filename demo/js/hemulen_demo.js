@@ -141,8 +141,11 @@
 
         reader.onload = function(readerE){
             var $sortableList = $(conf.sortable);
+            var $eTarg        = $(e.target);
 
-            $(e.detail.instance).find(conf.list).append(fullTemplate({
+            $eTarg.find(conf.error).html('');
+
+            $eTarg.find(conf.list).append(fullTemplate({
                 name: e.detail.file.name,
                 fileId: e.detail.fileId,
                 thumbSrc: readerE.target.result
@@ -162,11 +165,14 @@
 
     function _onFileStoredThumb(e){
         var reader = new FileReader();
+        var $eTarg        = $(e.target);
+
+        $eTarg.find(conf.error).html('');
 
         reader.onload = function(readerE){
             var $sortableList = $(conf.sortable);
 
-            $(e.detail.instance).find(conf.list).append(thumbTemplate({
+            $eTarg.find(conf.list).append(thumbTemplate({
                 name: e.detail.file.name,
                 fileId: e.detail.fileId,
                 thumbSrc: readerE.target.result
@@ -186,7 +192,7 @@
     }
 
     function _onFileStoredSingle(e){    
-        $(e.detail.instance).find(conf.list).html(singleTemplate({
+        $eTarg.find(conf.list).html(singleTemplate({
             name: e.detail.file.name,
             fileId: e.detail.fileId
         }));
@@ -245,31 +251,30 @@
 
     //Error events
 
-    function _onTooBig(e){
-        var errMessage = document.createElement('p');
-            errMessage.textContent = conf.err.tooBig + e.detail.file.name;
-
-        $(e.detail.instance).find(conf.ddError).append(errMessage);
-
-        console.log('hemulen-toomany', e);
+    function _onInvalid(e){
+        var errMessage;
+        var $errContainer = $(e.target).find(conf.error);
+        
+        $errContainer.html('');
+    
+        for (var i = 0, j = e.detail.errors.length; i < j; i++){
+            errMessage = document.createElement('p');
+            if (e.detail.errors[i].errorType === 'too big') {
+                errMessage.textContent = conf.err.tooBig + e.detail.errors[i].file.name;
+            } else if (e.detail.errors[i].errorType === 'wrong type') {
+                errMessage.textContent = conf.err.wrongType + e.detail.errors[i].file.name;
+            } 
+            $errContainer.append(errMessage);
+        }
     }
     
     function _onTooMany(e){
         var errMessage = document.createElement('p');
             errMessage.textContent = conf.err.tooMany;
 
-        $(e.detail.instance).find(conf.ddError).append(errMessage);
-
-        console.log('hemulen-toobig', e);
-    }
-    
-    function _onWrongType(e){
-        var errMessage = document.createElement('p');
-            errMessage.textContent = conf.err.wrongType + e.detail.file.name;
-
-        $(e.detail.instance).find(conf.ddError).append(errMessage);
-
-        console.log('hemulen-wrongtype', e);
+        $(e.target).find(conf.error)
+            .html('')
+            .append(errMessage);
     }
     
 
@@ -295,41 +300,35 @@
 
     fullEl0.addEventListener('hemulen-filestored', _onFileStoredFull, false); 
     fullEl0.addEventListener('hemulen-toomany', _onTooMany, false);
-    fullEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
-    fullEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    fullEl0.addEventListener('hemulen-invalid', _onInvalid, false);  
     fullEl0.addEventListener('hemulen-filedeleted', _onFileDeleted, false);
     fullEl0.addEventListener('hemulen-error', function(e){console.log('hemulen-error: ', e);}, false);
 
     fullEl1.addEventListener('hemulen-filestored', _onFileStoredFull, false); 
     fullEl1.addEventListener('hemulen-toomany', _onTooMany, false);
-    fullEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
-    fullEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    fullEl1.addEventListener('hemulen-invalid', _onInvalid, false);  
     fullEl1.addEventListener('hemulen-filedeleted', _onFileDeleted, false);
 
 
     thumbEl0.addEventListener('hemulen-filestored', _onFileStoredThumb, false);
     thumbEl0.addEventListener('hemulen-toomany', _onTooMany, false);
-    thumbEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
-    thumbEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    thumbEl0.addEventListener('hemulen-invalid', _onInvalid, false);  
     thumbEl0.addEventListener('hemulen-filedeleted', _onFileDeleted, false);
 
     thumbEl1.addEventListener('hemulen-filestored', _onFileStoredThumb, false);
     thumbEl1.addEventListener('hemulen-toomany', _onTooMany, false);
-    thumbEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
-    thumbEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    thumbEl1.addEventListener('hemulen-invalid', _onInvalid, false);  
     thumbEl1.addEventListener('hemulen-filedeleted', _onFileDeleted, false);
 
 
     singleEl0.addEventListener('hemulen-filestored', _onFileStoredSingle, false);
     singleEl0.addEventListener('hemulen-toomany', _onTooMany, false);
-    singleEl0.addEventListener('hemulen-toobig', _onTooBig, false);  
-    singleEl0.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    singleEl0.addEventListener('hemulen-invalid', _onInvalid, false);  
     singleEl0.addEventListener('hemulen-filedeleted', _onFileDeleted, false);
 
     singleEl1.addEventListener('hemulen-filestored', _onFileStoredSingle, false);
     singleEl1.addEventListener('hemulen-toomany', _onTooMany, false);
-    singleEl1.addEventListener('hemulen-toobig', _onTooBig, false);  
-    singleEl1.addEventListener('hemulen-wrongtype', _onWrongType, false);
+    singleEl1.addEventListener('hemulen-invalid', _onInvalid, false);  
     singleEl1.addEventListener('hemulen-filedeleted', _onFileDeleted, false);
 
     $(conf.list).on('click.delete', conf.del, _onDeleteFile);
