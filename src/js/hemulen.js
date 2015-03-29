@@ -2,10 +2,13 @@
     'use strict';
 
     //MODULE GLOBALS
-    var filesStored     = {};
-    var usedHashes      = [];
-    var beforeSub       = [];
-    var formSubmitted   = false; 
+    var forms       = [];
+    var formEls     = false;
+    var usedHashes  = [];
+
+    // var filesStored     = {};
+    // var beforeSub       = [];
+    // var formSubmitted   = false; 
 
 
 
@@ -139,6 +142,12 @@
             return formData;
     }
 
+    function _getFormIndex(form){
+        for (var i = 0, j = forms.length; i < j; i++) {
+            if (forms[i].form === form) {return i;}
+        }        
+        return -1;
+    }
 
 
 
@@ -173,14 +182,15 @@
     
     function _onSub(e){
         var i, j; 
+        var formIndex = _getFormIndex(e.target);
 
         e.preventDefault && e.preventDefault();
         
-        if (!formSubmitted) {
-            for (i = 0, j = beforeSub.length; i < j; i++) {beforeSub[i](e, this);}
+        if (!forms[formIndex].formSubmitted) {
+            for (i = 0, j = forms[formIndex].beforeSub.length; i < j; i++) {forms[formIndex].beforeSub[i](e, this);}
             this._subData(e.target);
         }
-        formSubmitted = true;
+        forms[formIndex].formSubmitted = true;
     }
 
 
@@ -218,42 +228,63 @@
 
     //HEMULEN "PRIVATE" METHODS
 
-    Hemulen.prototype._init = function(){
-        var els = document.querySelectorAll(this.hemulenEl);
-        this._instances = {};
-        filesStored[this.namespace] = {};
+    Hemulen.prototype._formInit = function(){
+        var i, j;
 
-        for (var i = 0, l = els.length, hemulenElId; i < l; i++) {
-            hemulenElId = _generateUniqueHash(_generateHash, 7, usedHashes);
-            this._instances[hemulenElId] = els[i];
-            filesStored[this.namespace][hemulenElId] = {};
+        formEls = document.getElementsByTagName('form');
+
+        for (i = 0, j = formEls.length; i < j; i++) {
+            forms.push({
+                beforeSub: [],
+                filesStored: {},
+                form: formEls[i],
+                formSubmitted: false
+            });
         }
 
-        if (this.beforeSub && this.beforeSub.constructor === Function){beforeSub.push(this.beforeSub);}
-
-        this._bindEventListeners();
     };
 
-    Hemulen.prototype._bindEventListeners = function(){
-        var i; 
-        var j; 
-        var k; 
-        var l;
-        var key; 
-        var el;
-        var dropForm;
+    Hemulen.prototype._init = function(){
+        var a, b, i, l;
+        var els;
+        var hemulenElId;
+
+        if (formEls === false) {this._formInit();}
+
+        this._instances = {};
+
+        for (var a = 0, b = formEls.length; a < b; a++) {
+            els = formEls[a].querySelectorAll(this.hemulenEl);
+
+            if (els.length) {
+                forms[a].filesStored[this.namespace] = forms[a].filesStored[this.namespace] || {};
+            
+                for (i = 0, l = els.length; i < l; i++) {
+                    hemulenElId = _generateUniqueHash(_generateHash, 7, usedHashes);
+                    this._instances[hemulenElId] = els[i];
+                    forms[a].filesStored[this.namespace][hemulenElId] = forms[a].filesStored[this.namespace][hemulenElId] || {};
+                }
+
+                if (this.beforeSub && this.beforeSub.constructor === Function){forms[a].beforeSub.push(this.beforeSub);}
+            
+                this._bindEventListeners(formEls[a], els);
+
+            }
+        }   
+    };
+
+    Hemulen.prototype._bindEventListeners = function(form, hemulenEls){
+        var i, j, k, l;
         var dropInput;
         var fileInput;
 
-        for (key in this._instances) {
-            el          = this._instances[key],
-            dropForm    = _closest(el, 'form'),
-            dropInput   = el.querySelectorAll(this.dropInput),
-            fileInput   = el.querySelectorAll(this.fileInput);
+        //bind submit event
+        form.addEventListener('submit', _onSub.bind(this), false);
 
-            //bind submit event
-            dropForm.addEventListener('submit', _onSub.bind(this), false);
-            
+        for (i = 0, j = hemulenEls.length; i < j; i++) {
+            dropInput = hemulenEls[i].querySelectorAll(this.dropInput);
+            fileInput = hemulenEls[i].querySelectorAll(this.fileInput);
+
             //bind change event
             for (k = 0, l = fileInput.length; k < l; k++) {
                 fileInput[k].addEventListener('change', _onFileChange.bind(this), false);
@@ -267,13 +298,14 @@
                 dropInput[k].addEventListener('drop', _onDrop.bind(this), false);
                 dropInput[k].addEventListener('dragdrop', _onDrop.bind(this), false);
             }
-          
         }
     };
 
     Hemulen.prototype._setUploadLimit = function(hemulenElId, files){
-        var instance            = this._instances[hemulenElId];
-        var filesStoredLength   = Object.keys(filesStored[this.namespace][hemulenElId]).length;
+        var hemulenEl           = this._instances[hemulenElId];
+        var form                = _closest(hemulenEl, 'form');
+        var formIndex           = _getFormIndex(form);
+        var filesStoredLength   = Object.keys(forms[formIndex].filesStored[this.namespace][hemulenElId]).length;
         var filesLength         = files.length;
         var filesLimit          = this.fileLimit - filesStoredLength;
         var range               = {};
@@ -288,7 +320,7 @@
                 hemulenElId: hemulenElId
             },
             ev = _createEvent('hemulen-toomany', true, true, eventDetail);  
-            instance.dispatchEvent(ev);
+            hemulenEl.dispatchEvent(ev);
 
             range.start = 0;
             range.end   = 0;
@@ -322,12 +354,15 @@
     };
 
     Hemulen.prototype._storeFile = function(hemulenElId, file){
-        var fileId = _generateUniqueHash(_generateHash, 7, usedHashes);
+        var fileId              = _generateUniqueHash(_generateHash, 7, usedHashes);
+        var hemulenEl           = this._instances[hemulenElId];
+        var form                = _closest(hemulenEl, 'form');
+        var formIndex           = _getFormIndex(form);
 
-        filesStored[this.namespace][hemulenElId][fileId] = {};
-        filesStored[this.namespace][hemulenElId][fileId]['file'] = file; 
+        forms[formIndex].filesStored[this.namespace][hemulenElId][fileId] = {};
+        forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] = file; 
         
-        if (filesStored[this.namespace][hemulenElId][fileId]['file'] === file) {
+        if (forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] === file) {
             var eventDetail = {
                 file: file,
                 fileId: fileId,
@@ -336,16 +371,18 @@
             };
             var ev = _createEvent('hemulen-filestored', true, true, eventDetail);
             
-            this._instances[hemulenElId].dispatchEvent(ev);
+            hemulenEl.dispatchEvent(ev);
         } else {
             return null;
         }
     };
 
     Hemulen.prototype._subData = function(form){
+        var formIndex           = _getFormIndex(form);
         var req     = new XMLHttpRequest();
         var route   = form.getAttribute('action');
-            
+        var formIndex = _getFormIndex(form);
+
         req.onreadystatechange = function(){
             if (req.readyState === 4) {
                 var ev;
@@ -356,12 +393,12 @@
 
                 form.dispatchEvent(ev);
                 
-                formSubmitted = false;            
+                forms[formIndex].formSubmitted = false;            
             }
         };
 
         req.open('POST', route, true);
-        req.send( _createSubData(filesStored, new FormData(form)) );
+        req.send( _createSubData(forms[formIndex].filesStored, new FormData(form)) );
     };
 
 
@@ -383,10 +420,18 @@
     };
 
     Hemulen.prototype.getFileId = function(hemulenElId, file){
-        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
+        var hemulenEl;
+        var form;
+        var formIndex;
 
-        for (var key in filesStored[hemulenElId]) {
-            if (filesStored[hemulenElId][key][file] === file) {
+        if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
+        
+        hemulenEl           = this._instances[hemulenElId];
+        form                = _closest(hemulenEl, 'form');
+        formIndex           = _getFormIndex(form);
+
+        for (var key in forms[formIndex].filesStored[hemulenElId]) {
+            if (forms[formIndex].filesStored[hemulenElId][key][file] === file) {
                 return key;
             } 
         }
@@ -398,19 +443,23 @@
         var ev;
         var eventDetail;
 
+        var hemulenEl           = this._instances[hemulenElId];
+        var form                = _closest(hemulenEl, 'form');
+        var formIndex           = _getFormIndex(form);
+
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
         
-        delete filesStored[this.namespace][hemulenElId][fileId];
+        delete forms[formIndex].filesStored[this.namespace][hemulenElId][fileId];
 
-        if (!filesStored[this.namespace][hemulenElId][fileId]) {
+        if (!forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]) {
             eventDetail = {
                 fileId: fileId,
                 hemulen: this,
                 hemulenElId: hemulenElId
             };
             ev = _createEvent('hemulen-filedeleted', true, true, eventDetail);
-            this._instances[hemulenElId].dispatchEvent(ev);            
+            hemulenEl.dispatchEvent(ev);            
         }
 
         return false;
@@ -452,17 +501,25 @@
     };
 
     Hemulen.prototype.addData = function(hemulenElId, fileId, updates){
+        var hemulenEl;
+        var form;
+        var formIndex;
+
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
         if (!fileId || fileId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
         if (!updates || updates.constructor !== Object) {throw new Error('This is an invalid value: ', updates);}
         
+        hemulenEl           = this._instances[hemulenElId];
+        form                = _closest(hemulenEl, 'form');
+        formIndex           = _getFormIndex(form);
+
         for (var prop in updates) {
             if (updates.hasOwnProperty(prop) && (updates[prop].constructor === Object || updates[prop].constructor === Array) ) {
                 throw new Error('The third argument is invalid. Values stored on the object must be primitives.');
             }
         }
 
-        _extend.call(filesStored[this.namespace][hemulenElId][fileId], updates);        
+        _extend.call(forms[formIndex].filesStored[this.namespace][hemulenElId][fileId], updates);        
     };
 
 
