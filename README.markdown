@@ -181,7 +181,7 @@ Validate by file size. When validation fails, the Hemulen element will emit the 
 
 ##Events
 
-Hemulen events are DOM events. In addition to the properties and methods common to DOM events, a Hemulen event object contains Hemulen-specific values stored on the `event.detail` property.
+Hemulen events are DOM events. In addition to the properties and methods common to DOM events, a Hemulen event object contains Hemulen-specific values stored on the `event` object.
 
 ###General Events
 
@@ -193,10 +193,10 @@ The event emitted by the Hemulen element when a file is removed from the data mo
 
 Event properties:
 
-- `hemulen-filedeleted.detail.hemulen`:
+- `hemulen-filedeleted.hemulen`:
     + Type: Object,
     + The `Hemulen` class instance bound to the Hemulen element emitting the event;
-- `hemulen-filedeleted.detail.hemulenElId`:
+- `hemulen-filedeleted.hemulenElId`:
     + Type: String,
     + The Hemulen storage key identifying the Hemulen element emitting the event.
 
@@ -208,16 +208,16 @@ The event emitted by the Hemulen element when a file is dropped on the drop inpu
 
 Event properties:
 
-- `hemulen-filestored.detail.hemulen`
+- `hemulen-filestored.hemulen`
     + Type: Object
     + The `Hemulen` class instance bound to the Hemulen element emitting the event.
-- `hemulen-filestored.detail.hemulenElId`
+- `hemulen-filestored.hemulenElId`
     + Type: String
     + The Hemulen storage key identifying the Hemulen element emitting the event.
-- `hemulen-filestored.detail.file`
+- `hemulen-filestored.file`
     + Type: File Object
     + The file object that has been successfully stored on the data model.
-- `hemulen-filestored.detail.fileId`
+- `hemulen-filestored.fileId`
     + Type: String
     + The key under which the file has been stored on the data model. **`fileId` should be stored for later use.** Without the value of `fileId`, the file cannot be removed from the data model or updated with additional properties. Unlike the `hemulenElId`, there is no method to query the data model for a `fileId`. A file whose `fileId` is unknown to the application is stranded on the data model.
 
@@ -231,13 +231,13 @@ The event emitted by the Hemulen element when the number of files dropped on the
 
 Properties:
 
-- `hemulen-toomany.detail.hemulen`
+- `hemulen-toomany.hemulen`
     + Type: Object
     + The `Hemulen` class instance bound to the Hemulen element emitting the event.
-- `hemulen-toomany.detail.hemulenElId`
+- `hemulen-toomany.hemulenElId`
     + Type: String
     + The Hemulen storage key identifying the Hemulen element emitting the event.
-- `hemulen-toomany.detail.files`
+- `hemulen-toomany.files`
     + Type: File List
     + The group of files that triggered the event.
 
@@ -247,17 +247,17 @@ Event Name: `hemulen-invalid`
 
 The event emitted by the Hemulen element when one or more invalid files have been dropped on the drag&ndash;and&ndash;drop field or uploaded through the file input. Invalid files have not been stored on the data model.
 
-A user action (dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input) can produce multiple errors. The event is emitted once per user action and  the `hemulen-invalid.detail.errors` property contains all errors produced by that action. 
+A user action (dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input) can produce multiple errors. The event is emitted once per user action and  the `hemulen-invalid.errors` property contains all errors produced by that action. 
 
 Event properties:
 
-- `hemulen-invalid.detail.hemulen`
+- `hemulen-invalid.hemulen`
     + Type: Object
     + The `Hemulen` class instance bound to the Hemulen element emitting the event.
-- `hemulen-invalid.detail.hemulenElId`
+- `hemulen-invalid.hemulenElId`
     + Type: String
     + The Hemulen storage key identifying the Hemulen element emitting the event.
-- `hemulen-invalid.detail.errors`:
+- `hemulen-invalid.errors`:
     + Type: Array,
     + An array of objects. Each object represents an error. Each object has two properties:
         * `errorType`:
@@ -277,7 +277,7 @@ Event Name: `hemulen-subsuccess`
 
 Properties
 
-- `hemulen-subsuccess.detail.request`
+- `hemulen-subsuccess.hemulenRequest`
     + Type: XMLHttpRequest object
     + The POST request made when the form is submitted.
 
@@ -287,7 +287,7 @@ Event Name: `hemulen-subfail`
 
 Properties
 
-- `hemulen-subfailure.detail.request`
+- `hemulen-subfailure.hemulenRequest`
     + Type: XMLHttpRequest object
     + The POST request made when the form is submitted.
 

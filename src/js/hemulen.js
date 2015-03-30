@@ -304,16 +304,14 @@
         var filesLimit          = this.fileLimit - filesStoredLength;
         var range               = {};
         var ev;
-        var eventDetail;
         var s;
 
         if (filesLength > filesLimit) {
-            eventDetail = {
-                files: files,
-                hemulen: this,
-                hemulenElId: hemulenElId
-            },
-            ev = _createEvent('hemulen-toomany', true, true, eventDetail);  
+            ev              = _createEvent('hemulen-toomany', true, true);
+            ev.files        = files;
+            ev.hemulen      = this;
+            ev.hemulenElId  = hemulenElId;
+
             hemulenEl.dispatchEvent(ev);
 
             range.start = 0;
@@ -352,19 +350,19 @@
         var hemulenEl           = this._instances[hemulenElId];
         var form                = _closest(hemulenEl, 'form');
         var formIndex           = _getFormIndex(form);
+        var ev;
 
         forms[formIndex].filesStored[this.namespace][hemulenElId][fileId] = {};
         forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] = file; 
         
         if (forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] === file) {
-            var eventDetail = {
-                file: file,
-                fileId: fileId,
-                hemulen: this,
-                hemulenElId: hemulenElId
-            };
-            var ev = _createEvent('hemulen-filestored', true, true, eventDetail);
+            ev      = _createEvent('hemulen-filestored', true, true);
             
+            ev.file         = file;
+            ev.fileId       = fileId;
+            ev.hemulen      = this;
+            ev.hemulenElId  = hemulenElId;
+
             hemulenEl.dispatchEvent(ev);
         } else {
             return null;
@@ -380,10 +378,11 @@
         req.onreadystatechange = function(){
             if (req.readyState === 4) {
                 var ev;
-                var eventDetail = {request: req};
                 
-                ev = req.status === 200 ?   _createEvent('hemulen-subsuccess', true, true, eventDetail) : 
-                                            _createEvent('hemulen-subfailure', true, true, eventDetail);
+                ev = req.status === 200 ?   _createEvent('hemulen-subsuccess', true, true) : 
+                                            _createEvent('hemulen-subfailure', true, true);
+
+                ev.hemulenRequest = request;                            
 
                 form.dispatchEvent(ev);
                 
@@ -435,8 +434,6 @@
 
     Hemulen.prototype.deleteFile = function(hemulenElId, fileId){
         var ev;
-        var eventDetail;
-
         var hemulenEl           = this._instances[hemulenElId];
         var form                = _closest(hemulenEl, 'form');
         var formIndex           = _getFormIndex(form);
@@ -447,12 +444,13 @@
         delete forms[formIndex].filesStored[this.namespace][hemulenElId][fileId];
 
         if (!forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]) {
-            eventDetail = {
-                fileId: fileId,
-                hemulen: this,
-                hemulenElId: hemulenElId
-            };
-            ev = _createEvent('hemulen-filedeleted', true, true, eventDetail);
+
+            ev = _createEvent('hemulen-filedeleted', true, true);
+
+            ev.fileId       = fileId;
+            ev.hemulen      = this;
+            ev.hemulenElid  = hemulenElId;
+
             hemulenEl.dispatchEvent(ev);            
         }
 
@@ -461,7 +459,7 @@
 
     Hemulen.prototype.storeFiles = function(hemulenElId, files){
         var range, valid;
-        var ev, eventDetail;
+        var ev;
         var errors = [];
 
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
@@ -483,13 +481,13 @@
             }   
         }
 
-        if (errors.length) {
-            eventDetail = {
-                errors: errors,
-                hemulen: this,
-                hemulenElId: hemulenElId
-            };
-            ev = _createEvent('hemulen-invalid', true, true, eventDetail);
+        if (errors.length) {            
+            ev = _createEvent('hemulen-invalid', true, true);
+            
+            ev.errors       = errors;
+            ev.hemulen      = this;
+            ev.hemulenElId  = hemulenElid;
+
             this._instances[hemulenElId].dispatchEvent(ev); 
         }
     };

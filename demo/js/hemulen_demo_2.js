@@ -145,8 +145,8 @@
     //         $eTarg.find(conf.error).html('');
 
     //         $eTarg.find(conf.list).append(fullTemplate({
-    //             name: e.detail.file.name,
-    //             fileId: e.detail.fileId,
+    //             name: e.file.name,
+    //             fileId: e.fileId,
     //             thumbSrc: readerE.target.result
     //         }));
 
@@ -159,7 +159,7 @@
     //         });
     //     };
 
-    //     reader.readAsDataURL(e.detail.file);
+    //     reader.readAsDataURL(e.file);
     // }
 
     // function _onFileStoredThumb(e){
@@ -172,8 +172,8 @@
     //         var $sortableList = $(conf.sortable);
 
     //         $eTarg.find(conf.list).append(thumbTemplate({
-    //             name: e.detail.file.name,
-    //             fileId: e.detail.fileId,
+    //             name: e.file.name,
+    //             fileId: e.fileId,
     //             thumbSrc: readerE.target.result
     //         }));
 
@@ -187,13 +187,13 @@
 
     //     };
 
-    //     reader.readAsDataURL(e.detail.file);
+    //     reader.readAsDataURL(e.file);
     // }
 
     // function _onFileStoredSingle(e){    
     //     $eTarg.find(conf.list).html(singleTemplate({
-    //         name: e.detail.file.name,
-    //         fileId: e.detail.fileId
+    //         name: e.file.name,
+    //         fileId: e.fileId
     //     }));
     // }
 
@@ -218,7 +218,7 @@
 
     // function _onFileDeleted(e){
     //     var $this           = $(this); 
-    //     var $thisItem       = $this.find("[" + conf.attrFileId + "=" + e.detail.fileId + "]");
+    //     var $thisItem       = $this.find("[" + conf.attrFileId + "=" + e.fileId + "]");
 
     //     $thisItem.remove();
     // }
@@ -256,12 +256,12 @@
         
     //     $errContainer.html('');
     
-    //     for (var i = 0, j = e.detail.errors.length; i < j; i++){
+    //     for (var i = 0, j = e.errors.length; i < j; i++){
     //         errMessage = document.createElement('p');
-    //         if (e.detail.errors[i].errorType === 'too big') {
-    //             errMessage.textContent = conf.err.tooBig + e.detail.errors[i].file.name;
-    //         } else if (e.detail.errors[i].errorType === 'wrong type') {
-    //             errMessage.textContent = conf.err.wrongType + e.detail.errors[i].file.name;
+    //         if (e.errors[i].errorType === 'too big') {
+    //             errMessage.textContent = conf.err.tooBig + e.errors[i].file.name;
+    //         } else if (e.errors[i].errorType === 'wrong type') {
+    //             errMessage.textContent = conf.err.wrongType + e.errors[i].file.name;
     //         } 
     //         $errContainer.append(errMessage);
     //     }
@@ -280,7 +280,7 @@
     // //Form submission events
 
     // function _onSubSuccess(e){
-    //     window.location = (JSON.parse(e.detail.request.response)).redirectUrl;
+    //     window.location = (JSON.parse(e.request.response)).redirectUrl;
     // }
     
     // function _onSubFailure(e){
