@@ -382,7 +382,7 @@
                 ev = req.status === 200 ?   _createEvent('hemulen-subsuccess', true, true) : 
                                             _createEvent('hemulen-subfailure', true, true);
 
-                ev.hemulenRequest = request;                            
+                ev.hemulenRequest = req;                            
 
                 form.dispatchEvent(ev);
                 
@@ -486,7 +486,7 @@
             
             ev.errors       = errors;
             ev.hemulen      = this;
-            ev.hemulenElId  = hemulenElid;
+            ev.hemulenElId  = hemulenElId;
 
             this._instances[hemulenElId].dispatchEvent(ev); 
         }
