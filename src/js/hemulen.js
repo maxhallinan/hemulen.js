@@ -356,8 +356,7 @@
         forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] = file; 
         
         if (forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] === file) {
-            ev      = _createEvent('hemulen-filestored', true, true);
-            
+            ev              = _createEvent('hemulen-filestored', true, true);
             ev.file         = file;
             ev.fileId       = fileId;
             ev.hemulen      = this;
