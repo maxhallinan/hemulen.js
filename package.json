@@ -1,0 +1,21 @@
+{
+  "name": "hemulen",
+  "version": "1.0.0",
+  "description": "A plugin that facilitates building forms with drag-and-drop fields.",
+  "main": "hemulen.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:maxhallinan/hemulen.git"
+  },
+  "keywords": [ 
+    "drag-and-drop", 
+    "drag and drop", 
+    "form", 
+    "form data"
+  ],
+  "author": "Max Hallinan",
+  "license": "MIT"
+}
