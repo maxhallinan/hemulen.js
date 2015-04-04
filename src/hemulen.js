@@ -58,7 +58,7 @@
 
     function _extend(options){
         for (var key in options) {
-            if(options[key].constructor === Object) {
+            if( (typeof options[key]).toLowerCase() === 'object' && !== options[key].constructor !== Array ) {
                 _extend.call(this[key], options[key])
             } else {
                 if(options.hasOwnProperty(key)) {
@@ -99,15 +99,15 @@
                 if (storedData.hasOwnProperty(foo)){
                     propname    = foo;
                     
-                    if (storedData[foo].constructor === Object) {
+                    if ( (typeof storedData[foo]).toLowerCase() === 'object' && storedData[foo].constructor !== Array) {
                         for (var bar in storedData[foo]) {
                             if (storedData[foo].hasOwnProperty(bar)) {
                                 
-                                if (storedData[foo][bar].constructor === Object) {    
+                                if ( (typeof storedData[foo][bar]).toLowerCase() === 'object' && storedData[foo][bar].constructor !== Array ) {    
                                     for (var baz in storedData[foo][bar]) {
                                         if (storedData[foo][bar].hasOwnProperty(baz)) {
                                             
-                                            if (storedData[foo][bar][baz].constructor === Object) {
+                                            if ( (typeof storedData[foo][bar][baz]).toLowerCase() === 'object' && storedData[foo][bar][baz].constructor !== Array ) {
                                                 for (var qux in storedData[foo][bar][baz]) {
                                                     if(storedData[foo][bar][baz].hasOwnProperty(qux)) {
                                                         formData.append((propname + counterA + qux + counterB), storedData[foo][bar][baz][qux]);
@@ -203,7 +203,7 @@
         this.fileLimit      = undefined;
         this.beforeSub      = undefined;
 
-        if (!options || options.constructor !== Object) {
+        if (!options || ( (typeof options).toLowerCase() === 'object' && options.constructor !== Array) ) {
             throw new Error('Invalid Hemulen configuration.');
         } else {
             _extend.call(this, options);
@@ -498,14 +498,14 @@
 
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
         if (!fileId || fileId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
-        if (!updates || updates.constructor !== Object) {throw new Error('This is an invalid value: ', updates);}
+        if (!updates || (typeof updates === 'Object' && updates.constructor === Array) ) {throw new Error('This is an invalid value: ', updates);}
         
         hemulenEl           = this._instances[hemulenElId];
         form                = _closest(hemulenEl, 'form');
         formIndex           = _getFormIndex(form);
 
         for (var prop in updates) {
-            if (updates.hasOwnProperty(prop) && (updates[prop].constructor === Object || updates[prop].constructor === Array) ) {
+            if (updates.hasOwnProperty(prop) && ( (typeof updates[prop]).toLowerCase() === 'object') ) {
                 throw new Error('The third argument is invalid. Values stored on the object must be primitives.');
             }
         }
