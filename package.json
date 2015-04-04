@@ -10,12 +10,16 @@
     "type": "git",
     "url": "git@bitbucket.org:maxhallinan/hemulen.git"
   },
-  "keywords": [ 
-    "drag-and-drop", 
-    "drag and drop", 
-    "form", 
+  "keywords": [
+    "drag-and-drop",
+    "drag and drop",
+    "form",
     "form data"
   ],
   "author": "Max Hallinan",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
+  }
 }
