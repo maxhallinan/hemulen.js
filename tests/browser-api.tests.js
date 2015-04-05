@@ -18,8 +18,12 @@
 
         describe('Drag and Drop API', function(){
             it('document element has class \'hemulen-incompatible\' if draggable property is undefined', function(){
+                var testEl = document.createElement('div');
+                delete testEl['draggable'];
+                delete testEl['ondragstart'];
+
                 foo._testBrowserApis({
-                    testElement: {}
+                    testElement: testEl
                 });
 
                 expect(doc.classList.contains('hemulen-incompatible')).to.be.true;                
@@ -34,7 +38,6 @@
 
                 expect(doc.classList.contains('hemulen-incompatible')).to.be.true;                
             }); 
-
         });
     });
 
