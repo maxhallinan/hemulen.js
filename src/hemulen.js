@@ -537,9 +537,10 @@
         return !!(window.File && window.FileList && window.FileReader);
     }
 
-    if (!_testFileAPI() || !_testDragDrop){
-        document.documentElement.classList.add('hemulen-incompatible');
+    if (typeof window !== 'undefined' && (!_testFileAPI() || !_testDragDrop) ) {
+        document.documentElement.classList.add('hemulen-incompatible');        
     }
+
 
 
 
