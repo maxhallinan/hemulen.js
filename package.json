@@ -4,7 +4,7 @@
   "description": "A plugin that facilitates building forms with drag-and-drop fields.",
   "main": "hemulen.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "./node_modules/.bin/mocha -R list"
   },
   "repository": {
     "type": "git",

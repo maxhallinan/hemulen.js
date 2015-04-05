@@ -58,7 +58,7 @@
 
     function _extend(options){
         for (var key in options) {
-            if( (typeof options[key]).toLowerCase() === 'object' && !== options[key].constructor !== Array ) {
+            if( (typeof options[key]).toLowerCase() === 'object' && options[key].constructor !== Array ) {
                 _extend.call(this[key], options[key])
             } else {
                 if(options.hasOwnProperty(key)) {
@@ -203,7 +203,7 @@
         this.fileLimit      = undefined;
         this.beforeSub      = undefined;
 
-        if (!options || ( (typeof options).toLowerCase() === 'object' && options.constructor !== Array) ) {
+        if (!options || (typeof options).toLowerCase() !== 'object' || options.constructor === Array) {
             throw new Error('Invalid Hemulen configuration.');
         } else {
             _extend.call(this, options);
@@ -537,11 +537,10 @@
         return !!(window.File && window.FileList && window.FileReader);
     }
 
-    (function(){
-        if (!_testFileAPI() || !_testDragDrop){
-            document.documentElement.classList.add('hemulen-incompatible');
-        }
-    }());
+    if (!_testFileAPI() || !_testDragDrop){
+        document.documentElement.classList.add('hemulen-incompatible');
+    }
+
 
 
 
