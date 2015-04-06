@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mocha</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="tests/lib/mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <form action="/" method="post" enctype="multipart/form-data">
+        <div id="foo" class="foo">
+            <div class="foo__drop-field"></div>
+        </div>
+    </form>
+
+    <!--LIBRARIES-->
+    <script src="tests/lib/mocha.js"></script>
+    <script src="tests/lib/chai.js"></script>
+    <script> mocha.setup('bdd');</script>
+
+    <!--DEPENDENCIES-->
+    <script src="src/hemulen.js"></script>
+
+    <!--TESTS-->
+    <script src="tests/constructor.tests.js"></script>
+    <script src="tests/events.tests.js"></script>
+    <script src="tests/browser-api.tests.js"></script>
+
+    <script>mocha.run();</script>
+  </body>
+</html>

@@ -257,7 +257,7 @@ Event properties:
 - `hemulen-invalid.hemulenElId`
     + Type: String
     + The Hemulen storage key identifying the Hemulen element emitting the event.
-- `hemulen-invalid.errors`:
+- `hemulen-invalid.hemulenErrors`:
     + Type: Array,
     + An array of objects. Each object represents an error. Each object has two properties:
         * `errorType`:

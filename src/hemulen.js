@@ -483,9 +483,9 @@
         if (errors.length) {            
             ev = _createEvent('hemulen-invalid', true, true);
             
-            ev.errors       = errors;
-            ev.hemulen      = this;
-            ev.hemulenElId  = hemulenElId;
+            ev.hemulenErrors    = errors;
+            ev.hemulen          = this;
+            ev.hemulenElId      = hemulenElId;
 
             this._instances[hemulenElId].dispatchEvent(ev); 
         }
