@@ -17,7 +17,7 @@
         });
 
         describe('Drag and Drop API', function(){
-            it('document element has class \'hemulen-incompatible\' if draggable property is undefined', function(){
+            it('document element has class \'hemulen-incompatible\' when draggable property is undefined', function(){
                 var testEl = document.createElement('div');
                 delete testEl['draggable'];
                 delete testEl['ondragstart'];
@@ -31,7 +31,7 @@
         });
 
         describe('File API', function(){
-            it('document element has class \'hemulen-incompatible\' if File API is undefined', function(){                
+            it('document element has class \'hemulen-incompatible\' when File API is undefined', function(){                
                 foo._testBrowserApis({
                     testEnvironment: {}
                 });

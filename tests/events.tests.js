@@ -11,10 +11,9 @@
         fileMaxSize: 10000000,
         fileLimit: 1
     });
-
     var fooEl       = document.getElementById('foo');
     var fooElId     = foo.getHemulenElId(fooEl);
-    
+
     var testFileValid;
     var testFileWrongType;
     var testFileId;
@@ -22,9 +21,7 @@
     describe('Hemulen Events', function(){
         before(function(done){
             var req = new XMLHttpRequest();
-            
             req.responseType = 'arraybuffer';
-
             req.onreadystatechange = function(e){
                 if (req.readyState === 4) {
                     testFileValid       = new Blob([req.response], {type: 'image/jpeg'});
@@ -33,93 +30,181 @@
                     done();                    
                 }
             };
-
             req.open('GET', '/tests/data/test.jpg', true);
             req.send();
         });
 
-        it('storing a file dispatches the hemulen-filestored event', function(done){
-            function handleFileStored(e){
-                testFileId = e.fileId;
-                
-                expect(e.file.size).to.equal(testFileValid.size);
-                expect(e.file.type).to.equal(testFileValid.type);
-                expect(e.type).to.equal('hemulen-filestored');
+        describe('hemulen-filestored', function(){
+            var fileStoredEvent;
 
-                fooEl.removeEventListener('hemulen-filestored', handleFileStored);
-    
-                done();                
-            }
+            before(function(done){
+                function handleFileStored(e){
+                    fileStoredEvent = e;
+                    testFileId = e.fileId;                    
+                    fooEl.removeEventListener('hemulen-filestored', handleFileStored);
+                    done();  
+                }
+                fooEl.addEventListener('hemulen-filestored', handleFileStored, false); 
+                foo.storeFiles(fooElId, [testFileValid]);               
+            });
 
-            fooEl.addEventListener('hemulen-filestored', handleFileStored, false);
+            it('storing a file dispatches the event', function(){
+                expect(fileStoredEvent.type).to.equal('hemulen-filestored');
+            });
 
-            foo.storeFiles(fooElId, [testFileValid]);
+            it('hemulen-filestored.hemulen has the expected value', function(){
+                expect(fileStoredEvent.hemulen).to.deep.equal(foo);
+            });
+
+            it('hemulen-filestored.hemulenElId has the expected value', function(){
+                expect(fileStoredEvent.hemulenElId).to.equal(fooElId);
+            });
+
+            it('hemulen-filestored.file has the expected value', function(){
+                expect(fileStoredEvent.file).to.deep.equal(testFileValid);
+            });
+
+            it('hemulen-filestored.fileId has the expected value', function(){
+                expect(fileStoredEvent.fileId).to.equal(testFileId);
+            });
         });
 
-        it('deleting a file dispatches the hemulen-filedeleted event', function(done){
-            function handleFileDeleted(e){
-                expect(e.type).to.equal('hemulen-filedeleted');
+        describe('hemulen-filedeleted', function(){
+            var fileDeletedEvent;
 
-                fooEl.removeEventListener('hemulen-filedeleted', handleFileDeleted);
+            before(function(done){
+                function handleFileDeleted(e){
+                    fileDeletedEvent = e;
+                    console.log(e);
+                    fooEl.removeEventListener('hemulen-filedeleted', handleFileDeleted);
+                    done();                
+                }                
+                fooEl.addEventListener('hemulen-filedeleted', handleFileDeleted, false);
+                foo.deleteFile(fooElId, testFileId);
+            });
 
-                done();                
-            }
+            it('deleting a file dispatches the event', function(){
+                expect(fileDeletedEvent.type).to.equal('hemulen-filedeleted');
+            });
 
-            fooEl.addEventListener('hemulen-filedeleted', handleFileDeleted, false);
+            it('hemulen-filedeleted.hemulen has the expected value', function(){
+                expect(fileDeletedEvent.hemulen).to.deep.equal(foo);
+            });
 
-            foo.deleteFile(fooElId, testFileId);
+            it('hemulen-filedeleted.hemulenElId has the expected value', function(){
+                expect(fileDeletedEvent.hemulenElId).to.equal(fooElId);                
+            });
         });
+        
+        describe('hemulen-toomany', function(){
+            var testFiles = [testFileValid, testFileValid];
+            var tooManyEvent;
 
-        it('a file of the wrong type dispatches the hemulen-invalid event', function(done){
-            function handleWrongType(e){
-                expect(e.type).to.equal('hemulen-invalid');
-                expect(e.hemulenErrors[0].errorType).to.equal('wrong type');
+            before(function(done){
+                function handleTooMany(e){
+                    tooManyEvent = e;
+                    fooEl.removeEventListener('hemulen-toomany', handleTooMany);
+                    done();                
+                }
+                fooEl.addEventListener('hemulen-toomany', handleTooMany, false);
+                foo.storeFiles(fooElId, testFiles);
+            });
 
-                fooEl.removeEventListener('hemulen-invalid', handleWrongType);                
-                
-                done();
-            }
+            it('attempting to store too many files dispatches the event', function(){
+                expect(tooManyEvent.type).to.equal('hemulen-toomany');
+            });
 
-            fooEl.addEventListener('hemulen-invalid', handleWrongType, false);
+            it('hemulen-toomany.hemulen has the expected value', function(){
+                expect(tooManyEvent.hemulen).to.deep.equal(foo);
+            });
 
-            foo.storeFiles(fooElId, [testFileWrongType]);            
+            it('hemulen-toomany.hemulenElId has the expected value', function(){
+                expect(tooManyEvent.hemulenElId).to.equal(fooElId);
+            });
+
+            it('hemulen-toomany.files has the expected value', function(){
+                expect(tooManyEvent.files).to.deep.equal(testFiles);
+            });
         });
+        
+        describe('hemulen-invalid', function(){
+            describe('wrong type', function(done){
+                var wrongTypeEvent;
+                before(function(done){
+                    function handleWrongType(e){
+                        wrongTypeEvent = e;
+                        fooEl.removeEventListener('hemulen-invalid', handleWrongType);                
+                        done();
+                    }
+                    fooEl.addEventListener('hemulen-invalid', handleWrongType, false);
+                    foo.storeFiles(fooElId, [testFileWrongType]);                     
+                });
 
-        it('a file of the wrong size dispatches the hemulen-invalid event', function(done){
-            var originalFileMaxSize = foo.fileMaxSize;
-            foo.fileMaxSize = 1;
+                it('attempting to store one file with the wrong file type dispatches the hemulen-invalid error', function(){
+                    expect(wrongTypeEvent.type).to.equal('hemulen-invalid');
+                });
 
-            function handleWrongSize(e){
-                expect(e.type).to.equal('hemulen-invalid');
-                expect(e.hemulenErrors[0].errorType).to.equal('too big');
+                it('hemulen-invalid.hemulen has the expected value', function(){
+                    expect(wrongTypeEvent.hemulen).to.deep.equal(foo);
+                });
 
-                foo.fileMaxSize = originalFileMaxSize;
+                it('hemulen-invalid.hemulenElId has the expected value', function(){
+                    expect(wrongTypeEvent.hemulenElId).to.equal(fooElId);
+                });
 
-                fooEl.removeEventListener('hemulen-invalid', handleWrongSize);
+                it('hemulen-invalid.hemulenErrors has a length of 1', function(){
+                    expect(wrongTypeEvent.hemulenErrors.length).to.equal(1);
+                });
 
-                done();                
-            }
+                it('hemulen-invalid.hemulenErrors[0].errorType equals \'wrong type\'', function(){
+                    expect(wrongTypeEvent.hemulenErrors[0].errorType).to.equal('wrong type');
+                });
+            
+                it('hemulen-invalid.hemulenErrors[0].file is the invalid file', function(){
+                    expect(wrongTypeEvent.hemulenErrors[0].file).to.deep.equal(testFileWrongType);
+                })
+            });
 
-            fooEl.addEventListener('hemulen-invalid', handleWrongSize, false);
+            describe('too big', function(){
+                var tooBigEvent;
+                before(function(done){
+                    var originalFileMaxSize = foo.fileMaxSize;
+                    foo.fileMaxSize = 1;
+                    function handleWrongSize(e){
+                        tooBigEvent = e;
+                        foo.fileMaxSize = originalFileMaxSize;
+                        fooEl.removeEventListener('hemulen-invalid', handleWrongSize);
+                        done();                
+                    }                    
+                    fooEl.addEventListener('hemulen-invalid', handleWrongSize, false);
+                    foo.storeFiles(fooElId, [testFileValid]);  
+                });
 
-            foo.storeFiles(fooElId, [testFileValid]);            
+                it('attempting to store one file with the wrong file type dispatches the hemulen-invalid error', function(){
+                    expect(tooBigEvent.type).to.equal('hemulen-invalid');
+                });
+
+                it('hemulen-invalid.hemulen has the expected value', function(){
+                    expect(tooBigEvent.hemulen).to.deep.equal(foo);
+                });
+
+                it('hemulen-invalid.hemulenElId has the expected value', function(){
+                    expect(tooBigEvent.hemulenElId).to.equal(fooElId);
+                });
+
+                it('hemulen-invalid.hemulenErrors has a length of 1', function(){
+                    expect(tooBigEvent.hemulenErrors.length).to.equal(1);
+                });
+
+                it('hemulen-invalid.hemulenErrors[0].errorType equals \'too big\'', function(){
+                    expect(tooBigEvent.hemulenErrors[0].errorType).to.equal('too big');
+                });
+            
+                it('hemulen-invalid.hemulenErrors[0].file is the invalid file', function(){
+                    expect(tooBigEvent.hemulenErrors[0].file).to.deep.equal(testFileValid);
+                });
+            });
         });
-
-        it('too many files dispatches the hemulen-toomany event', function(done){
-            function handleTooMany(e){
-                expect(e.type).to.equal('hemulen-toomany');
-
-                fooEl.removeEventListener('hemulen-toomany', handleTooMany);
-                done();                
-            }
-
-            fooEl.addEventListener('hemulen-toomany', handleTooMany, false);
-
-            foo.storeFiles(fooElId, [testFileValid, testFileValid]);
-        });
-
-
-
     });
 
 }());

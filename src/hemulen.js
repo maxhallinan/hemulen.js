@@ -448,7 +448,7 @@
 
             ev.fileId       = fileId;
             ev.hemulen      = this;
-            ev.hemulenElid  = hemulenElId;
+            ev.hemulenElId  = hemulenElId;
 
             hemulenEl.dispatchEvent(ev);            
         }
