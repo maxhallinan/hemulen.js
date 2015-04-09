@@ -75,7 +75,6 @@
             before(function(done){
                 function handleFileDeleted(e){
                     fileDeletedEvent = e;
-                    console.log(e);
                     fooEl.removeEventListener('hemulen-filedeleted', handleFileDeleted);
                     done();                
                 }                
@@ -140,7 +139,7 @@
                     foo.storeFiles(fooElId, [testFileWrongType]);                     
                 });
 
-                it('attempting to store one file with the wrong file type dispatches the hemulen-invalid error', function(){
+                it('attempting to store one file with that is too big type dispatches the hemulen-invalid error', function(){
                     expect(wrongTypeEvent.type).to.equal('hemulen-invalid');
                 });
 

@@ -9,7 +9,7 @@
   <body>
     <div id="mocha"></div>
 
-    <form action="/" method="post" enctype="multipart/form-data">
+    <form id="fooform" action="/" method="post" enctype="multipart/form-data">
         <div id="foo" class="foo">
             <div class="foo__drop-field"></div>
         </div>
@@ -25,8 +25,12 @@
 
     <!--TESTS-->
     <script src="tests/constructor.tests.js"></script>
+    <script src="tests/internal.tests.js"></script>
+    <script src="tests/api.tests.js"></script>
     <script src="tests/events.tests.js"></script>
-    <script src="tests/browser-api.tests.js"></script>
+    <script src="tests/data.tests.js"></script>
+    <script src="tests/submission.tests.js"></script>
+    <script src="tests/browser.tests.js"></script>
 
     <script>mocha.run();</script>
   </body>
