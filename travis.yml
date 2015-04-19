@@ -1,1 +1,3 @@
 language: javascript
+before_script:
+    - "npm install mocha-phantomjs tests.html" 
