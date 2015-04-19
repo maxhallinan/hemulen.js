@@ -1,4 +1,5 @@
 #Hemulen.js
+[![Build Status](https://travis-ci.org/maximumhallinan/hemulen.svg?branch=master)](https://travis-ci.org/maximumhallinan/hemulen)
 
 ##Introduction
 
