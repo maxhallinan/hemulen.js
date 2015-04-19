@@ -1,0 +1,3 @@
+language: javascript
+before_install:
+    - "npm install -g mocha-phantomjs"

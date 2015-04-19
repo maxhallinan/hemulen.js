@@ -4,7 +4,7 @@
   "description": "A plugin that facilitates building forms with drag-and-drop fields.",
   "main": "hemulen.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha -R list"
+    "test": "mocha-phantomjs tests.html"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,8 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "mocha-phantomjs": "^3.5.3",
+    "phantomjs": "^1.9.16"
   }
 }
