@@ -1,3 +1,5 @@
 language: javascript
 install:
     - npm install -g mocha-phantomjs
+script: 
+    - mocha-phantomjs tests.html
