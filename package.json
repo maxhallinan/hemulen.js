@@ -18,10 +18,5 @@
   ],
   "author": "Max Hallinan",
   "license": "MIT",
-  "devDependencies": {
-    "chai": "*",
-    "mocha": "*",
-    "mocha-phantomjs": "^3.5.3",
-    "phantomjs": "^1.9.16"
-  }
+  "devDependencies": {}
 }
