@@ -3,20 +3,10 @@
 
     var expect = chai.expect;
 
-    var foo = new Hemulen({
-        dropInput: '.foo__drop-field',
-        hemulenEl: '.foo',
-        namespace: 'foo',
-        acceptTypes: ['image/jpeg'],
-        fileMaxSize: 10000000,
-        fileLimit: 1
-    });
-    var fooEl       = document.getElementById('foo');
-    var fooElId     = foo.getHemulenElId(fooEl);
+    var fooEl = document.getElementById('foo');
+    var foo, fooElId;
 
-    var testFileValid;
-    var testFileWrongType;
-    var testFileId;
+    var testFileValid, testFileWrongType, testFileId;
 
     describe('Hemulen Events', function(){
         before(function(done){
@@ -38,6 +28,17 @@
             var fileStoredEvent;
 
             before(function(done){
+                foo = new Hemulen({
+                    dropInput: '.foo__drop-field',
+                    hemulenEl: '.foo',
+                    namespace: 'foo',
+                    acceptTypes: ['image/jpeg'],
+                    fileMaxSize: 10000000,
+                    fileLimit: 1
+                });
+                
+                fooElId = foo.getHemulenElId(fooEl);
+
                 function handleFileStored(e){
                     fileStoredEvent = e;
                     testFileId = e.fileId;                    
@@ -46,6 +47,10 @@
                 }
                 fooEl.addEventListener('hemulen-filestored', handleFileStored, false); 
                 foo.storeFiles(fooElId, [testFileValid]);               
+            });
+
+            after(function(){
+                foo.destroy(fooElId);
             });
 
             it('storing a file dispatches the event', function(){
@@ -73,6 +78,17 @@
             var fileDeletedEvent;
 
             before(function(done){
+                foo = new Hemulen({
+                    dropInput: '.foo__drop-field',
+                    hemulenEl: '.foo',
+                    namespace: 'foo',
+                    acceptTypes: ['image/jpeg'],
+                    fileMaxSize: 10000000,
+                    fileLimit: 1
+                });
+                
+                fooElId = foo.getHemulenElId(fooEl);
+
                 function handleFileDeleted(e){
                     fileDeletedEvent = e;
                     fooEl.removeEventListener('hemulen-filedeleted', handleFileDeleted);
@@ -80,6 +96,10 @@
                 }                
                 fooEl.addEventListener('hemulen-filedeleted', handleFileDeleted, false);
                 foo.deleteFile(fooElId, testFileId);
+            });
+
+            after(function(){
+                foo.destroy(fooElId);
             });
 
             it('deleting a file dispatches the event', function(){
@@ -100,6 +120,17 @@
             var tooManyEvent;
 
             before(function(done){
+                foo = new Hemulen({
+                    dropInput: '.foo__drop-field',
+                    hemulenEl: '.foo',
+                    namespace: 'foo',
+                    acceptTypes: ['image/jpeg'],
+                    fileMaxSize: 10000000,
+                    fileLimit: 1
+                });
+                
+                fooElId = foo.getHemulenElId(fooEl);
+
                 function handleTooMany(e){
                     tooManyEvent = e;
                     fooEl.removeEventListener('hemulen-toomany', handleTooMany);
@@ -107,6 +138,10 @@
                 }
                 fooEl.addEventListener('hemulen-toomany', handleTooMany, false);
                 foo.storeFiles(fooElId, testFiles);
+            });
+
+            after(function(){
+                foo.destroy(fooElId);
             });
 
             it('attempting to store too many files dispatches the event', function(){
@@ -130,6 +165,17 @@
             describe('wrong type', function(done){
                 var wrongTypeEvent;
                 before(function(done){
+                    foo = new Hemulen({
+                        dropInput: '.foo__drop-field',
+                        hemulenEl: '.foo',
+                        namespace: 'foo',
+                        acceptTypes: ['image/jpeg'],
+                        fileMaxSize: 10000000,
+                        fileLimit: 1
+                    });
+                    
+                    fooElId = foo.getHemulenElId(fooEl);
+
                     function handleWrongType(e){
                         wrongTypeEvent = e;
                         fooEl.removeEventListener('hemulen-invalid', handleWrongType);                
@@ -137,6 +183,10 @@
                     }
                     fooEl.addEventListener('hemulen-invalid', handleWrongType, false);
                     foo.storeFiles(fooElId, [testFileWrongType]);                     
+                });
+
+                after(function(){
+                    foo.destroy(fooElId);
                 });
 
                 it('attempting to store one file with that is too big type dispatches the hemulen-invalid error', function(){
@@ -166,17 +216,30 @@
 
             describe('too big', function(){
                 var tooBigEvent;
+
                 before(function(done){
-                    var originalFileMaxSize = foo.fileMaxSize;
-                    foo.fileMaxSize = 1;
+                    foo = new Hemulen({
+                        dropInput: '.foo__drop-field',
+                        hemulenEl: '.foo',
+                        namespace: 'foo',
+                        acceptTypes: ['image/jpeg'],
+                        fileMaxSize: 1,
+                        fileLimit: 1
+                    });
+                    
+                    fooElId = foo.getHemulenElId(fooEl);
+
                     function handleWrongSize(e){
                         tooBigEvent = e;
-                        foo.fileMaxSize = originalFileMaxSize;
                         fooEl.removeEventListener('hemulen-invalid', handleWrongSize);
                         done();                
                     }                    
                     fooEl.addEventListener('hemulen-invalid', handleWrongSize, false);
                     foo.storeFiles(fooElId, [testFileValid]);  
+                });
+
+                after(function(){
+                    foo.destroy(fooElId);
                 });
 
                 it('attempting to store one file with the wrong file type dispatches the hemulen-invalid error', function(){

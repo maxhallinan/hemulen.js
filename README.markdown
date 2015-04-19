@@ -317,7 +317,7 @@ Parameters:
 
 `Hemulen.prototype.deleteFile(hemulenElId, fileId)`
 
-Remove a file and all associated data from the data model. If the file is removed successfully, the `hemulen-filedeleted` event is emitted.
+Removes a file and all associated data from the data model. If the file is removed successfully, the `hemulen-filedeleted` event is emitted.
 
 Parameters:
 
@@ -327,6 +327,19 @@ Parameters:
 - `fileId`: 
     + Type: String,
     + a Hemulen storage key identifying the file to be removed from storage.
+
+
+###destroy
+
+`Hemulen.prototype.destroy(hemulenElId)`
+
+Removes Hemulen event listeners from Hemulen element and delete files associated with that element in Hemulen storage. If the Hemulen instance is not bound to any other elements and there are no other Hemulen instances, `Hemulen.prototype.destroy` removes event listeners from the form. 
+
+Parameters:
+
+- `hemulenElId`
+    + Type: String,
+    + a Hemulen storage key identifying an element to which the Hemulan instance is bound;
 
 ###getHemulenElId
 

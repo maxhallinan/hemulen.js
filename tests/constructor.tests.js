@@ -3,11 +3,12 @@
 
     var expect = chai.expect;
 
-    var foo, hemulenElId;
-
     describe('Hemulen Constructor', function(){
-        
-        beforeEach(function(){
+        var foo, hemulenElId;
+
+        //SETUP
+
+        beforeEach('instantiate the Hemulen class', function(){
             foo = new Hemulen({
                 dropInput: '.foo__drop-field',
                 hemulenEl: '.foo',
@@ -17,9 +18,11 @@
             hemulenElId = foo.getHemulenElId(document.getElementById('foo'));
         });
 
-        afterEach(function(){
+        afterEach('destroy Hemulen class instance', function(){
             foo.destroy(hemulenElId);            
         });
+
+        //TESTS
 
         it('returns an object', function(){
             expect(foo).to.be.a('object');
@@ -92,6 +95,5 @@
             }).to.throw(/namespace is a required configuration option and must be a CSS selector string./); 
         });
     });
- 
 }());
 
