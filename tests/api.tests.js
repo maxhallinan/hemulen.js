@@ -10,14 +10,6 @@
     var fileId, fileStoredEvent, fileDeletedEvent;
     var testFile;
 
-    var testDataUri = 'data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/4QMtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjMtYzAxMSA2Ni4xNDU2NjEsIDIwMTIvMDIvMDYtMTQ6NTY6MjcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RUNDN0IwRjlENDExMTFFNEFEOTJCODUzRjQyREI5NkYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RUNDN0IwRkFENDExMTFFNEFEOTJCODUzRjQyREI5NkYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFQ0M3QjBGN0Q0MTExMUU0QUQ5MkI4NTNGNDJEQjk2RiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFQ0M3QjBGOEQ0MTExMUU0QUQ5MkI4NTNGNDJEQjk2RiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv/uAA5BZG9iZQBkwAAAAAH/2wCEABALCwsMCxAMDBAXDw0PFxsUEBAUGx8XFxcXFx8eFxoaGhoXHh4jJSclIx4vLzMzLy9AQEBAQEBAQEBAQEBAQEABEQ8PERMRFRISFRQRFBEUGhQWFhQaJhoaHBoaJjAjHh4eHiMwKy4nJycuKzU1MDA1NUBAP0BAQEBAQEBAQEBAQP/AABEIAAEAAQMBIgACEQEDEQH/xABLAAEBAAAAAAAAAAAAAAAAAAAABwEBAAAAAAAAAAAAAAAAAAAAABABAAAAAAAAAAAAAAAAAAAAABEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AoAAP/9k=';
-
-    var testData = {
-        foo: 'foo',
-        bar: 'bar',
-        baz: 'baz'
-    }
-
     function _handleFileStored(e, callback){
         fileStoredEvent = e;
         fileId          = e.fileId; 
@@ -41,7 +33,7 @@
             });
 
             var builder = new WebKitBlobBuilder();
-            builder.append(testDataUri);
+            builder.append(hemulenTestData.imageURI);
             testFile = builder.getBlob('image/jpeg');
         });
 
@@ -85,7 +77,7 @@
 
         describe('Hemulen.prototype.addData', function(){
             before(function(){
-                foo.addData(fooElId, fileId, testData);
+                foo.addData(fooElId, fileId, hemulenTestData.associatedValues);
             });
 
             it('the expected values are found in the expected location on the data model', function(){
@@ -94,9 +86,9 @@
                 var storedDataBar   = formStorage.filesStored[foo.namespace][fooElId][fileId].bar;
                 var storedDataBaz   = formStorage.filesStored[foo.namespace][fooElId][fileId].baz;
 
-                expect(storedDataFoo).to.equal(testData.foo);
-                expect(storedDataBar).to.equal(testData.bar);
-                expect(storedDataBaz).to.equal(testData.baz);
+                expect(storedDataFoo).to.equal(hemulenTestData.associatedValues.foo);
+                expect(storedDataBar).to.equal(hemulenTestData.associatedValues.bar);
+                expect(storedDataBaz).to.equal(hemulenTestData.associatedValues.baz);
             });
         });
 
