@@ -580,41 +580,6 @@
         }
     };
 
-
-    //TEST FOR BROWSER API DEPENDENCIES
-    function _testDragDrop(testElement) { 
-        var testEl = testElement || document.createElement('div');
-        return ('draggable' in testEl) || ('ondragstart' in testEl && 'ondrop' in testEl);
-    }
-
-    function _testFileAPI(testEnvironment) {
-        // file tests for the File API specification
-        // Tests for objects specific to the File API W3C specification without
-        // being redundant (don't bother testing for Blob since it is assumed
-        // to be the File object's prototype.
-        
-        // Will fail in Safari 5 due to its lack of support for the standards
-        // defined FileReader object
-
-        var testEnv = testEnvironment || window;
-        return !!(testEnv.File && testEnv.FileList && testEnv.FileReader);
-    }
-
-    Hemulen.prototype._testBrowserApis = function(options){
-        var testElement     = options ? options.testElement : undefined;
-        var testEnvironment = options ? options.testEnvironment : undefined;
-         
-        var dragDropIsSupported = _testDragDrop(testElement);
-        var fileAPIIsSupported  = _testFileAPI(testEnvironment);
-
-        if (!dragDropIsSupported || !fileAPIIsSupported ) {
-            document.documentElement.classList.add('hemulen-incompatible');        
-        }        
-    };
-
-    Hemulen.prototype._testBrowserApis();
-
-
     //EXPORT HEMULEN
     if (typeof module !== "undefined" && module !== null) {
         module.exports = Hemulen;

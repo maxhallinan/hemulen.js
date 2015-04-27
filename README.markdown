@@ -56,7 +56,7 @@ A Hemulen event describes the internal result of an interaction with a Hemulen i
 
 Hemulen.js is devoted to a single utility: handling data for forms with drag&ndash;and&ndash;drop fields. Hemulen.js is designed to fulfill this utility without making assumptions about or asserting application architecture, and with minimal side effects on application state. For this reason, Hemulen.js does not:
 
-- manipulate the DOM (with the exception of adding the `hemulen-incompatible` class), including:
+- manipulate the DOM:
     + generate UI components,
     + generate file thumbnails,
     + list dropped files,
@@ -72,7 +72,7 @@ Hemulen.js depends on these browser APIs:
     - [File List](http://www.w3.org/TR/FileAPI/#filelist-section),
     - [File Object](http://www.w3.org/TR/FileAPI/#dfn-file).
 
-When loaded, Hemulen.js tests support for these APIs. If they are not supported, Hemulen.js adds class `hemulen-incompatible` to the `html` element. Check for this class before creating a Hemulen instance.
+Test for these APIs before instantiating the `Hemulen` class. A recommended means of testing is the [Modernizr](http://modernizr.com/) library. Modernizr core tests for drag and drop events. A test for the file API is among Modernizr's optional non-core detects.
 
 ##Browser Compatability
 
