@@ -5,7 +5,7 @@
 
 ###Overview
 
-Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. A drag&#45;and&#45;drop field is created by instantiating the `Hemulen` class. A `Hemulen` instance is bound to one or more DOM elements containing a drag&#45;and&#45;drop field and an optional file input. A single `Hemulen` instance works for one or more forms per page and the `Hemulen` class can be instantiated multiple times per form, enabling differences of behavior among fields. When the form is submitted, files dropped on the drag&#45;and&#45;drop fields will be posted with the form as a single asynchronous request. The request is made to the value of the form's action attribute.
+Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. A drag&#45;and&#45;drop field is created by instantiating the `Hemulen` class. A `Hemulen` instance is bound to one or more DOM elements containing a drag&#45;and&#45;drop field. A single `Hemulen` instance works for one or more forms per page and the `Hemulen` class can be instantiated multiple times per form, enabling differences of behavior among fields. When the form is submitted, files dropped on the drag&#45;and&#45;drop fields will be posted with the form as a single asynchronous request. The request is made to the value of the form's action attribute.
 
 ###What Hemulen.js does
 
@@ -155,21 +155,13 @@ A callback executed after the submit event is registered but before the data is 
 - `event`: the submit event
 - `instance`: the `Hemulen` instance on which `beforeSub` is defined. To call a Hemulen API method within `beforeSub`, reference `instance`, e.g. `instance.addData()`.
 
-####fileInput
-
-`config.fileInput`
-
-Type: CSS selector string
-
-A file input to work jointly with the drag&#45;and&#45;drop field. `config.fileInput` must be a child of `config.hemulenEl`. Files selected through the file input are treated like files dropped on the drag&#45;and&#45;drop field. When the data is posted to the server, there will be no differentiation between files that were dropped on the drag&#45;and&#45;drop field and files that were uploaded through the file input. The file input should not be given a `name` attribute; files selected through this input will be named by Hemulen.js. See the "Send data to the server" section of the Hemulen.js overview for more information.
-
 ####fileLimit
 
 `config.fileLimit`
 
 Type: Number
 
-Limit the number of files a drag&#45;and&#45;drop field or a file input will accept. A user can drop files multiple times until this limit is reached. If a user attempts to drop a group of files whose number exceeds the limit (or the remaining limit if files have been dropped already), no files will be accepted and the Hemulen element will emit the `hemulen-toomany` event.
+Limit the number of files a drag&#45;and&#45;drop field will accept. A user can drop files multiple times until this limit is reached. If a user attempts to drop a group of files whose number exceeds the limit (or the remaining limit if files have been dropped already), no files will be accepted and the Hemulen element will emit the `hemulen-toomany` event.
 
 ####fileMaxSize
 
@@ -205,7 +197,7 @@ Event properties:
 
 Event Name: `hemulen-filestored`
 
-The event emitted by the Hemulen element when a file is dropped on the drop input or uploaded through the file input and successfully stored on the data model.
+The event emitted by the Hemulen element when a file is dropped on the drag&ndash;and&ndash;drop field and successfully stored on the data model.
 
 Event properties:
 
@@ -228,7 +220,7 @@ Event properties:
 
 Event Name: `hemulen-toomany`
 
-The event emitted by the Hemulen element when the number of files dropped on the drop input or uploaded through the file input is greater than the value of `options.fileLimit`. When `hemulen-toomany` is emitted, none of that group of files have been stored on the data model.
+The event emitted by the Hemulen element when the number of files dropped on the drop input is greater than the value of `options.fileLimit`. When `hemulen-toomany` is emitted, none of that group of files have been stored on the data model.
 
 Properties:
 
@@ -246,9 +238,9 @@ Properties:
 
 Event Name: `hemulen-invalid`
 
-The event emitted by the Hemulen element when one or more invalid files have been dropped on the drag&ndash;and&ndash;drop field or uploaded through the file input. Invalid files have not been stored on the data model.
+The event emitted by the Hemulen element when one or more invalid files have been dropped on the drag&ndash;and&ndash;drop field. Invalid files have not been stored on the data model.
 
-A user action (dropping a file on a drag&ndash;and&ndash;drop field or uploading through a file input) can produce multiple errors. The event is emitted once per user action and  the `hemulen-invalid.errors` property contains all errors produced by that action. 
+Dropping a file on a drag&ndash;and&ndash;drop field can produce multiple errors. The event is emitted once per user action and  the `hemulen-invalid.errors` property contains all errors produced by that action. 
 
 Event properties:
 
@@ -358,7 +350,7 @@ Parameters:
 
 `Hemulen.prototype.storeFiles(hemulenElId, files)`
 
-Stores each item of `files` on the data model. When `Hemulen.storeFiles()` is called, the Hemulen instance will emit events as if the files had been dropped on the drop input or uploaded through the file input.
+Stores each item of `files` on the data model. When `Hemulen.storeFiles()` is called, the Hemulen instance will emit events as if the files had been dropped on the drag&ndash;and&ndash;drop field.
 
 Parameters:
 

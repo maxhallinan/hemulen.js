@@ -147,10 +147,6 @@
 
     //EVENT HANDLERS
 
-    function _onFileChange(e){
-        this.storeFiles(this.getHemulenElId(_closest(e.target, this.hemulenEl)), e.target.files);
-    }
-
     function _onDragEnter(e){
         e.preventDefault && e.preventDefault();
         return false;
@@ -196,7 +192,6 @@
         this.hemulenEl      = undefined;
         this.namespace      = undefined;
         this.dropInput      = undefined;
-        this.fileInput      = undefined;
         this.acceptTypes    = undefined;
         this.fileMaxSize    = undefined;
         this.fileLimit      = undefined;
@@ -274,19 +269,12 @@
     Hemulen.prototype._bindEventListeners = function(form, hemulenEls){
         var i, j, k, l;
         var dropInput;
-        var fileInput;
 
         //bind submit event
         form.addEventListener('submit', _onSub.bind(this), false);
 
         for (i = 0, j = hemulenEls.length; i < j; i++) {
             dropInput = hemulenEls[i].querySelectorAll(this.dropInput);
-            fileInput = hemulenEls[i].querySelectorAll(this.fileInput);
-
-            //bind change event
-            for (k = 0, l = fileInput.length; k < l; k++) {
-                fileInput[k].addEventListener('change', _onFileChange.bind(this), false);
-            }
 
             //bind drag/drop events
             for (k = 0, l = dropInput.length; k < l; k++) {
@@ -300,7 +288,7 @@
     };
 
     Hemulen.prototype._removeEventListeners = function(hemulenElId){
-        var hemulenEl, dropInput, fileInput;
+        var hemulenEl, dropInput;
 
         if(!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ' + hemulenElId);}
     
@@ -312,11 +300,6 @@
         dropInput[0].removeEventListener('dragover', _onDragOver);
         dropInput[0].removeEventListener('drop', _onDrop);
         dropInput[0].removeEventListener('dragdrop', _onDrop);
-
-        if (this.fileInput && this.fileInput.constructor === String) {
-            fileInput = hemulenEl[0].querySelectorAll(this.fileInput);
-            fileInput[0].removeEventListener('change', _onFileChange);
-        }
     };
 
     Hemulen.prototype._setUploadLimit = function(hemulenElId, files){
