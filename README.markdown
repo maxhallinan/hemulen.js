@@ -169,7 +169,7 @@ Limit the number of files a drag&#45;and&#45;drop field will accept. A user can 
 
 Type: Number
 
-Validate by file size. When validation fails, the Hemulen element will emit the `hemulen-toobig` event. If the `Hemulen` class is instantiated without `options.fileMaxSize`, the instance will not validate by file size. 
+The number of bytes to use as the file size limit. If a file exceeds this limit, the Hemulen element will emit the `hemulen-toobig` event. If the `Hemulen` class is instantiated without `options.fileMaxSize`, the instance will not validate by file size. 
 
 
 ##Events
