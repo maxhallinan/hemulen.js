@@ -276,7 +276,7 @@ Properties
 
 ####Submission Failure
 
-Event Name: `hemulen-subfail`
+Event Name: `hemulen-subfailure`
 
 Properties
 
