@@ -7,6 +7,8 @@
 
 Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. A drag&#45;and&#45;drop field is created by instantiating the `Hemulen` class. A `Hemulen` instance is bound to one or more DOM elements containing a drag&#45;and&#45;drop field. A single `Hemulen` instance works for one or more forms per page and the `Hemulen` class can be instantiated multiple times per form, enabling differences of behavior among fields. When the form is submitted, files dropped on the drag&#45;and&#45;drop fields will be posted with the form as a single asynchronous request. The request is made to the value of the form's action attribute.
 
+Please visit [the project page](http://maximumhallinan.com/hemulen/) to see a demo and code examples.
+
 ###What Hemulen.js does
 
 Hemulen.js has three primary functions: manage data, send data to the server, and dispatch events that describe actions taken with this data.
