@@ -10,7 +10,6 @@
 
         beforeEach('instantiate the Hemulen class', function(){
             foo = new Hemulen({
-                dropInput: '.foo__drop-field',
                 hemulenEl: '.foo',
                 namespace: 'foo',
                 beforeSub: function(){console.log('beforeSub');}
@@ -36,25 +35,6 @@
             expect(function(){
                 new Hemulen();
             }).to.throw(/Invalid Hemulen configuration./);
-        });
-
-        it('throws an error if config.dropInput is undefined', function(){
-            expect(function(){
-                new Hemulen({
-                    hemulenEl: '.foo',
-                    namespace: 'foo'
-                });
-            }).to.throw(/dropInput is a required configuration option and must be a CSS selector string./); 
-        });
-
-        it('throws an error if config.dropInput is not a string', function(){
-            expect(function(){
-                new Hemulen({
-                    dropInput: 1,
-                    hemulenEl: '.foo',
-                    namespace: 'foo'
-                });
-            }).to.throw(/dropInput is a required configuration option and must be a CSS selector string./); 
         });
 
         it('throws an error if config.hemulenEl is undefined', function(){

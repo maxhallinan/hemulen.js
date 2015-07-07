@@ -27,7 +27,6 @@
         before(function(){
             //create a fresh Hemulen instance to be used for testing
             foo = new Hemulen({
-                dropInput: '.foo__drop-field',
                 hemulenEl: '.foo',
                 namespace: 'foo'
             });

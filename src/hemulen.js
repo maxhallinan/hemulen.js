@@ -191,7 +191,6 @@
     function Hemulen(options){
         this.hemulenEl      = undefined;
         this.namespace      = undefined;
-        this.dropInput      = undefined;
         this.acceptTypes    = undefined;
         this.fileMaxSize    = undefined;
         this.fileLimit      = undefined;
@@ -204,7 +203,7 @@
         }
         
         if (!this.hemulenEl || this.hemulenEl.constructor !== String){throw new Error('hemulenEl is a required configuration option and must be a CSS selector string.');}
-        if (!this.dropInput || this.dropInput.constructor !== String){throw new Error('dropInput is a required configuration option and must be a CSS selector string.');}
+
         if (!this.namespace || this.namespace.constructor !== String){throw new Error('namespace is a required configuration option and must be a CSS selector string.');}
 
         this._init();
@@ -268,38 +267,31 @@
 
     Hemulen.prototype._bindEventListeners = function(form, hemulenEls){
         var i, j, k, l;
-        var dropInput;
 
         //bind submit event
         form.addEventListener('submit', _onSub.bind(this), false);
 
         for (i = 0, j = hemulenEls.length; i < j; i++) {
-            dropInput = hemulenEls[i].querySelectorAll(this.dropInput);
-
-            //bind drag/drop events
-            for (k = 0, l = dropInput.length; k < l; k++) {
-                dropInput[k].addEventListener('dragenter', _onDragEnter.bind(this), false);
-                dropInput[k].addEventListener('dragleave', _onDragLeave.bind(this), false);
-                dropInput[k].addEventListener('dragover', _onDragOver.bind(this), false);
-                dropInput[k].addEventListener('drop', _onDrop.bind(this), false);
-                dropInput[k].addEventListener('dragdrop', _onDrop.bind(this), false);
-            }
+            hemulenEls[i].addEventListener('dragenter', _onDragEnter.bind(this), false);
+            hemulenEls[i].addEventListener('dragleave', _onDragLeave.bind(this), false);
+            hemulenEls[i].addEventListener('dragover', _onDragOver.bind(this), false);
+            hemulenEls[i].addEventListener('drop', _onDrop.bind(this), false);
+            hemulenEls[i].addEventListener('dragdrop', _onDrop.bind(this), false);
         }
     };
 
     Hemulen.prototype._removeEventListeners = function(hemulenElId){
-        var hemulenEl, dropInput;
+        var hemulenEl;
 
         if(!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ' + hemulenElId);}
     
         hemulenEl = this._instances[hemulenElId];
-        
-        dropInput = hemulenEl.querySelectorAll(this.dropInput);
-        dropInput[0].removeEventListener('dragenter', _onDragEnter);
-        dropInput[0].removeEventListener('dragleave', _onDragLeave);
-        dropInput[0].removeEventListener('dragover', _onDragOver);
-        dropInput[0].removeEventListener('drop', _onDrop);
-        dropInput[0].removeEventListener('dragdrop', _onDrop);
+
+        hemulenEl.removeEventListener('dragenter', _onDragEnter);
+        hemulenEl.removeEventListener('dragleave', _onDragLeave);
+        hemulenEl.removeEventListener('dragover', _onDragOver);
+        hemulenEl.removeEventListener('drop', _onDrop);
+        hemulenEl.removeEventListener('dragdrop', _onDrop);
     };
 
     Hemulen.prototype._setUploadLimit = function(hemulenElId, files){

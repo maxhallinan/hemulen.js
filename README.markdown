@@ -5,9 +5,7 @@
 
 ###Overview
 
-Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. A drag&#45;and&#45;drop field is created by instantiating the `Hemulen` class. A `Hemulen` instance is bound to one or more DOM elements containing a drag&#45;and&#45;drop field. A single `Hemulen` instance works for one or more forms per page and the `Hemulen` class can be instantiated multiple times per form, enabling differences of behavior among fields. When the form is submitted, files dropped on the drag&#45;and&#45;drop fields will be posted with the form as a single asynchronous request. The request is made to the value of the form's action attribute.
-
-Please visit [the project page](http://maximumhallinan.com/hemulen/) to see a demo and code examples.
+Hemulen.js facilitates building forms with drag&#45;and&#45;drop file upload fields. Please visit the [project page](http://maximumhallinan.com/hemulen/) to see a demo and code samples.
 
 ###What Hemulen.js does
 
@@ -86,9 +84,9 @@ Test for these APIs before instantiating the `Hemulen` class. A recommended mean
 ##Basic Use
 
     <form action="/hemulen-form" method="post" enctype="multipart/form-data">
-        <div class="foo">
-            <div class="foo__drop-field"></div>
-        </div>
+    
+        <div class="foo"></div>
+    
         <input type="submit" />
     </form>
     
@@ -97,7 +95,6 @@ Test for these APIs before instantiating the `Hemulen` class. A recommended mean
     
     <script>
         var foo = new Hemulen({
-            dropInput: '.foo__drop-field',
             hemulenEl: '.foo',
             namespace: 'foo'
         });
@@ -108,17 +105,9 @@ Test for these APIs before instantiating the `Hemulen` class. A recommended mean
 
 `new Hemulen(config);`
 
-The `Hemulen` constructor expects a single argument: a configuration object. There are three required configuration properties and several optional configuration properties.
+The `Hemulen` constructor expects a single argument: a configuration object. There are two required configuration properties and several optional configuration properties.
 
 ###Required
-
-####dropInput
-
-`config.dropInput`
-
-Type: CSS selector string
-
-A CSS selector identifying the drag&#45;and&#45;drop field. `config.dropInput` must be a descendant of `config.hemulenEl`.
 
 ####hemulenEl
 
@@ -126,7 +115,7 @@ A CSS selector identifying the drag&#45;and&#45;drop field. `config.dropInput` m
 
 Type: CSS selector string
 
-A CSS selector identifying the element containing `config.dropInput` and (optionally) `config.fileInput`.
+A CSS selector identifying the drag&#45;and&#45;drop field. 
 
 ####namespace
 

@@ -21,7 +21,6 @@
 
             before(function(done){
                 foo = new Hemulen({
-                    dropInput: '.foo__drop-field',
                     hemulenEl: '.foo',
                     namespace: 'foo',
                     acceptTypes: ['image/jpeg'],
@@ -71,7 +70,6 @@
 
             before(function(done){
                 foo = new Hemulen({
-                    dropInput: '.foo__drop-field',
                     hemulenEl: '.foo',
                     namespace: 'foo',
                     acceptTypes: ['image/jpeg'],
@@ -113,7 +111,6 @@
 
             before(function(done){
                 foo = new Hemulen({
-                    dropInput: '.foo__drop-field',
                     hemulenEl: '.foo',
                     namespace: 'foo',
                     acceptTypes: ['image/jpeg'],
@@ -158,7 +155,6 @@
                 var wrongTypeEvent;
                 before(function(done){
                     foo = new Hemulen({
-                        dropInput: '.foo__drop-field',
                         hemulenEl: '.foo',
                         namespace: 'foo',
                         acceptTypes: ['image/jpeg'],
@@ -211,7 +207,6 @@
 
                 before(function(done){
                     foo = new Hemulen({
-                        dropInput: '.foo__drop-field',
                         hemulenEl: '.foo',
                         namespace: 'foo',
                         acceptTypes: ['image/jpeg'],
