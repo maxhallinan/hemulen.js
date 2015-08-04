@@ -147,19 +147,9 @@
 
     //EVENT HANDLERS
 
-    function _onDragEnter(e){
-        e.preventDefault && e.preventDefault();
-        return false;
-    }
-
-    function _onDragLeave(e){
-        e.preventDefault && e.preventDefault();
-        return false;
-    }
-
     function _onDragOver(e){
         e.preventDefault && e.preventDefault();
-        e.dataTransfer.dropEffect = 'all';
+        e.dataTransfer.effectAllowed = 'all';
         return false;
     }
 
@@ -272,11 +262,8 @@
         form.addEventListener('submit', _onSub.bind(this), false);
 
         for (i = 0, j = hemulenEls.length; i < j; i++) {
-            hemulenEls[i].addEventListener('dragenter', _onDragEnter.bind(this), false);
-            hemulenEls[i].addEventListener('dragleave', _onDragLeave.bind(this), false);
             hemulenEls[i].addEventListener('dragover', _onDragOver.bind(this), false);
             hemulenEls[i].addEventListener('drop', _onDrop.bind(this), false);
-            hemulenEls[i].addEventListener('dragdrop', _onDrop.bind(this), false);
         }
     };
 
@@ -287,11 +274,8 @@
 
         hemulenEl = this._instances[hemulenElId];
 
-        hemulenEl.removeEventListener('dragenter', _onDragEnter);
-        hemulenEl.removeEventListener('dragleave', _onDragLeave);
         hemulenEl.removeEventListener('dragover', _onDragOver);
         hemulenEl.removeEventListener('drop', _onDrop);
-        hemulenEl.removeEventListener('dragdrop', _onDrop);
     };
 
     Hemulen.prototype._setUploadLimit = function(hemulenElId, files){
