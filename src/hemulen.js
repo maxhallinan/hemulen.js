@@ -45,15 +45,15 @@
         return hash;
     }
 
-    //Generate a random hash of length equal to the second argument 
+    //Generate a random hash of length equal to the second argument
     //by calling generator function passed as the first argument.
     //If new hash is equal to a value stored in array passed as the third argument,
     //recurse to generate new hash and check again.
-    //Otherwise, return new hash.     
+    //Otherwise, return new hash.
     function _generateUniqueHash(hashGenerator, hashLength, usedHashes){
         var newHash = hashGenerator(hashLength);
- 
-        return usedHashes.indexOf(newHash) > -1 ? _generateUniqueHash(hashGenerator, hashLength, usedHashes) : newHash; 
+
+        return usedHashes.indexOf(newHash) > -1 ? _generateUniqueHash(hashGenerator, hashLength, usedHashes) : newHash;
     }
 
     function _extend(options){
@@ -97,33 +97,33 @@
             for (var foo in storedData) {
                 if (storedData.hasOwnProperty(foo)){
                     propname    = foo;
-                    
+
                     if ( (typeof storedData[foo]).toLowerCase() === 'object' && storedData[foo].constructor !== Array) {
                         for (var bar in storedData[foo]) {
                             if (storedData[foo].hasOwnProperty(bar)) {
-                                
-                                if ( (typeof storedData[foo][bar]).toLowerCase() === 'object' && storedData[foo][bar].constructor !== Array ) {    
+
+                                if ( (typeof storedData[foo][bar]).toLowerCase() === 'object' && storedData[foo][bar].constructor !== Array ) {
                                     for (var baz in storedData[foo][bar]) {
                                         if (storedData[foo][bar].hasOwnProperty(baz)) {
-                                            
+
                                             if ( (typeof storedData[foo][bar][baz]).toLowerCase() === 'object' && storedData[foo][bar][baz].constructor !== Array ) {
                                                 for (var qux in storedData[foo][bar][baz]) {
                                                     if(storedData[foo][bar][baz].hasOwnProperty(qux)) {
                                                         formData.append((propname + counterA + qux + counterB), storedData[foo][bar][baz][qux]);
                                                     }
                                                 }
-                                
+
                                                 counterB++;
                                             }
 
-                                          
+
                                         }
                                     }
-                                
-                                    counterA++;  
+
+                                    counterA++;
                                     counterB = 0;
                                 }
-                                                      
+
                             }
                         }
                     }
@@ -138,7 +138,7 @@
     function _getFormIndex(form){
         for (var i = 0, j = forms.length; i < j; i++) {
             if (forms[i].form === form) {return i;}
-        }        
+        }
         return -1;
     }
 
@@ -151,30 +151,30 @@
         e.preventDefault && e.preventDefault();
         return false;
     }
-    
+
     function _onDragLeave(e){
         e.preventDefault && e.preventDefault();
         return false;
     }
-    
+
     function _onDragOver(e){
         e.preventDefault && e.preventDefault();
         e.dataTransfer.dropEffect = 'all';
         return false;
     }
-    
+
     function _onDrop(e){
         e.preventDefault && e.preventDefault();
         this.storeFiles(this.getHemulenElId(_closest(e.target, this.hemulenEl)), e.dataTransfer.files);
         return false;
     }
-    
+
     function _onSub(e){
-        var i, j; 
+        var i, j;
         var formIndex = _getFormIndex(e.target);
 
         e.preventDefault && e.preventDefault();
-        
+
         if (!forms[formIndex].formSubmitted) {
             for (i = 0, j = forms[formIndex].beforeSub.length; i < j; i++) {forms[formIndex].beforeSub[i].callback(e, this);}
             this._subData(e.target);
@@ -201,7 +201,7 @@
         } else {
             _extend.call(this, options);
         }
-        
+
         if (!this.hemulenEl || this.hemulenEl.constructor !== String){throw new Error('hemulenEl is a required configuration option and must be a CSS selector string.');}
 
         if (!this.namespace || this.namespace.constructor !== String){throw new Error('namespace is a required configuration option and must be a CSS selector string.');}
@@ -245,7 +245,7 @@
 
             if (els.length) {
                 forms[a].filesStored[this.namespace] = forms[a].filesStored[this.namespace] || {};
-            
+
                 for (i = 0, l = els.length; i < l; i++) {
                     hemulenElId = _generateUniqueHash(_generateHash, 7, usedHashes);
                     this._instances[hemulenElId] = els[i];
@@ -258,11 +258,11 @@
                         id: hemulenElId
                     });
                 }
-            
+
                 this._bindEventListeners(formEls[a], els);
 
             }
-        }   
+        }
     };
 
     Hemulen.prototype._bindEventListeners = function(form, hemulenEls){
@@ -284,7 +284,7 @@
         var hemulenEl;
 
         if(!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ' + hemulenElId);}
-    
+
         hemulenEl = this._instances[hemulenElId];
 
         hemulenEl.removeEventListener('dragenter', _onDragEnter);
@@ -318,11 +318,11 @@
             return range;
         } else if (filesStoredLength === 0) {
             range.start = 0;
-            range.end   = filesLength > this.fileLimit ? this.fileLimit : filesLength;  
+            range.end   = filesLength > this.fileLimit ? this.fileLimit : filesLength;
         } else if (filesStoredLength < this.fileLimit && filesStoredLength > 0) {
             range.start = filesStoredLength;
             s = range.start + filesLength;
-            range.end   = this.fileLimit < s ? this.fileLimit : s; 
+            range.end   = this.fileLimit < s ? this.fileLimit : s;
         }
 
         return range;
@@ -352,8 +352,8 @@
         var ev;
 
         forms[formIndex].filesStored[this.namespace][hemulenElId][fileId] = {};
-        forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] = file; 
-        
+        forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] = file;
+
         if (forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]['file'] === file) {
             ev              = _createEvent('hemulen-filestored', true, true);
             ev.file         = file;
@@ -376,15 +376,15 @@
         req.onreadystatechange = function(){
             if (req.readyState === 4) {
                 var ev;
-                
-                ev = req.status === 200 ?   _createEvent('hemulen-subsuccess', true, true) : 
-                                            _createEvent('hemulen-subfailure', true, true);
 
-                ev.hemulenRequest = req;                            
+                ev = (req.status >= 200 && req.status < 300) ?  _createEvent('hemulen-subsuccess', true, true) :
+                                            					_createEvent('hemulen-subfailure', true, true);
+
+                ev.hemulenRequest = req;
 
                 form.dispatchEvent(ev);
-                
-                forms[formIndex].formSubmitted = false;            
+
+                forms[formIndex].formSubmitted = false;
             }
         };
 
@@ -399,7 +399,7 @@
             formIndex = _getFormIndex(form);
             if (formIndex !== -1) {return forms[formIndex];}
         } else {
-            return forms;            
+            return forms;
         }
     };
 
@@ -427,7 +427,7 @@
         var formIndex;
 
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
-        
+
         hemulenEl           = this._instances[hemulenElId];
         form                = _closest(hemulenEl, 'form');
         formIndex           = _getFormIndex(form);
@@ -435,7 +435,7 @@
         for (var key in forms[formIndex].filesStored[hemulenElId]) {
             if (forms[formIndex].filesStored[hemulenElId][key][file] === file) {
                 return key;
-            } 
+            }
         }
 
         return undefined;
@@ -449,7 +449,7 @@
 
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
-        
+
         delete forms[formIndex].filesStored[this.namespace][hemulenElId][fileId];
 
         if (!forms[formIndex].filesStored[this.namespace][hemulenElId][fileId]) {
@@ -460,7 +460,7 @@
             ev.hemulen      = this;
             ev.hemulenElId  = hemulenElId;
 
-            hemulenEl.dispatchEvent(ev);            
+            hemulenEl.dispatchEvent(ev);
         }
 
         return false;
@@ -473,11 +473,11 @@
 
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
 
-        range = this.fileLimit ? this._setUploadLimit(hemulenElId, files) : {start: 0, end: files.length}; 
+        range = this.fileLimit ? this._setUploadLimit(hemulenElId, files) : {start: 0, end: files.length};
 
         for (var i = range.start; i < range.end; i++) {
-            valid = this._validFile(hemulenElId, files[i - range.start]); 
-            
+            valid = this._validFile(hemulenElId, files[i - range.start]);
+
             if ( valid === true ) {
                 this._storeFile(hemulenElId, files[i - range.start]);
             } else {
@@ -487,17 +487,17 @@
                         file: files[i - range.start]
                     });
                 }
-            }   
+            }
         }
 
-        if (errors.length) {            
+        if (errors.length) {
             ev = _createEvent('hemulen-invalid', true, true);
-            
+
             ev.hemulenErrors    = errors;
             ev.hemulen          = this;
             ev.hemulenElId      = hemulenElId;
 
-            this._instances[hemulenElId].dispatchEvent(ev); 
+            this._instances[hemulenElId].dispatchEvent(ev);
         }
     };
 
@@ -509,7 +509,7 @@
         if (!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ', hemulenElId);}
         if (!fileId || fileId.constructor !== String) {throw new Error('This is an invalid value: ', fileId);}
         if (!updates || (typeof updates === 'Object' && updates.constructor === Array) ) {throw new Error('This is an invalid value: ', updates);}
-        
+
         hemulenEl           = this._instances[hemulenElId];
         form                = _closest(hemulenEl, 'form');
         formIndex           = _getFormIndex(form);
@@ -520,7 +520,7 @@
             }
         }
 
-        _extend.call(forms[formIndex].filesStored[this.namespace][hemulenElId][fileId], updates);        
+        _extend.call(forms[formIndex].filesStored[this.namespace][hemulenElId][fileId], updates);
     };
 
     Hemulen.prototype.destroy = function(hemulenElId){
@@ -529,7 +529,7 @@
         var form;
 
         if(!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ' + hemulenElId);}
-    
+
         hemulenEl   = this._instances[hemulenElId];
         form        = _closest(hemulenEl, 'form');
         formIndex   = _getFormIndex(form);
