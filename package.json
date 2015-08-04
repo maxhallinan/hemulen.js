@@ -1,6 +1,6 @@
 {
   "name": "hemulen",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A plugin that facilitates building forms with drag-and-drop fields.",
   "main": "hemulen.js",
   "scripts": {
