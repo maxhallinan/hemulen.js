@@ -310,45 +310,45 @@
         var counterA    = 0;
         var counterB    = 0;
 
-            for (var foo in storedData) {
-                if (storedData.hasOwnProperty(foo)){
-                    propname    = foo;
+        for (var foo in storedData) {
+            if (storedData.hasOwnProperty(foo)){
+                propname    = foo;
 
-                    if ( (typeof storedData[foo]).toLowerCase() === 'object' && storedData[foo].constructor !== Array) {
-                        for (var bar in storedData[foo]) {
-                            if (storedData[foo].hasOwnProperty(bar)) {
+                if ( (typeof storedData[foo]).toLowerCase() === 'object' && storedData[foo].constructor !== Array) {
+                    for (var bar in storedData[foo]) {
+                        if (storedData[foo].hasOwnProperty(bar)) {
 
-                                if ( (typeof storedData[foo][bar]).toLowerCase() === 'object' && storedData[foo][bar].constructor !== Array ) {
-                                    for (var baz in storedData[foo][bar]) {
-                                        if (storedData[foo][bar].hasOwnProperty(baz)) {
+                            if ( (typeof storedData[foo][bar]).toLowerCase() === 'object' && storedData[foo][bar].constructor !== Array ) {
+                                for (var baz in storedData[foo][bar]) {
+                                    if (storedData[foo][bar].hasOwnProperty(baz)) {
 
-                                            if ( (typeof storedData[foo][bar][baz]).toLowerCase() === 'object' && storedData[foo][bar][baz].constructor !== Array ) {
-                                                for (var qux in storedData[foo][bar][baz]) {
-                                                    if(storedData[foo][bar][baz].hasOwnProperty(qux)) {
-                                                        formData.append((propname + counterA + qux + counterB), storedData[foo][bar][baz][qux]);
-                                                    }
+                                        if ( (typeof storedData[foo][bar][baz]).toLowerCase() === 'object' && storedData[foo][bar][baz].constructor !== Array ) {
+                                            for (var qux in storedData[foo][bar][baz]) {
+                                                if(storedData[foo][bar][baz].hasOwnProperty(qux)) {
+                                                    formData.append((propname + counterA + qux + counterB), storedData[foo][bar][baz][qux]);
                                                 }
-
-                                                counterB++;
                                             }
 
-
+                                            counterB++;
                                         }
-                                    }
 
-                                    counterA++;
-                                    counterB = 0;
+
+                                    }
                                 }
 
+                                counterA++;
+                                counterB = 0;
                             }
+
                         }
                     }
-
-                    counterA = 0;
                 }
-            }
 
-            return formData;
+                counterA = 0;
+            }
+        }
+
+        return formData;
     }
 
     Hemulen.prototype._subData = function(form){
