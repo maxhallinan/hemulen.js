@@ -6,13 +6,13 @@
     var fooEl   = document.getElementById('foo');
     var fooForm = document.getElementById('fooform');
     var foo, fooElId;
-    
+
     var fileId, fileStoredEvent, fileDeletedEvent;
     var testFile;
 
     function _handleFileStored(e, callback){
         fileStoredEvent = e;
-        fileId          = e.fileId; 
+        fileId          = e.fileId;
         fooEl.removeEventListener('hemulen-filestored', _handleFileStored);
         callback();
     }
@@ -39,7 +39,7 @@
         //TEST SUITES
         describe('Hemulen.prototype.getHemulenElId', function(){
             before(function(){
-                fooElId = foo.getHemulenElId(fooEl);                
+                fooElId = foo.getHemulenElId(fooEl);
             });
 
             it('returns a string', function(){
@@ -60,13 +60,13 @@
         describe('Hemulen.prototype.storeFiles', function(){
             before(function(done){
                 fooEl.addEventListener('hemulen-filestored', function(e){_handleFileStored(e, done);}, false);
-                foo.storeFiles(fooElId, [testFile]);                
+                foo.storeFiles(fooElId, [testFile]);
             });
 
             it('triggers the hemulen-filestored event', function(){
                 expect(fileStoredEvent.type).to.equal('hemulen-filestored');
             });
-        
+
             it('stores the file at the expected location on the data model', function(){
                 var formStorage = foo._getStorage(fooForm);
                 var storedFile  = formStorage.filesStored[foo.namespace][fooElId][fileId].file;
@@ -107,7 +107,7 @@
                 expect(storedFile).to.equal(undefined);
             });
         });
-    
+
         describe('Hemulen.prototype.destroy', function(){
             before(function(){
                 foo.destroy(fooElId);
@@ -116,7 +116,7 @@
             it('deletes the Hemulen storage for the destroyed element', function(){
                 var formStorage = foo._getStorage(fooForm);
                 var fooStorage  = formStorage.filesStored[foo.namespace];
-                console.log('api destroyed test');
+
                 expect(fooStorage).to.equal(undefined);
             });
 
