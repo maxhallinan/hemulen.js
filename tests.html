@@ -16,6 +16,7 @@
     <!--LIBRARIES-->
     <script src="tests/lib/mocha.js"></script>
     <script src="tests/lib/chai.js"></script>
+    <script src="node_modules/sinon/pkg/sinon.js"></script>
     <script> mocha.setup('bdd');</script>
 
     <!--DEPENDENCIES-->
@@ -31,7 +32,7 @@
     <!--<script src="tests/submission.tests.js"></script>-->
 
     <script>
-        if(window.mochaPhantomJS){mochaPhantomJS.run();} 
+        if(window.mochaPhantomJS){mochaPhantomJS.run();}
         else {mocha.run();}
     </script>
   </body>
