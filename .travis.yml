@@ -1,5 +1,5 @@
 language: javascript
 install:
-    - npm install mocha-phantomjs-core
-script: 
+    - npm install
+script:
     - phantomjs node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js tests.html spec
