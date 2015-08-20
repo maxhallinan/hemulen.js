@@ -19,6 +19,7 @@
   "author": "Max Hallinan",
   "license": "MIT",
   "devDependencies": {
-    "mocha-phantomjs-core": "^0.2.1"
+    "mocha-phantomjs-core": "^0.2.1",
+    "sinon": "^1.16.0"
   }
 }
