@@ -1,11 +1,11 @@
 ;(function(){
-	'use strict';
+    'use strict';
 
     var expect = chai.expect;
 
     var count = 0;
     var fileCount = 3;
-	var fileIds = [];
+    var fileIds = [];
     var storage;
     var subData;
     var testFile;
