@@ -9,7 +9,7 @@
   <body>
     <div id="mocha"></div>
 
-    <form id="fooform" action="/" method="post" enctype="multipart/form-data">
+    <form id="fooform" action="/foo" method="post" enctype="multipart/form-data">
         <div id="foo" class="foo"></div>
     </form>
 
@@ -27,9 +27,9 @@
     <script src="tests/constructor.tests.js"></script>
     <script src="tests/api.tests.js"></script>
     <script src="tests/events.tests.js"></script>
-
+    <script src="tests/submission.tests.js"></script>
     <!--<script src="tests/data.tests.js"></script>-->
-    <!--<script src="tests/submission.tests.js"></script>-->
+
 
     <script>
         if(window.mochaPhantomJS){mochaPhantomJS.run();}
