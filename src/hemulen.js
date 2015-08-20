@@ -535,7 +535,7 @@
         }
         //if there are no Hemulen instances, unbind form event handlers
         if(Object.keys(forms[formIndex]['filesStored']).length === 0) {
-            formEls[i].removeEventListener('submit', _onSub, false);
+            form.removeEventListener('submit', _onSub, false);
         }
     };
 
