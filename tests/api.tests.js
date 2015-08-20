@@ -120,9 +120,15 @@
                 expect(fooStorage).to.equal(undefined);
             });
 
-            it('removes the Hemulen event bindings on the destroyed element', function(){
+            // TODO
+            // it('removes the Hemulen event bindings on the destroyed Hemulen element', function(){
 
-            });
+            // });
+
+            // it('removes the Hemulen event bindings on the form if that form has no active Hemulen elements', function(){
+
+            // });
+
         });
     });
 }());
