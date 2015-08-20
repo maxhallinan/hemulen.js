@@ -534,7 +534,7 @@
             delete forms[formIndex]['filesStored'][this.namespace];
         }
         //if there are no Hemulen instances, unbind form event handlers
-        if(Object.keys(forms[formIndex]['filesStored']) === 0) {
+        if(Object.keys(forms[formIndex]['filesStored']).length === 0) {
             formEls[i].removeEventListener('submit', _onSub, false);
         }
     };
