@@ -1,12 +1,12 @@
 var hemulenTestData = {
-	mockFormData: {
+    mockFormData: {
         foo: 'foo',
         bar: 'bar',
         baz: 'baz',
         append: function (prop, val) {
-        	this[prop] = val;
+            this[prop] = val;
         }
-	},
+    },
     associatedValues: {
         foo: 'foo',
         bar: 'bar',
