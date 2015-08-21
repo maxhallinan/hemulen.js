@@ -93,19 +93,19 @@
 
     //EVENT HANDLERS
 
-    function _onDragOver(e){
+    Hemulen.prototype._onDragOver = function (e){
         e.preventDefault && e.preventDefault();
         e.dataTransfer.effectAllowed = 'all';
         return false;
     }
 
-    function _onDrop(e){
+    Hemulen.prototype._onDrop = function (e){
         e.preventDefault && e.preventDefault();
         this.storeFiles(this.getHemulenElId(_closest(e.target, this.hemulenEl)), e.dataTransfer.files);
         return false;
     }
 
-    function _onSub(e){
+    Hemulen.prototype._onSub = function (e){
         var i, j;
         var formIndex = _getFormIndex(e.target);
 
@@ -205,11 +205,11 @@
         var i, j, k, l;
 
         //bind submit event
-        form.addEventListener('submit', _onSub.bind(this), false);
+        form.addEventListener('submit', this._onSub.bind(this), false);
 
         for (i = 0, j = hemulenEls.length; i < j; i++) {
-            hemulenEls[i].addEventListener('dragover', _onDragOver.bind(this), false);
-            hemulenEls[i].addEventListener('drop', _onDrop.bind(this), false);
+            hemulenEls[i].addEventListener('dragover', this._onDragOver.bind(this), false);
+            hemulenEls[i].addEventListener('drop', this._onDrop.bind(this), false);
         }
     };
 
@@ -220,8 +220,8 @@
 
         hemulenEl = this._instances[hemulenElId];
 
-        hemulenEl.removeEventListener('dragover', _onDragOver);
-        hemulenEl.removeEventListener('drop', _onDrop);
+        hemulenEl.removeEventListener('dragover', this._onDragOver);
+        hemulenEl.removeEventListener('drop', this._onDrop);
     };
 
     Hemulen.prototype._setUploadLimit = function(hemulenElId, files){
@@ -535,7 +535,7 @@
         }
         //if there are no Hemulen instances, unbind form event handlers
         if(Object.keys(forms[formIndex]['filesStored']).length === 0) {
-            form.removeEventListener('submit', _onSub, false);
+            form.removeEventListener('submit', this._onSub, false);
         }
     };
 
