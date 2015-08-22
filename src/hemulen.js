@@ -159,6 +159,10 @@
         for (i = 0, j = formEls.length; i < j; i++) {
             forms.push({
                 beforeSub: [],
+                eventHandlers: {
+                    formHandler: undefined,
+                    hemulenElHandlers: {}
+                },
                 filesStored: {},
                 form: formEls[i],
                 formSubmitted: false
@@ -195,33 +199,44 @@
                     });
                 }
 
-                this._bindEventListeners(formEls[a], els);
+                this._bindEventListeners(formEls[a], els, forms[a], hemulenElId);
 
             }
         }
     };
 
-    Hemulen.prototype._bindEventListeners = function(form, hemulenEls){
+    Hemulen.prototype._bindEventListeners = function(formEl, hemulenEls, formDataSet, hemulenElId){
         var i, j, k, l;
+        var handleSubmit;
+        var handleDragOver;
+        var handleDrop;
+        
+        var theseHandlers = formDataSet.eventHandlers.hemulenElHandlers[this.namespace] = {};
+        theseHandlers[hemulenElId] = {};
+        
+        // save functions returned by .bind so they can be referenced when unbinding event handlers
+        handleSubmit    = formDataSet.eventHandlers.formHandler         = this._onSub.bind(this);
+        handleDragOver  = theseHandlers[hemulenElId].dragOverHandler    = this._onDragOver.bind(this);
+        handleDrop      = theseHandlers[hemulenElId].dropHandler        = this._onDrop.bind(this);
 
-        //bind submit event
-        form.addEventListener('submit', this._onSub.bind(this), false);
+        formEl.addEventListener('submit', handleSubmit, false);
 
         for (i = 0, j = hemulenEls.length; i < j; i++) {
-            hemulenEls[i].addEventListener('dragover', this._onDragOver.bind(this), false);
-            hemulenEls[i].addEventListener('drop', this._onDrop.bind(this), false);
+            hemulenEls[i].addEventListener('dragover', handleDragOver, false);
+            hemulenEls[i].addEventListener('drop', handleDrop, false);
         }
     };
 
-    Hemulen.prototype._removeEventListeners = function(hemulenElId){
+    Hemulen.prototype._removeEventListeners = function(hemulenElId, formDataSet){
         var hemulenEl;
+        var theseHandlers = formDataSet.eventHandlers.hemulenElHandlers[this.namespace][hemulenElId];
 
         if(!hemulenElId || hemulenElId.constructor !== String) {throw new Error('This is an invalid value: ' + hemulenElId);}
 
         hemulenEl = this._instances[hemulenElId];
 
-        hemulenEl.removeEventListener('dragover', this._onDragOver);
-        hemulenEl.removeEventListener('drop', this._onDrop);
+        hemulenEl.removeEventListener('dragover', theseHandlers.dragOverHandler);
+        hemulenEl.removeEventListener('drop', theseHandlers.dropHandler);
     };
 
     Hemulen.prototype._setUploadLimit = function(hemulenElId, files){
@@ -519,7 +534,7 @@
         formIndex   = _getFormIndex(form);
 
         //unbind events
-        Hemulen.prototype._removeEventListeners.call(this, hemulenElId);
+        this._removeEventListeners(hemulenElId, forms[formIndex]);
         //delete hemulen storage
         delete forms[formIndex].filesStored[this.namespace][hemulenElId];
         //remove beforeSub callback
@@ -535,7 +550,7 @@
         }
         //if there are no Hemulen instances, unbind form event handlers
         if(Object.keys(forms[formIndex]['filesStored']).length === 0) {
-            form.removeEventListener('submit', this._onSub, false);
+            form.removeEventListener('submit', forms[formIndex].eventHandlers.formHandler, false);
         }
     };
 

@@ -10,6 +10,8 @@
     var fileId, fileStoredEvent, fileDeletedEvent;
     var testFile;
 
+    var submitHandler, dragOverHandler, dropHandler;
+
     function _handleFileStored(e, callback){
         fileStoredEvent = e;
         fileId          = e.fileId;
@@ -25,15 +27,19 @@
 
     describe('Hemulen API', function(){
         before(function(){
+            var builder = new WebKitBlobBuilder();
+            builder.append(hemulenTestData.imageURI);
+            testFile = builder.getBlob('image/jpeg');
+
+            submitHandler   = sinon.spy(Hemulen.prototype, '_onSub');
+            dragOverHandler = sinon.spy(Hemulen.prototype, "_onDragOver");
+            dropHandler     = sinon.spy(Hemulen.prototype, "_onDrop");
+
             //create a fresh Hemulen instance to be used for testing
             foo = new Hemulen({
                 hemulenEl: '.foo',
                 namespace: 'foo'
             });
-
-            var builder = new WebKitBlobBuilder();
-            builder.append(hemulenTestData.imageURI);
-            testFile = builder.getBlob('image/jpeg');
         });
 
         //TEST SUITES
@@ -110,25 +116,39 @@
 
         describe('Hemulen.prototype.destroy', function(){
             before(function(){
+                var dragOverEvent, dropEvent, submitEvent;
+
                 foo.destroy(fooElId);
+
+                dragOverEvent = document.createEvent('Event');
+                dragOverEvent.initEvent('dragover');
+                fooEl.dispatchEvent(dragOverEvent);
+
+                dropEvent = document.createEvent('Event');
+                dropEvent.initEvent('drop');
+                fooEl.dispatchEvent(dropEvent);
+
+                submitEvent = document.createEvent('Event');
+                submitEvent.initEvent('submit');
+                fooForm.dispatchEvent(submitEvent);
             });
 
             it('deletes the Hemulen storage for the destroyed element', function(){
                 var formStorage = foo._getStorage(fooForm);
                 var fooStorage  = formStorage.filesStored[foo.namespace];
-
+    
                 expect(fooStorage).to.equal(undefined);
             });
 
-            // TODO
-            // it('removes the Hemulen event bindings on the destroyed Hemulen element', function(){
 
-            // });
+            it('removes the Hemulen event bindings on the destroyed Hemulen element', function(){
+                expect(dragOverHandler.called).to.be.false;
+                expect(dropHandler.called).to.be.false;
+            });
 
-            // it('removes the Hemulen event bindings on the form if that form has no active Hemulen elements', function(){
-
-            // });
-
+            it('removes the Hemulen event bindings on the form if that form has no active Hemulen elements', function(){
+                expect(submitHandler.called).to.be.false;
+            });
         });
     });
 }());
