@@ -14,9 +14,10 @@
     var fooEl   = document.getElementById('foo');
     var fooForm = document.getElementById('fooform');
 
-    var builder = new Blob();
-    builder.append(hemulenTestData.imageURI);
-    testFile = builder.getBlob('image/jpeg');
+    var testFile = new Blob(
+        [new Uint8Array(hemulenTestData.imageURI)], 
+        { type: 'image/jpeg', }
+    );
 
     function handleAddFile (e) {
         count++;
