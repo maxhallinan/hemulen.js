@@ -14,7 +14,7 @@
     var fooEl   = document.getElementById('foo');
     var fooForm = document.getElementById('fooform');
 
-    var builder = new WebKitBlobBuilder();
+    var builder = new Blob();
     builder.append(hemulenTestData.imageURI);
     testFile = builder.getBlob('image/jpeg');
 
